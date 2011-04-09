@@ -32,11 +32,13 @@ compinit -i
 zmodload -i zsh/complist
 
 # enable approximation of mistyped completes
-zstyle ':completion:*' completer _oldlist _expand _complete _correct
+zstyle ':completion:*' completer _oldlist _expand _complete _correct # with *.avi<tab> expand
+#zstyle ':completion:*' completer _oldlist _complete _correct # without *.avi<tab> expand
 zstyle -e ':completion:*:approximate:*' max-errors 'reply=( $(( ($#PREFIX + $#SUFFIX) / 3 )) )'
 zstyle ':completion:*:corrections' format '%B---- %d %F{11}(errors: %e)%f%b'
 
 zstyle ':completion:*' list-colors true # colorfull completions
+zstyle ':completion:*' group-name '' # separate completions into groups
 zstyle ':completion:*:*:*:*:*' menu select # by default a select-menu for completions
 
 zstyle ':completion:*:options' auto-description '%d'
@@ -236,7 +238,7 @@ alias gup='git fetch && git rebase'
 compdef _git gup=git-fetch
 alias gp='git push'
 compdef _git gp=git-push
-alias gd='git diff | mate'
+alias gd='git diff'
 # WTF is mate??
 compdef _git gd=git-diff
 alias gdv='git diff -w "$@" | vim -R -'

@@ -41,11 +41,17 @@ zstyle ':completion:*:options' auto-description '%d'
 zstyle ':completion:*:options' description 'yes' # this one and above will make options have nice docs!
 zstyle ':completion:*:options' menu search # if there is a shitload of options it's more convenient than menu
 
+# separation and color funn
+zstyle ':completion:*:messages' format $'%{\e[0;31m%}%d%{\e[0m%}'
+zstyle ':completion:*:warnings' format $'%{\e[0;31m%}Ooops: %d%{\e[0m%}'
 # should this be in keybindings?
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
 zstyle ':completion:*:*:kill:*:processes' menu interactive=3
 zstyle ':completion:*:*:*:*:processes' command "ps -u `whoami` -o pid,user,comm -w -w"
 zstyle ':completion:*:cd:*' tag-order named-directories local-directories directory-stack path-directories
+
+# mplayer - no urls in completions
+zstyle ':completion:*:*:mplayer:*' tag-order files
 
 # gvim/vim completion - ignore backup files and sort by last used
 zstyle ':completion:*:*:(gvim|vim):*:*files' ignored-patterns '*~' file-sort access
@@ -179,6 +185,9 @@ speakers() {
         amixer -c 0 -- sset PCM 100%
 }
 # aliases {{{1
+# just give a filename with those suffixes and zsh will open it with mplayer
+alias -s {mkv,avi,mpg,mpeg,wmv,rmvb}='mplayer' 
+
 alias ...='cd ../..'
 # Show history
 alias history='fc -l 1'
@@ -206,8 +215,6 @@ alias vrestart="sudo /etc/rc.d/openvpn restart"
 alias '?=bc -l <<<'
 alias sluch=headphones
 alias glosn=speakers
-alias rs="wget --auth-no-challenge --user=447270 --password=475633"
-alias filesonic="wget --auth-no-challenge --user=fascikostwo --password=fascikostwosf"
 alias tcm="truecrypt -t"
 alias tcu="truecrypt -t -d"
 alias gvim="STTY='intr \^C' gvim" # C-x mapping fucks up gvim

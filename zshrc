@@ -67,6 +67,10 @@ zstyle ':completion:*:*:(gvim|vim):*' file-sort access
 [ -r ~/.ssh/known_hosts ] && _ssh_hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[\|]*}%%\ *}%%,*}) || _ssh_hosts=()
 hosts=( "$_ssh_hosts[@]" "$_etc_hosts[@]" `hostname` localhost)
 zstyle ':completion:*:hosts' hosts $hosts
+# above host completion is nice, but for ssh I want only hosts from .ssh/config - doesn't work :(
+#[[ -f ~/.ssh/config ]] && ssh_hosts=(`grep ^Host ~/.ssh/config | sed s/Host\ // | egrep -v ‘^\*$’`)
+zstyle ':completion:*:*:ssh:*' menu false
+#zstyle ':completion:*:*:ssh:hosts' hosts $ssh_hosts
 # Use caching so that commands like apt and dpkg complete are useable
 zstyle ':completion::complete:*' use-cache 1
 zstyle ':completion::complete:*' cache-path ~/.zsh/cache/
@@ -357,6 +361,8 @@ setopt long_list_jobs
 
 ## pager
 export PAGER=less
+# keychain {{{1
+eval `keychain --eval --nogui -Q -q ~/.ssh/id_dsa`
 # spectrum {{{1
 source ~/.zsh/spectrum.zsh
 # termsupport {{{1

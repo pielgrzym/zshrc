@@ -1,3 +1,19 @@
+# named-directories {{{1
+# theese are actually aliases for directories:
+# ~ $ cd ~rkl
+# ~/proj/r/git $
+proj=~/proj
+download=~/download
+mov=~/mov
+dj=~/proj/django
+scr=~/proj/scrapy
+rukola=~/proj/django/rukola/git
+endywia=~/proj/django/endywia/git
+rkl=~/proj/r/git
+vimrc=~/.vim
+zshrc=~/.zsh
+xmonad=~/.xmonad
+vpn=/etc/openvpn
 # completion {{{1
 # options {{{2
 setopt menu_complete   # do not autoselect the first completion entry
@@ -29,16 +45,19 @@ zstyle ':completion:*:options' menu search # if there is a shitload of options i
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
 zstyle ':completion:*:*:kill:*:processes' menu interactive=3
 zstyle ':completion:*:*:*:*:processes' command "ps -u `whoami` -o pid,user,comm -w -w"
-# disable named-directories autocompletion
-zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories
-cdpath=(.)
+zstyle ':completion:*:cd:*' tag-order named-directories local-directories directory-stack path-directories
+
+# gvim/vim completion - ignore backup files and sort by last used
+zstyle ':completion:*:*:(gvim|vim):*:*files' ignored-patterns '*~' file-sort access
+zstyle ':completion:*:*:(gvim|vim):*' file-sort access
+#cdpath=(.)
 # use /etc/hosts and known_hosts for hostname completion
 [ -r ~/.ssh/known_hosts ] && _ssh_hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[\|]*}%%\ *}%%,*}) || _ssh_hosts=()
 hosts=( "$_ssh_hosts[@]" "$_etc_hosts[@]" `hostname` localhost)
 zstyle ':completion:*:hosts' hosts $hosts
 # Use caching so that commands like apt and dpkg complete are useable
 zstyle ':completion::complete:*' use-cache 1
-zstyle ':completion::complete:*' cache-path ~/.oh-my-zsh/cache/
+zstyle ':completion::complete:*' cache-path ~/.zsh/cache/
 # Don't complete uninteresting users
 zstyle ':completion:*:*:*:users' ignored-patterns \
         adm amanda apache avahi beaglidx bin cacti canna clamav daemon \

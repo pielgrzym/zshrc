@@ -49,7 +49,7 @@ zstyle ':completion:*' menu select # by default a select-menu for completions
 # completion descriptions {{{3
 zstyle ':completion:*:options' auto-description '%d'
 zstyle ':completion:*:options' description 'yes' # this one and above will make options have nice docs!
-zstyle ':completion:*:options' menu search # if there is a shitload of options it's more convenient than menu
+zstyle ':completion:*:options' menu true search # if there is a shitload of options it's more convenient than menu
 
 # separators funn {{{3
 zstyle ':completion:*:messages' format $'%{\e[0;31m%}%d%{\e[0m%}'
@@ -58,7 +58,7 @@ zstyle ':completion:*:warnings' format $'%{\e[0;31m%}Ooops: %d%{\e[0m%}'
 # kill processes {{{3
 # stopped working for some reason...
 #zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
-zstyle ':completion:*:*:kill:*:processes' menu interactive
+zstyle ':completion:*:*:kill:*:processes' menu true interactive
 zstyle ':completion:*:*:*:*:processes' command "ps -u `whoami` -o pid,comm,pcpu,cmd -w -w"
 zstyle ':completion:*:cd:*' tag-order local-directories directory-stack named-directories path-directories
 
@@ -85,7 +85,7 @@ zstyle ':completion:*:*:(gvim|vim):*' file-sort access # sort by last used
 hosts=( "$_ssh_hosts[@]" "$_etc_hosts[@]" `hostname` localhost)
 zstyle ':completion:*:*:*:*:hosts' hosts $hosts
 # above host completion is nice, but for ssh I want only hosts from .ssh/config - doesn't work :(
-_cfg_ssh_hosts=(${${${(M)${(f)"$(<.ssh/config)"}##Host *}#Host }#\*})
+_cfg_ssh_hosts=(${${${(M)${(f)"$(<$HOME/.ssh/config)"}##Host *}#Host }#\*})
 zstyle ':completion:*:*:ssh:*' menu false # rather no menu...
 zstyle ':completion:*:*:ssh:*' tag-order hosts # only hosts in the suggestions
 zstyle ':completion:*:*:ssh:*:hosts' hosts $_cfg_ssh_hosts  # only hosts from ~/.ssh/config

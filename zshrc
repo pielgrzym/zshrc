@@ -202,14 +202,14 @@ alias history='fc -l 1'
 # List direcory contents
 alias lsa='ls -lah'
 alias l='ls -la'
-alias ll='ls -l'
+alias ll='ls++' # try ls++ - AWESOME: https://github.com/trapd00r/ls--
+#alias ll="ls -lh --color"
 alias sl=ls # often screw this up
 alias x=extract
 compdef mp=mplayer
 alias ls="ls -h --color"
 alias mp="mplayer"
 alias um="sudo umount"
-alias ll="ls -lh --color"
 alias po="ping onet.pl"
 alias eud="emerge --sync && emerge --regen && emerge -uDNav world"
 alias df="df -hT"

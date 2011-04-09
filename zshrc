@@ -1,9 +1,13 @@
+# various options {{{1
+# Make things split words by shell arguments, not spaces
+autoload -U select-word-style
+select-word-style s
 # named-directories {{{1
 # theese are actually aliases for directories:
 # ~ $ cd ~rkl
 # ~/proj/r/git $
 proj=~/proj
-download=~/download
+dn=~/download
 mov=~/mov
 dj=~/proj/django
 scr=~/proj/scrapy
@@ -26,13 +30,11 @@ WORDCHARS=''
 autoload -U compinit
 compinit -i
 zmodload -i zsh/complist
-## case-insensitive (all),partial-word and then substring completion
-#if [ "x$CASE_SENSITIVE" = "xtrue" ]; then
-  #zstyle ':completion:*' matcher-list 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
-  #unset CASE_SENSITIVE
-#else
-  #zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
-#fi
+
+# enable approximation of mistyped completes
+zstyle ':completion:*' completer _oldlist _expand _complete _correct
+zstyle -e ':completion:*:approximate:*' max-errors 'reply=( $(( ($#PREFIX + $#SUFFIX) / 3 )) )'
+zstyle ':completion:*:corrections' format '%B---- %d %F{11}(errors: %e)%f%b'
 
 zstyle ':completion:*' list-colors true # colorfull completions
 zstyle ':completion:*:*:*:*:*' menu select # by default a select-menu for completions
@@ -52,6 +54,8 @@ zstyle ':completion:*:cd:*' tag-order named-directories local-directories direct
 
 # mplayer - no urls in completions
 zstyle ':completion:*:*:mplayer:*' tag-order files
+# show only video files ; if no match then regular files; then dirs
+zstyle ':completion:*:*:mplayer:*' file-patterns '*.(rmvb|mkv|mpg|wmv|mpeg|avi):video' '*:all-files' '*(-/):directories'
 
 # gvim/vim completion - ignore backup files and sort by last used
 zstyle ':completion:*:*:(gvim|vim):*:*files' ignored-patterns '*~' file-sort access
@@ -75,18 +79,18 @@ zstyle ':completion:*:*:*:users' ignored-patterns \
         rpc rpcuser rpm shutdown squid sshd sync uucp vcsa xfs
 # ... unless we really want to.
 zstyle '*' single-ignored show
-
 # corrections {{{1
-setopt correct_all
+# it's quite inconvenient to use with named-directories
+unsetopt correct_all
 
-alias man='nocorrect man'
-alias mv='nocorrect mv'
-alias mysql='nocorrect mysql'
-alias mkdir='nocorrect mkdir'
-alias gist='nocorrect gist'
-alias heroku='nocorrect heroku'
-alias ebuild='nocorrect ebuild'
-alias hpodder='nocorrect hpodder'
+#alias man='nocorrect man'
+#alias mv='nocorrect mv'
+#alias mysql='nocorrect mysql'
+#alias mkdir='nocorrect mkdir'
+#alias gist='nocorrect gist'
+#alias heroku='nocorrect heroku'
+#alias ebuild='nocorrect ebuild'
+#alias hpodder='nocorrect hpodder'
 # functions {{{1
 # extract {{{2
 function extract() {
@@ -187,6 +191,8 @@ speakers() {
 # aliases {{{1
 # just give a filename with those suffixes and zsh will open it with mplayer
 alias -s {mkv,avi,mpg,mpeg,wmv,rmvb}='mplayer' 
+# same goes for images
+alias -s {gif,jpg,jpeg,png}='feh'
 
 alias ...='cd ../..'
 # Show history

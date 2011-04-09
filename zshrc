@@ -20,71 +20,69 @@ xmonad=~/.xmonad
 vpn=/etc/openvpn
 # completion {{{1
 # options {{{2
-setopt menu_complete   # do not autoselect the first completion entry
+unsetopt menu_complete   # do not autoselect the first completion entry
 unsetopt flowcontrol
 setopt auto_menu         # show completion menu on succesive tab press
-setopt complete_in_word
-setopt always_to_end
-# styles {{{2
+setopt complete_in_word # perform completion from inside the word. Dude.
+setopt always_to_end # everything dies...
 WORDCHARS=''
 autoload -U compinit
 compinit -i
 zmodload -i zsh/complist
 
-# enable approximation of mistyped completes
+# zstyle magic - HERE BE DRAGONS {{{2
+# approximation of mistyped completes {{{3
 zstyle ':completion:*' completer _oldlist _expand _complete _correct # with *.avi<tab> expand
 #zstyle ':completion:*' completer _oldlist _complete _correct # without *.avi<tab> expand
 zstyle -e ':completion:*:approximate:*' max-errors 'reply=( $(( ($#PREFIX + $#SUFFIX) / 3 )) )'
 zstyle ':completion:*:corrections' format '%B---- %d %F{11}(errors: %e)%f%b'
 
+# colorfull completions & grouping {{{3
 zstyle ':completion:*' list-colors true # colorfull completions
 zstyle ':completion:*' group-name '' # separate completions into groups
 zstyle ':completion:*:*:*:*:*' menu select # by default a select-menu for completions
 
+# completion descriptions {{{3
 zstyle ':completion:*:options' auto-description '%d'
 zstyle ':completion:*:options' description 'yes' # this one and above will make options have nice docs!
 zstyle ':completion:*:options' menu search # if there is a shitload of options it's more convenient than menu
 
-# separation and color funn
+# separators funn {{{3
 zstyle ':completion:*:messages' format $'%{\e[0;31m%}%d%{\e[0m%}'
 zstyle ':completion:*:warnings' format $'%{\e[0;31m%}Ooops: %d%{\e[0m%}'
-# should this be in keybindings?
-zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
-zstyle ':completion:*:*:kill:*:processes' menu interactive=3
-zstyle ':completion:*:*:*:*:processes' command "ps -u `whoami` -o pid,user,comm -w -w"
-zstyle ':completion:*:cd:*' tag-order named-directories local-directories directory-stack path-directories
 
-# mplayer - no urls in completions
-zstyle ':completion:*:*:mplayer:*' tag-order files
-# show only video files ; if no match then regular files; then dirs
+# kill processes {{{3
+# stopped working for some reason...
+#zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
+zstyle ':completion:*:*:kill:*:processes' menu interactive
+zstyle ':completion:*:*:*:*:processes' command "ps -u `whoami` -o pid,comm,pcpu,cmd -w -w"
+zstyle ':completion:*:cd:*' tag-order local-directories directory-stack named-directories path-directories
+
+# mplayer {{{3
+zstyle ':completion:*:*:mplayer:*' tag-order files # no urls in completions
+# mplayer show only video files ; if no match then regular files; then dirs
 zstyle ':completion:*:*:mplayer:*' file-patterns '*.(rmvb|mkv|mpg|wmv|mpeg|avi):video' '*:all-files' '*(-/):directories'
 
-# gvim/vim completion - ignore backup files and sort by last used
+# gvim/vim {{{3
+# ignore backup files 
 zstyle ':completion:*:*:(gvim|vim):*:*files' ignored-patterns '*~' file-sort access
-zstyle ':completion:*:*:(gvim|vim):*' file-sort access
-#cdpath=(.)
+zstyle ':completion:*:*:(gvim|vim):*' file-sort access # sort by last used
+
+# hosts, ssh, scp {{{3
 # use /etc/hosts and known_hosts for hostname completion
 [ -r ~/.ssh/known_hosts ] && _ssh_hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[\|]*}%%\ *}%%,*}) || _ssh_hosts=()
 hosts=( "$_ssh_hosts[@]" "$_etc_hosts[@]" `hostname` localhost)
-zstyle ':completion:*:hosts' hosts $hosts
+zstyle ':completion:*:*:*:*:hosts' hosts $hosts
 # above host completion is nice, but for ssh I want only hosts from .ssh/config - doesn't work :(
-#[[ -f ~/.ssh/config ]] && ssh_hosts=(`grep ^Host ~/.ssh/config | sed s/Host\ // | egrep -v ‘^\*$’`)
-zstyle ':completion:*:*:ssh:*' menu false
-#zstyle ':completion:*:*:ssh:hosts' hosts $ssh_hosts
+_cfg_ssh_hosts=(${${${(M)${(f)"$(<.ssh/config)"}##Host *}#Host }#\*})
+zstyle ':completion:*:*:ssh:*' menu false # rather no menu...
+zstyle ':completion:*:*:ssh:*' tag-order hosts # only hosts in the suggestions
+zstyle ':completion:*:*:ssh:*:hosts' hosts $_cfg_ssh_hosts  # only hosts from ~/.ssh/config
+zstyle ':completion:*:*:scp:*' group-order hosts files # I like to get hosts before files in scp
 # Use caching so that commands like apt and dpkg complete are useable
-zstyle ':completion::complete:*' use-cache 1
-zstyle ':completion::complete:*' cache-path ~/.zsh/cache/
-# Don't complete uninteresting users
-zstyle ':completion:*:*:*:users' ignored-patterns \
-        adm amanda apache avahi beaglidx bin cacti canna clamav daemon \
-        dbus distcache dovecot fax ftp games gdm gkrellmd gopher \
-        hacluster haldaemon halt hsqldb ident junkbust ldap lp mail \
-        mailman mailnull mldonkey mysql nagios \
-        named netdump news nfsnobody nobody nscd ntp nut nx openvpn \
-        operator pcap postfix postgres privoxy pulse pvm quagga radvd \
-        rpc rpcuser rpm shutdown squid sshd sync uucp vcsa xfs
-# ... unless we really want to.
-zstyle '*' single-ignored show
+zstyle ':completion:*:complete:*' use-cache 1
+zstyle ':completion:*:complete:*' cache-path ~/.zsh/cache/
+zstyle '*' single-ignored menu
 # corrections {{{1
 # it's quite inconvenient to use with named-directories
 unsetopt correct_all

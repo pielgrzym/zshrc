@@ -21,16 +21,20 @@ vpn=/etc/openvpn
 # completion {{{1
 # options {{{2
 unsetopt menu_complete   # do not autoselect the first completion entry
-unsetopt flowcontrol
+#unsetopt flowcontrol
 setopt auto_menu         # show completion menu on succesive tab press
 setopt complete_in_word # perform completion from inside the word. Dude.
 setopt always_to_end # everything dies...
 WORDCHARS=''
 autoload -U compinit
-compinit -i
+compinit 
 zmodload -i zsh/complist
 
 # zstyle magic - HERE BE DRAGONS {{{2
+# Use caching so that commands like apt and dpkg complete are useable
+zstyle ':completion:*:complete:*' use-cache 1
+zstyle ':completion:*:complete:*' cache-path ~/.zsh/cache/
+zstyle '*' single-ignored menu
 # approximation of mistyped completes {{{3
 zstyle ':completion:*' completer _oldlist _expand _complete _correct # with *.avi<tab> expand
 #zstyle ':completion:*' completer _oldlist _complete _correct # without *.avi<tab> expand
@@ -40,7 +44,7 @@ zstyle ':completion:*:corrections' format '%B---- %d %F{11}(errors: %e)%f%b'
 # colorfull completions & grouping {{{3
 zstyle ':completion:*' list-colors true # colorfull completions
 zstyle ':completion:*' group-name '' # separate completions into groups
-zstyle ':completion:*:*:*:*:*' menu select # by default a select-menu for completions
+zstyle ':completion:*' menu select # by default a select-menu for completions
 
 # completion descriptions {{{3
 zstyle ':completion:*:options' auto-description '%d'
@@ -58,7 +62,14 @@ zstyle ':completion:*:*:kill:*:processes' menu interactive
 zstyle ':completion:*:*:*:*:processes' command "ps -u `whoami` -o pid,comm,pcpu,cmd -w -w"
 zstyle ':completion:*:cd:*' tag-order local-directories directory-stack named-directories path-directories
 
+# ls / ls++ / cd stuff {{{3
+# I like to have autocompletions for ls inserted immediately
+zstyle ':completion:*:*:ls:*' menu true
+zstyle ':completion:*:*:ls++:*' menu true
+zstyle ':completion:*:*:cd:*' menu true # same for cd
+
 # mplayer {{{3
+zstyle ':completion:*:*:mplayer:*' menu true # insert autocompletions immediately
 zstyle ':completion:*:*:mplayer:*' tag-order files # no urls in completions
 # mplayer show only video files ; if no match then regular files; then dirs
 zstyle ':completion:*:*:mplayer:*' file-patterns '*.(rmvb|mkv|mpg|wmv|mpeg|avi):video' '*:all-files' '*(-/):directories'
@@ -79,10 +90,6 @@ zstyle ':completion:*:*:ssh:*' menu false # rather no menu...
 zstyle ':completion:*:*:ssh:*' tag-order hosts # only hosts in the suggestions
 zstyle ':completion:*:*:ssh:*:hosts' hosts $_cfg_ssh_hosts  # only hosts from ~/.ssh/config
 zstyle ':completion:*:*:scp:*' group-order hosts files # I like to get hosts before files in scp
-# Use caching so that commands like apt and dpkg complete are useable
-zstyle ':completion:*:complete:*' use-cache 1
-zstyle ':completion:*:complete:*' cache-path ~/.zsh/cache/
-zstyle '*' single-ignored menu
 # corrections {{{1
 # it's quite inconvenient to use with named-directories
 unsetopt correct_all

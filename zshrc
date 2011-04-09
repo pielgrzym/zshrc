@@ -1,6 +1,6 @@
 # completion {{{1
 # options {{{2
-unsetopt menu_complete   # do not autoselect the first completion entry
+setopt menu_complete   # do not autoselect the first completion entry
 unsetopt flowcontrol
 setopt auto_menu         # show completion menu on succesive tab press
 setopt complete_in_word
@@ -11,18 +11,23 @@ autoload -U compinit
 compinit -i
 zmodload -i zsh/complist
 ## case-insensitive (all),partial-word and then substring completion
-if [ "x$CASE_SENSITIVE" = "xtrue" ]; then
-  zstyle ':completion:*' matcher-list 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
-  unset CASE_SENSITIVE
-else
-  zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
-fi
+#if [ "x$CASE_SENSITIVE" = "xtrue" ]; then
+  #zstyle ':completion:*' matcher-list 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+  #unset CASE_SENSITIVE
+#else
+  #zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+#fi
 
-zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' list-colors true # colorfull completions
+zstyle ':completion:*:*:*:*:*' menu select # by default a select-menu for completions
+
+zstyle ':completion:*:options' auto-description '%d'
+zstyle ':completion:*:options' description 'yes' # this one and above will make options have nice docs!
+zstyle ':completion:*:options' menu search # if there is a shitload of options it's more convenient than menu
+
 # should this be in keybindings?
-bindkey -M menuselect '^o' accept-and-infer-next-history
-zstyle ':completion:*:*:*:*:*' menu select
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
+zstyle ':completion:*:*:kill:*:processes' menu interactive=3
 zstyle ':completion:*:*:*:*:processes' command "ps -u `whoami` -o pid,user,comm -w -w"
 # disable named-directories autocompletion
 zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories

@@ -196,19 +196,39 @@ speakers() {
 }
 # wget download prompt {{{2
 
-rs_download(){
-         while read URL; do
-                 if [[ -n $URL ]]; then
-                         echo "$URL" >> f
-                 else
-                         break
-                 fi
-         done
-         source $HOME/.rs_download
-         wget --auth-no-challenge --user=$RAPID_USER --password=$RAPID_PASS -i f
-         rm f
+batch_download(){
+        #if [[ -z "$1" ]] 
+                #echo "WTF? You missed something, dude"
+                #return -1
+        while read URL; do
+                if [[ -n $URL ]]; then
+                        echo "$URL" >> f
+                else
+                        break
+                fi
+        done
+        case "$1" in
+                rapidshare)
+                        source $HOME/.rs_download
+                        wget --auth-no-challenge --user=$RAPID_USER --password=$RAPID_PASS -i f
+                        ;;
+                fileserve)
+                        source $HOME/.fsrv_download
+                        wget --auth-no-challenge --user=$FSRV_USER --password=$FSRV_PASS -i f
+                        ;;
+                filesonic)
+                        if [[ ! -f ~/.fs_cookie ]]; then
+                                source $HOME/.fs_download
+                                wget --save-cookie="~/.fs_cookie" --post-data="returnto=/&email=$FS_USER&password=$FS_PASS&rememberMe=1" http://filesonic.com/premium?login=1
+                        fi
+                        wget --load-cookie="~/.fs_cookie" -i f
+                        ;;
+        esac
+        rm f
 }
-alias rsi=rs_download
+alias rsi="batch_download rapidshare"
+alias fsi="batch_download filesonic"
+alias fsrv="batch_download fileserve"
 # aliases {{{1
 # just give a filename with those suffixes and zsh will open it with mplayer
 alias -s {mkv,avi,mpg,mpeg,wmv,rmvb}='mplayer' 

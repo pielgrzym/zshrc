@@ -348,6 +348,7 @@ create_history_branch() {
         then # in case there already is a custom history for current dir
                 checkout_history_branch
         else # otherwise let's create a new one!
+                echo "Creating a new custom history branch"
                 fc -p # pop current global history into stack and create new one
                 # below we need to tell zsh where to store the custom history and it's parameters
                 HISTFILE=$PWD/.zsh_custom_history

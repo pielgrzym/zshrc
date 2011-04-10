@@ -340,18 +340,39 @@ setopt APPEND_HISTORY
 
 freeze_hist() {
         fc -p # pop current history into stack
-        CUSTOM_HIST_DIR=`pwd`
-        HISTFILE=$CUSTOM_HIST_DIR/.zsh_custom_history
+        HISTFILE=`pwd`/.zsh_custom_history
         SAVEHIST=10000
         HISTSIZE=10000
 }
 
 unfreeze_hist() {
-        CUSTOM_HIST_DIR=`pwd`
-        fc -p $CUSTOM_HIST_DIR/.zsh_custom_history
-        HISTFILE=$CUSTOM_HIST_DIR/.zsh_custom_history
+        fc -p `pwd`/.zsh_custom_history
+        HISTFILE=`pwd`/.zsh_custom_history
         SAVEHIST=10000
         HISTSIZE=10000
+}
+
+HBD="/home/pielgrzym/var/hist_test"
+HBD_LOCK=0
+
+chpwd() {
+        if [[ $PWD = $HBD* && $HBD_LOCK -eq 0 ]]
+        then
+                HBD_LOCK=1
+                echo "Setting the lock"
+                if [[ -s .zsh_custom_history && -r .zsh_custom_history && -w .zsh_custom_history ]] 
+                then
+                        echo "Unfreezing history!"
+                        unfreeze_hist
+                fi
+        fi
+        if [[ $PWD != $HBD* && $HBD_LOCK -ne 0 ]]
+        then
+                HBD_LOCK=0
+                echo "Resetting the lock"
+                fc -P
+                echo "Restoring global history"
+        fi
 }
 # keybindings {{{1
 autoload -U compinit

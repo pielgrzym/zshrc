@@ -100,12 +100,12 @@ unsetopt correct_all
 # functions {{{1
 # extract {{{2
 function extract() {
-    unset REMOVE_ARCHIVE
-    
-    if test "$1" = "-r"; then
-        REMOVE=1
-        shift
-    fi
+  unset REMOVE_ARCHIVE
+  
+  if test "$1" = "-r"; then
+      REMOVE_ARCHIVE=1
+      shift
+  fi
   if [[ -f $1 ]]; then
     case $1 in
       *.tar.bz2) tar xvjf $1;;

@@ -1,7 +1,3 @@
-# various options {{{1
-# Make things split words by shell arguments, not spaces
-autoload -U select-word-style
-select-word-style s
 # named-directories {{{1
 # theese are actually aliases for directories:
 # ~ $ cd ~rkl
@@ -350,6 +346,9 @@ bindkey -M viins '^R' history-incremental-search-backward
 bindkey '^c' vi-cmd-mode
 stty intr '^x'
 
+## file rename magick
+bindkey "^[m" copy-prev-shell-word
+
 # virtualenvwrapper {{{1
 export WORKON_HOME=$HOME/.virtualenvs
 source /usr/bin/virtualenvwrapper.sh
@@ -358,12 +357,15 @@ source /usr/bin/virtualenvwrapper.sh
 ## smart urls
 autoload -U url-quote-magic
 zle -N self-insert url-quote-magic
-## file rename magick
-bindkey "^[m" copy-prev-shell-word
-
 ## jobs
 setopt long_list_jobs
-
+# Make things split words by shell arguments, not spaces
+autoload -U select-word-style
+select-word-style s
+#setopt no_beep
+setopt auto_cd
+setopt multios
+setopt cdablevarS
 ## pager
 export PAGER=less
 # keychain {{{1
@@ -413,11 +415,6 @@ then
   # Find the option for using colors in ls, depending on the version: Linux or BSD
   ls --color -d . &>/dev/null 2>&1 && alias ls='ls --color=tty' || alias ls='ls -G'
 fi
-
-#setopt no_beep
-setopt auto_cd
-setopt multios
-setopt cdablevarS
 
 if [[ x$WINDOW != x ]]
 then

@@ -337,6 +337,22 @@ setopt hist_ignore_space
 
 #setopt SHARE_HISTORY
 setopt APPEND_HISTORY
+
+freeze_hist() {
+        fc -p # pop current history into stack
+        CUSTOM_HIST_DIR=`pwd`
+        HISTFILE=$CUSTOM_HIST_DIR/.zsh_custom_history
+        SAVEHIST=10000
+        HISTSIZE=10000
+}
+
+unfreeze_hist() {
+        CUSTOM_HIST_DIR=`pwd`
+        fc -p $CUSTOM_HIST_DIR/.zsh_custom_history
+        HISTFILE=$CUSTOM_HIST_DIR/.zsh_custom_history
+        SAVEHIST=10000
+        HISTSIZE=10000
+}
 # keybindings {{{1
 autoload -U compinit
 compinit -i

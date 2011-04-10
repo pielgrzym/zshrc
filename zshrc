@@ -194,6 +194,21 @@ speakers() {
         amixer -c 0 -- sset Surround unmute
         amixer -c 0 -- sset PCM 100%
 }
+# wget download prompt {{{2
+
+rs_download(){
+         while read URL; do
+                 if [[ -n $URL ]]; then
+                         echo "$URL" >> f
+                 else
+                         break
+                 fi
+         done
+         source $HOME/.rs_download
+         wget --auth-no-challenge --user=$RAPID_USER --password=$RAPID_PASS -i f
+         rm f
+}
+alias rsi=rs_download
 # aliases {{{1
 # just give a filename with those suffixes and zsh will open it with mplayer
 alias -s {mkv,avi,mpg,mpeg,wmv,rmvb}='mplayer' 

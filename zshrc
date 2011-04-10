@@ -75,8 +75,7 @@ zstyle ':completion:*:*:mplayer:*' tag-order files # no urls in completions
 zstyle ':completion:*:*:mplayer:*' file-patterns '*.(rmvb|mkv|mpg|wmv|mpeg|avi):video' '*:all-files' '*(-/):directories'
 
 # gvim/vim {{{3
-# ignore backup files 
-zstyle ':completion:*:*:(gvim|vim):*:*files' ignored-patterns '*~' file-sort access
+zstyle ':completion:*:*:(gvim|vim):*:*files' ignored-patterns '*~' '*.pyc' '*.pyo' # ignore backups and pyc/pyo files
 zstyle ':completion:*:*:(gvim|vim):*' file-sort access # sort by last used
 
 # hosts, ssh, scp {{{3

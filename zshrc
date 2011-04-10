@@ -316,6 +316,7 @@ zle -N zle-keymap-select
 
 bindkey -v
 # history {{{1
+# options {{{2
 HISTFILE=$HOME/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
@@ -334,6 +335,49 @@ setopt hist_ignore_space
 #setopt SHARE_HISTORY
 setopt APPEND_HISTORY
 
+# branching functions {{{2
+# I like to keep a separate shell history for my projects (this makes it easier to
+# reuse some older commands and predict is much more sensible in such scenario).
+# As I would often forget to enable cusom history - I just set up zsh to do this 
+# automatically if it finds a readable-writable-non-zero .zsh_custom_history file in PWD
+# If I'm done I can simply type 'hr' to use global zsh history. If I have a fresh project
+# I can simply type 'hc' and this will create and checkout new history branch.
+# The checkout and branch terminology is borrowed from git - I use it everyday  :)
+create_history_branch() {
+        if [[ -s .zsh_custom_history && -r .zsh_custom_history && -w .zsh_custom_history ]] 
+        then # in case there already is a custom history for current dir
+                checkout_history_branch
+        else # otherwise let's create a new one!
+                fc -p # pop current global history into stack and create new one
+                # below we need to tell zsh where to store the custom history and it's parameters
+                HISTFILE=$PWD/.zsh_custom_history
+                SAVEHIST=10000
+                HISTSIZE=10000
+        fi
+}
+
+checkout_history_branch() {
+        echo "Restoring custom history branch for current dir"
+        fc -p $PWD/.zsh_custom_history # put global hist on stack and use this one
+        # below we need to tell zsh where to store the custom history and it's parameters
+        HISTFILE=$PWD/.zsh_custom_history
+        SAVEHIST=10000
+        HISTSIZE=10000
+}
+
+checkout_master_history_branch() {
+        echo "Restoring master history branch"
+        fc -P # stash current history and pop global one from stack
+}
+
+chpwd() {
+        if [[ -s .zsh_custom_history && -r .zsh_custom_history && -w .zsh_custom_history ]] 
+        then
+                checkout_history_branch
+        fi
+}
+alias hr=checkout_master_history_branch
+alias hc=create_history_branch
 # keybindings {{{1
 autoload -U compinit
 compinit -i

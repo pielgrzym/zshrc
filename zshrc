@@ -338,21 +338,26 @@ setopt hist_ignore_space
 #setopt SHARE_HISTORY
 setopt APPEND_HISTORY
 
-freeze_hist() {
+# automatic history branching {{{2
+HISTORY_BRANCHES_DIR="/home/pielgrzym/.zsh/history_branches"
+create_history_branch() {
         fc -p # pop current history into stack
         HISTFILE=`pwd`/.zsh_custom_history
         SAVEHIST=10000
         HISTSIZE=10000
 }
 
-unfreeze_hist() {
+checkout_history_branch() {
         fc -p `pwd`/.zsh_custom_history
         HISTFILE=`pwd`/.zsh_custom_history
         SAVEHIST=10000
         HISTSIZE=10000
 }
 
-HBD="/home/pielgrzym/var/hist_test"
+checkout_master_history_branch() {
+        fc -P
+}
+HBD= ("/home/pielgrzym/var/hist_test")
 HBD_LOCK=0
 
 chpwd() {
@@ -363,14 +368,14 @@ chpwd() {
                 if [[ -s .zsh_custom_history && -r .zsh_custom_history && -w .zsh_custom_history ]] 
                 then
                         echo "Unfreezing history!"
-                        unfreeze_hist
+                        checkout_history_branch
                 fi
         fi
         if [[ $PWD != $HBD* && $HBD_LOCK -ne 0 ]]
         then
                 HBD_LOCK=0
                 echo "Resetting the lock"
-                fc -P
+                checkout_master_history_branch
                 echo "Restoring global history"
         fi
 }

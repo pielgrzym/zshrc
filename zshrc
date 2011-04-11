@@ -66,6 +66,7 @@ zstyle ':completion:*' menu select # by default a select-menu for completions
 # completion descriptions {{{3
 zstyle ':completion:*:options' auto-description '%d'
 zstyle ':completion:*:options' description 'yes' # this one and above will make options have nice docs!
+zstyle ':completion:*:options' list-colors "=(#b) #(-[a-zA-Z0-9] #)*=38;5;32=$color[yellow]" # color single char opts
 zstyle ':completion:*:options' menu true search # if there is a shitload of options it's more convenient than menu
 
 # separators funn {{{3
@@ -75,6 +76,8 @@ zstyle ':completion:*:warnings' format "%{$fg[red]%}Wrong: %d %{$reset_color%}"
 # git {{{3
 # we want nice git subcommand search inside descriptions
 zstyle ':completion:*:complete:git:argument-rest:commands' menu true search
+# non alias options colorfull :) whee :]
+zstyle ':completion:*:complete:git:argument-rest:commands' list-colors "=(#b)([a-zA-Z0-9-]# )*=38;5;32=$color[yellow]"
 # kill processes {{{3
 # stopped working for some reason...
 #zstyle ':completion:*:*:kill:*:processes' list-colors "=(#b) #([0-9]#) #([0-9]#.[0-9]#) ([0-9a-z-]#) ([0-9a-z-]#) \

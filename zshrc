@@ -35,6 +35,18 @@ compinit
 zmodload -i zsh/complist
 
 # zstyle magic - HERE BE DRAGONS {{{2
+bindkey '^i' complete-word # this is *VERY* important read below:
+# binding complete-word to TAB instead of expand-or-complete (the default). This 
+# changes expansion behavior a lot. If you type ls *.avi<tab> (supposing there are
+# avi files to list) it will give you a menu with all avi files.
+zstyle ":completion:*:expand:*" group-order all-expansions expansions original 
+# Above line will work when expanding string - first it shows a string with all expanded
+# files - thing that usually is inserted by expand-or-complete. Later a menu of expansions
+# and in the very end original expansion string ( like *.avi)
+# Below: pretty color for each above-listed group:
+zstyle ":completion:*:expand:*:*:all-expansions" format "%{$fg[green]%}%d %o%{$reset_color%}"
+zstyle ":completion:*:expand:*:*:expansions" format "%{$fg[blue]%}%d %o%{$reset_color%}"
+zstyle ":completion:*:expand:*:*:original" format "%{$fg[red]%}%d %o%{$reset_color%}"
 # Use caching so that commands like apt and dpkg complete are useable
 zstyle ':completion:*:complete:*' use-cache 1
 zstyle ':completion:*:complete:*' cache-path ~/.zsh/cache/

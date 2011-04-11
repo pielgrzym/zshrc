@@ -58,9 +58,8 @@ zstyle ':completion:*' completer _oldlist _expand _complete _correct # with *.av
 #zstyle ':completion:*' completer _oldlist _complete _correct # without *.avi<tab> expand
 zstyle -e ':completion:*:approximate:*' max-errors 'reply=( $(( ($#PREFIX + $#SUFFIX) / 3 )) )'
 zstyle ':completion:*:corrections' format '%B---- %d %F{11}(errors: %e)%f%b'
-
 # colorfull completions & grouping {{{3
-zstyle ':completion:*' list-colors "${LS_COLORS}" # colorfull completions
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS} # colorfull completions
 zstyle ':completion:*' group-name '' # separate completions into groups
 zstyle ':completion:*' menu select # by default a select-menu for completions
 

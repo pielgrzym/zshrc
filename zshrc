@@ -73,9 +73,12 @@ zstyle ':completion:*:warnings' format "%{$fg[red]%}Wrong: %d %{$reset_color%}"
 
 # kill processes {{{3
 # stopped working for some reason...
-zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
+#zstyle ':completion:*:*:kill:*:processes' list-colors "=(#b) #([0-9]#) #([0-9]#.[0-9]#) ([0-9a-z-]#) ([0-9a-z-]#) \
+#        *=$color[green]=$color[red]=$color[yellow]=$color[cyan]=$color[blue]"
+arr=( '' 8 88 2 64 32 )
+zstyle ':completion:*:*:kill:*:processes' list-colors "=(#b) ${(l:9*9:: #([^ ]#):)}*${(j:=38;5;:)arr}"
 zstyle ':completion:*:*:kill:*:processes' menu true interactive
-zstyle ':completion:*:*:*:*:processes' command "ps -u `whoami` -o pid,comm,pcpu,cmd -w -w"
+zstyle ':completion:*:*:*:*:processes' command "ps -A -o pid,pcpu,pmem,cmd --sort=-pcpu"
 zstyle ':completion:*:cd:*' tag-order local-directories directory-stack named-directories path-directories
 
 # ls / ls++ / cd stuff {{{3

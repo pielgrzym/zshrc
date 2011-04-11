@@ -398,6 +398,10 @@ setopt multios
 setopt cdablevarS
 ## pager
 export PAGER=less
+# complete with sudo {{{1
+insert_sudo () { zle beginning-of-line; zle -U "sudo " }
+zle -N insert-sudo insert_sudo
+bindkey "^[s" insert-sudo
 # keychain {{{1
 eval `keychain --eval --nogui -Q -q ~/.ssh/id_dsa`
 # prompt {{{1

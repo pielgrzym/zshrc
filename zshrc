@@ -71,6 +71,9 @@ zstyle ':completion:*:options' menu true search # if there is a shitload of opti
 zstyle ':completion:*:messages' format "%{$fg[red]%}%d %{$reset_color%}"
 zstyle ':completion:*:warnings' format "%{$fg[red]%}Wrong: %d %{$reset_color%}"
 
+# git {{{3
+# we want nice git subcommand search inside descriptions
+zstyle ':completion:*:complete:git:argument-rest:commands' menu true search
 # kill processes {{{3
 # stopped working for some reason...
 #zstyle ':completion:*:*:kill:*:processes' list-colors "=(#b) #([0-9]#) #([0-9]#.[0-9]#) ([0-9a-z-]#) ([0-9a-z-]#) \
@@ -416,7 +419,7 @@ precmd () {
     if [[ -z $(git ls-files --other --exclude-standard 2> /dev/null) ]] {
             zstyle ':vcs_info:*' formats "%{$reset_color%}::%{$fg[yellow]%} (%b%c%u)%{$reset_color%} "
     } else {
-    zstyle ':vcs_info:*' formats "%{$reset_color%}::%{$fg[yellow]%} (%b%c%u%{$fg[red]%}≡%{$fg[yellow]%})%{$reset_color%} "
+    zstyle ':vcs_info:*' formats "%{$reset_color%}::%{$fg[yellow]%} (%b%c%u%{$fg[red]%}∪%{$fg[yellow]%})%{$reset_color%} "
     }
  
     vcs_info

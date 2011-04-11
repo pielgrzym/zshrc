@@ -201,7 +201,6 @@ alias -s {gif,jpg,jpeg,png}='feh'
 alias ...='cd ../..'
 # Show history
 alias history='fc -l 1'
-#alias ll="ls -lh --color"
 alias x=extract
 compdef mp=mplayer
 alias ls="ls -h --color=tty"
@@ -211,10 +210,7 @@ alias llp='ls++' # try ls++ - AWESOME: https://github.com/trapd00r/ls--
 alias mp="mplayer"
 alias um="sudo umount"
 alias po="ping onet.pl"
-alias eud="emerge --sync && emerge --regen && emerge -uDNav world"
 alias df="df -hT"
-alias xtr="extract_archive"
-alias temp="sensors | egrep \"CPU|Sys\""
 alias pacman="sudo pacman-color"
 alias tname=term_title
 alias vstart="sudo /etc/rc.d/openvpn start"

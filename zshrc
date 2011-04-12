@@ -317,7 +317,7 @@ SAVEHIST=10000
 HISTIGNORE="[   ]*:&:bg:fg:clear:hr:hc"
 
 setopt hist_ignore_dups # ignore duplication command history list
-setopt share_history # share command history data
+unsetopt share_history # by some queer accident it was turned on (horror!)
 
 setopt hist_verify
 setopt inc_append_history
@@ -326,7 +326,6 @@ setopt hist_expire_dups_first
 setopt hist_find_no_dups
 setopt hist_ignore_space
 
-#setopt SHARE_HISTORY # God no...
 setopt APPEND_HISTORY
 
 # branching functions {{{2

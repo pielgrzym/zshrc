@@ -113,8 +113,9 @@ zstyle ':completion:*:*:*:*:hosts' hosts $hosts
 _cfg_ssh_hosts=(${${${(M)${(f)"$(<$HOME/.ssh/config)"}##Host *}#Host }#\*})
 zstyle ':completion:*:*:ssh:*' menu false # rather no menu...
 zstyle ':completion:*:*:ssh:*' tag-order hosts # only hosts in the suggestions
-zstyle ':completion:*:*:ssh:*:hosts' hosts $_cfg_ssh_hosts  # only hosts from ~/.ssh/config
-zstyle ':completion:*:*:scp:*' group-order hosts files # I like to get hosts before files in scp
+zstyle ':completion:*:*:(ssh|scp):*:hosts' hosts $_cfg_ssh_hosts  # only hosts from ~/.ssh/config
+zstyle ':completion:*:*:scp:*' menu true # rather no menu...
+#zstyle ':completion:*:*:scp:*' group-order files hosts # I like to get hosts before files in scp
 # corrections {{{1
 # it's quite inconvenient to use with named-directories
 unsetopt correct_all

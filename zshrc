@@ -306,6 +306,7 @@ zle -N zle-line-init
 zle -N zle-keymap-select
 
 bindkey -v
+bindkey '^[' vi-cmd-mode
 # history {{{1
 # options {{{2
 HISTFILE=$HOME/.zsh_history
@@ -376,11 +377,10 @@ bindkey -M viins '^N' down-line-or-history
 bindkey -M viins '^P' up-line-or-history
 bindkey -M viins '^R' history-incremental-search-backward
 
-#bindkey '^c' vi-cmd-mode
 #stty intr '^x'
 
 ## file rename magick
-bindkey "^[m" copy-prev-shell-word
+bindkey "^X^m" copy-prev-shell-word
 
 # virtualenvwrapper {{{1
 #export WORKON_HOME=$HOME/.virtualenvs
@@ -404,7 +404,7 @@ export PAGER=less
 # complete with sudo {{{1
 insert_sudo () { zle beginning-of-line; zle -U "sudo " }
 zle -N insert-sudo insert_sudo
-bindkey "^[s" insert-sudo
+bindkey "^X^s" insert-sudo
 # keychain {{{1
 eval `keychain --eval --nogui -Q -q ~/.ssh/id_dsa`
 # prompt {{{1

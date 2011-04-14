@@ -303,11 +303,11 @@ function zle-line-init zle-keymap-select {
   zle reset-prompt
 }
 
-zle -N zle-line-init
-zle -N zle-keymap-select
+#zle -N zle-line-init
+#zle -N zle-keymap-select
 
-bindkey -v
 bindkey '^[' vi-cmd-mode
+bindkey -v
 # history {{{1
 # options {{{2
 HISTFILE=$HOME/.zsh_history

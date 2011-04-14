@@ -116,7 +116,7 @@ zstyle ':completion:*:*:scp:*' menu true # rather no menu...
 # it's quite inconvenient to use with named-directories
 unsetopt correct_all
 
-#alias man='nocorrect man'
+##alias man='nocorrect man'
 #alias mv='nocorrect mv'
 #alias mysql='nocorrect mysql'
 #alias mkdir='nocorrect mkdir'
@@ -217,7 +217,6 @@ alias -s {mkv,avi,mpg,mpeg,wmv,rmvb}='mplayer'
 # same goes for images
 alias -s {gif,jpg,jpeg,png}='feh'
 
-alias ...='cd ../..'
 # Show history
 alias history='fc -l 1'
 alias x=extract

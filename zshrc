@@ -27,7 +27,7 @@ setopt complete_in_word # perform completion from inside the word. Dude.
 setopt always_to_end # everything dies...
 WORDCHARS=''
 autoload -U compinit
-compinit 
+compinit -d /tmp/piel/zcompdump
 zmodload -i zsh/complist
 
 # zstyle magic - HERE BE DRAGONS {{{2
@@ -46,7 +46,7 @@ zstyle ":completion:*:expand:*:*:expansions" format "%{$fg[blue]%}%d %o%{$reset_
 zstyle ":completion:*:expand:*:*:original" format "%{$fg[red]%}%d %o%{$reset_color%}"
 # Use caching so that commands like apt and dpkg complete are useable
 zstyle ':completion:*:complete:*' use-cache 1
-zstyle ':completion:*:complete:*' cache-path ~/.zsh/cache/
+zstyle ':completion:*:complete:*' cache-path /tmp/piel/
 zstyle '*' single-ignored menu
 # approximation of mistyped completes {{{3
 zstyle ':completion:*' completer _oldlist _expand _complete _correct # with *.avi<tab> expand

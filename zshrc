@@ -377,8 +377,8 @@ bindkey -M viins '^N' down-line-or-history
 bindkey -M viins '^P' up-line-or-history
 bindkey -M viins '^R' history-incremental-search-backward
 
-bindkey '^c' vi-cmd-mode
-stty intr '^x'
+#bindkey '^c' vi-cmd-mode
+#stty intr '^x'
 
 ## file rename magick
 bindkey "^[m" copy-prev-shell-word

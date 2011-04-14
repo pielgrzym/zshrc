@@ -38,6 +38,7 @@ zmodload -i zsh/complist
 
 # zstyle magic - HERE BE DRAGONS {{{2
 bindkey '^i' complete-word # this is *VERY* important read below:
+zstyle ':completion:*' accept-exact '*(N)'
 # binding complete-word to TAB instead of expand-or-complete (the default). This 
 # changes expansion behavior a lot. If you type ls *.avi<tab> (supposing there are
 # avi files to list) it will give you a menu with all avi files.
@@ -86,13 +87,13 @@ arr=( '' 8 88 2 64 32 )
 zstyle ':completion:*:*:kill:*:processes' list-colors "=(#b) #${(l:9*9:: #([^ ]#):)}*${(j:=38;5;:)arr}"
 zstyle ':completion:*:*:kill:*:processes' menu true interactive
 zstyle ':completion:*:*:*:*:processes' command "ps -A -o pid,pcpu,pmem,cmd --sort=-pcpu"
-zstyle ':completion:*:cd:*' tag-order local-directories directory-stack named-directories path-directories
 
 # ls / ls++ / cd stuff {{{3
 # I like to have autocompletions for ls inserted immediately
 zstyle ':completion:*:*:ls:*' menu true
 zstyle ':completion:*:*:ls++:*' menu true
 zstyle ':completion:*:*:cd:*' menu true # same for cd
+zstyle ':completion:*:cd:*' tag-order local-directories directory-stack named-directories path-directories
 
 # mplayer {{{3
 zstyle ':completion:*:*:mplayer:*' menu true # insert autocompletions immediately
@@ -280,13 +281,13 @@ alias ggpush='git push origin $(current_branch)'
 alias ggpnp='git pull origin $(current_branch) && git push origin $(current_branch)'
 # directories {{{1
 # options {{{2
-setopt autocd                  # change to dirs without cd
+#setopt autocd                  # change to dirs without cd
 setopt auto_name_dirs
 setopt auto_pushd # auto push to dir stack
 setopt pushd_ignore_dups # no dups in dir stack
 export DIRSTACKSIZE=100
 # aliases {{{2
-#alias ..='cd ..' # not needed with autocd option
+alias ..='cd ..' # not needed with autocd option
 # dir stack traversal:
 alias 1='cd ~1'
 alias 2='cd ~2'
@@ -321,7 +322,7 @@ setopt hist_ignore_dups # ignore duplication command history list
 unsetopt share_history # by some queer accident it was turned on (horror!)
 
 setopt hist_verify
-setopt inc_append_history
+#setopt inc_append_history
 setopt extended_history
 setopt hist_expire_dups_first
 setopt hist_find_no_dups
@@ -399,10 +400,10 @@ setopt long_list_jobs
 # Make things split words by shell arguments, not spaces
 autoload -U select-word-style
 select-word-style s
-#setopt no_beep
-setopt auto_cd
-setopt multios
-setopt cdablevarS
+setopt no_beep
+# got to observe if theese actually make any performance difference:
+#setopt multios
+#setopt cdablevarS
 ## pager
 export PAGER=less
 # complete with sudo {{{1
@@ -430,7 +431,6 @@ precmd () {
     vcs_info
 }
  
-setopt prompt_subst
 #PROMPT='%F{blue}%n@%m %c${vcs_info_msg_0_}%F{blue} %(?/%F{blue}/%F{red})%% %{$reset_color%}'
 local return_code="%(?..%{$fg[red]%}%? ↵%{$reset_color%})"
 

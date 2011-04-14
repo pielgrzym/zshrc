@@ -54,7 +54,9 @@ zstyle ':completion:*' completer _oldlist _expand _complete _correct # with *.av
 zstyle -e ':completion:*:approximate:*' max-errors 'reply=( $(( ($#PREFIX + $#SUFFIX) / 3 )) )'
 zstyle ':completion:*:corrections' format '%B---- %d %F{11}(errors: %e)%f%b'
 # colorfull completions & grouping {{{3
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS} # colorfull completions
+# evil -> zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS} # colorfull completions
+zstyle ':completion:*:*:*:*:(files|paths|local-directories)' list-colors ${(s.:.)LS_COLORS} # colorfull completions
+zstyle ':completion:*:*:(ls|cd|mv|cp|mp|mount):*:*' list-colors ${(s.:.)LS_COLORS} # colorfull completions
 zstyle ':completion:*' group-name '' # separate completions into groups
 zstyle ':completion:*' menu select # by default a select-menu for completions
 
@@ -216,7 +218,7 @@ alias -s {mkv,avi,mpg,mpeg,wmv,rmvb}='mplayer'
 # same goes for images
 alias -s {gif,jpg,jpeg,png}='feh'
 
-alias ...='cd ../..'
+#alias ...='cd ../..'
 # Show history
 alias history='fc -l 1'
 alias x=extract
@@ -275,7 +277,7 @@ alias ggpush='git push origin $(current_branch)'
 alias ggpnp='git pull origin $(current_branch) && git push origin $(current_branch)'
 # directories {{{1
 # options {{{2
-#setopt autocd                  # change to dirs without cd
+setopt autocd                  # change to dirs without cd
 setopt auto_name_dirs
 setopt auto_pushd # auto push to dir stack
 setopt pushd_ignore_dups # no dups in dir stack

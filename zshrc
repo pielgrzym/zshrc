@@ -387,8 +387,8 @@ stty intr '^x'
 bindkey "^[m" copy-prev-shell-word
 
 # virtualenvwrapper {{{1
-export WORKON_HOME=$HOME/.virtualenvs
-source /usr/bin/virtualenvwrapper.sh
+#export WORKON_HOME=$HOME/.virtualenvs
+#source /usr/bin/virtualenvwrapper.sh
 
 # misc {{{1
 ## smart urls

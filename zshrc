@@ -116,7 +116,7 @@ zstyle ':completion:*:*:scp:*' menu true # rather no menu...
 # it's quite inconvenient to use with named-directories
 unsetopt correct_all
 
-##alias man='nocorrect man'
+#alias man='nocorrect man'
 #alias mv='nocorrect mv'
 #alias mysql='nocorrect mysql'
 #alias mkdir='nocorrect mkdir'
@@ -281,7 +281,6 @@ setopt auto_pushd # auto push to dir stack
 setopt pushd_ignore_dups # no dups in dir stack
 export DIRSTACKSIZE=100
 # aliases {{{2
-alias ..='cd ..' # not needed with autocd option
 # dir stack traversal:
 alias 1='cd ~1'
 alias 2='cd ~2'

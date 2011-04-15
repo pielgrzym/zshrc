@@ -304,13 +304,31 @@ export GREP_OPTIONS='--color=auto'
 export GREP_COLOR='1;32'
 # vi-mode {{{1
 function zle-line-init zle-keymap-select {
-  zle reset-prompt
+    # show nice star digraph when in vi-mode
+    VIMODE_I="${${KEYMAP/vicmd/$fg[yellow]★$reset_color }/(main|viins)/}"
+            zle reset-prompt
 }
+zle -N zle-line-init
+zle -N zle-keymap-select
+#function zle-keymap-select {
+#if [ $TERM = "rxvt-256color" ]; then
+        #if [ $KEYMAP = vicmd ]; then
+                #echo -ne "\033]12;Red\007"
+        #else
+                #echo -ne "\033]12;Orange\007"
+        #fi
+#fi
+#}
 
-#zle -N zle-line-init
 #zle -N zle-keymap-select
 
-bindkey '^[' vi-cmd-mode
+#zle-line-init () {
+        #zle -K viins
+        #if [ $TERM = "rxvt-256color" ]; then
+                #echo -ne "\033]12;Orange\007"
+        #fi
+#}
+#zle -N zle-line-init
 bindkey -v
 # history {{{1
 # options {{{2
@@ -377,7 +395,6 @@ chpwd() {
 alias hr=checkout_master_history_branch
 alias hc=create_history_branch
 # keybindings {{{1
-bindkey -e
 bindkey -M viins '^N' down-line-or-history
 bindkey -M viins '^P' up-line-or-history
 bindkey -M viins '^R' history-incremental-search-backward
@@ -436,7 +453,7 @@ local return_code="%(?..%{$fg[red]%}%? ↵%{$reset_color%})"
 
 PROMPT='%{$fg[green]%}%c \
 ${vcs_info_msg_0_}\
-%{$fg[red]%}%(!.#.»)%{$reset_color%} '
+%{$fg[red]%}%(!.#.»)%{$reset_color%} ${VIMODE_I}'
 PROMPT2='%{$fg[red]%}\ %{$reset_color%}'
 RPS1='%{$fg[blue]%}%~%{$reset_color%} ${return_code} '
 # vim: fdm=marker:fdl=0

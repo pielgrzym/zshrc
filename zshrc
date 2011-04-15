@@ -405,6 +405,7 @@ bindkey -M viins '^R' history-incremental-search-backward
 
 bindkey "^Xh" _complete_help
 bindkey "^X?" _complete_debug
+bindkey "^Xx" execute-named-cmd
 ## file rename magick
 bindkey "^X^m" copy-prev-shell-word
 bindkey "^Xm" _most_recent_file

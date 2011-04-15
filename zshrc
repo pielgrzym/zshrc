@@ -306,6 +306,7 @@ alias d='dirs -v' # show directory stack
 export GREP_OPTIONS='--color=auto'
 export GREP_COLOR='1;32'
 # vi-mode {{{1
+VIMODE_I="☆ "
 function zle-line-init zle-keymap-select {
     # show nice star digraph when in vi-mode
     VIMODE_I="${${KEYMAP/vicmd/★ }/(main|viins)/☆ }"

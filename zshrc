@@ -20,7 +20,7 @@ vpn=/etc/openvpn
 # completion {{{1
 # options {{{2
 unsetopt menu_complete   # do not autoselect the first completion entry
-unsetopt flowcontrol # having C-s availible help a lot in completion->search mode
+setopt flowcontrol # having C-s availible help a lot in completion->search mode
 setopt auto_menu         # show completion menu on succesive tab press
 setopt complete_in_word # perform completion from inside the word. Dude.
 setopt always_to_end # everything dies...
@@ -405,6 +405,7 @@ alias hc=create_history_branch
 bindkey -M viins '^N' down-line-or-history
 bindkey -M viins '^P' up-line-or-history
 bindkey -M viins '^R' history-incremental-search-backward
+bindkey -M viins '^F' history-incremental-search-forward
 
 #stty intr '^x'
 

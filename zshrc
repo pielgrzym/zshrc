@@ -408,9 +408,11 @@ bindkey "^Xh" _complete_help
 bindkey "^X^m" copy-prev-shell-word
 
 # virtualenvwrapper {{{1
-#export WORKON_HOME=$HOME/.virtualenvs
-#source /usr/bin/virtualenvwrapper.sh
-
+prepare_wrapper() {
+        export WORKON_HOME=$HOME/.virtualenvs
+        source /usr/bin/virtualenvwrapper.sh
+}
+alias vew=prepare_wrapper
 # misc {{{1
 ## smart urls
 autoload -U url-quote-magic

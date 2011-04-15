@@ -329,6 +329,9 @@ zle -N zle-keymap-select
 #}
 #zle -N zle-line-init
 bindkey -v
+# removing those causes no delay when going into vimode :)
+bindkey -r "^[OA" "^[OB" "^[OC" "^[OD" "^[[A" "^[[B" "^[[C" "^[[D"
+
 # history {{{1
 # options {{{2
 HISTFILE=$HOME/.zsh_history

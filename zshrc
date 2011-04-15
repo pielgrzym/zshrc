@@ -31,7 +31,6 @@ compinit
 zmodload -i zsh/complist
 
 # zstyle magic - HERE BE DRAGONS {{{2
-bindkey '^i' complete-word # this is *VERY* important read below:
 zstyle ':completion:*' accept-exact '*(N)'
 # binding complete-word to TAB instead of expand-or-complete (the default). This 
 # changes expansion behavior a lot. If you type ls *.avi<tab> (supposing there are
@@ -56,6 +55,7 @@ zstyle ':completion:*:corrections' format '%B---- %d %F{11}(errors: %e)%f%b'
 # colorfull completions & grouping {{{3
 # evil -> zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS} # colorfull completions
 zstyle ':completion:*:*:*:argument-rest:*' list-colors ${(s.:.)LS_COLORS} # colorfull completions fast
+zstyle ':completion:*:*:cd:*:*' list-colors ${(s.:.)LS_COLORS} # cd needs to be nice too
 zstyle ':completion:*' group-name '' # separate completions into groups
 zstyle ':completion:*' menu select # by default a select-menu for completions
 
@@ -404,8 +404,12 @@ bindkey -M viins '^R' history-incremental-search-backward
 #stty intr '^x'
 
 bindkey "^Xh" _complete_help
+bindkey "^X?" _complete_debug
 ## file rename magick
 bindkey "^X^m" copy-prev-shell-word
+bindkey "^Xm" _most_recent_file
+bindkey "^X^X" vi-beginning-of-line
+bindkey "^X^A" vi-end-of-line
 
 # virtualenvwrapper {{{1
 prepare_wrapper() {
@@ -432,6 +436,7 @@ export PAGER=less
 insert_sudo () { zle beginning-of-line; zle -U "sudo " }
 zle -N insert-sudo insert_sudo
 bindkey "^X^s" insert-sudo
+bindkey '^i' complete-word # this is *VERY* important read below:
 # keychain {{{1
 eval `keychain --eval --nogui -Q -q ~/.ssh/id_dsa`
 # prompt {{{1

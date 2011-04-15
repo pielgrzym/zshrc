@@ -306,25 +306,32 @@ alias d='dirs -v' # show directory stack
 export GREP_OPTIONS='--color=auto'
 export GREP_COLOR='1;32'
 # vi-mode {{{1
-function zle-keymap-select {
-if [ $TERM = "rxvt-256color" ]; then
-        if [ $KEYMAP = vicmd ]; then
-                echo -ne "\033]12;Red\007"
-        else
-                echo -ne "\033]12;Orange\007"
-        fi
-fi
-}
-
-zle -N zle-keymap-select
-
-zle-line-init () {
-        zle -K viins
-        if [ $TERM = "rxvt-256color" ]; then
-                echo -ne "\033]12;Orange\007"
-        fi
+function zle-line-init zle-keymap-select {
+    # show nice star digraph when in vi-mode
+    VIMODE_I="${${KEYMAP/vicmd/$fg[yellow]★$reset_color }/(main|viins)/}"
+            zle reset-prompt
 }
 zle -N zle-line-init
+zle -N zle-keymap-select
+#function zle-keymap-select {
+#if [ $TERM = "rxvt-256color" ]; then
+        #if [ $KEYMAP = vicmd ]; then
+                #echo -ne "\033]12;Red\007"
+        #else
+                #echo -ne "\033]12;Orange\007"
+        #fi
+#fi
+#}
+
+#zle -N zle-keymap-select
+
+#zle-line-init () {
+        #zle -K viins
+        #if [ $TERM = "rxvt-256color" ]; then
+                #echo -ne "\033]12;Orange\007"
+        #fi
+#}
+#zle -N zle-line-init
 bindkey -v
 # removing those causes no delay when going into vimode :)
 bindkey -r "^[OA" "^[OB" "^[OC" "^[OD" "^[[A" "^[[B" "^[[C" "^[[D"
@@ -461,7 +468,7 @@ local return_code="%(?..%{$fg[red]%}%? ↵%{$reset_color%})"
 
 PROMPT='%{$fg[green]%}%c \
 ${vcs_info_msg_0_}\
-%{$fg[red]%}%(!.#.»)%{$reset_color%} '
+%{$fg[red]%}%(!.#.»)%{$reset_color%} ${VIMODE_I}'
 PROMPT2='%{$fg[red]%}\ %{$reset_color%}'
 RPS1='%{$fg[blue]%}%~%{$reset_color%} ${return_code} '
 # vim: fdm=marker:fdl=0

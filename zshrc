@@ -308,7 +308,7 @@ export GREP_COLOR='1;32'
 # vi-mode {{{1
 function zle-line-init zle-keymap-select {
     # show nice star digraph when in vi-mode
-    VIMODE_I="${${KEYMAP/vicmd/$fg[yellow]★$reset_color }/(main|viins)/}"
+    VIMODE_I="${${KEYMAP/vicmd/★ }/(main|viins)/☆ }"
             zle reset-prompt
 }
 zle -N zle-line-init
@@ -468,7 +468,7 @@ local return_code="%(?..%{$fg[red]%}%? ↵%{$reset_color%})"
 
 PROMPT='%{$fg[green]%}%c \
 ${vcs_info_msg_0_}\
-%{$fg[red]%}%(!.#.»)%{$reset_color%} ${VIMODE_I}'
+${VIMODE_I} %{$fg[red]%}%(!.#.»)%{$reset_color%} '
 PROMPT2='%{$fg[red]%}\ %{$reset_color%}'
 RPS1='%{$fg[blue]%}%~%{$reset_color%} ${return_code} '
 # vim: fdm=marker:fdl=0

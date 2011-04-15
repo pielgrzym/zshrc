@@ -54,8 +54,9 @@ zstyle ':completion:*' completer _oldlist _expand _complete _correct # with *.av
 zstyle -e ':completion:*:approximate:*' max-errors 'reply=( $(( ($#PREFIX + $#SUFFIX) / 3 )) )'
 zstyle ':completion:*:corrections' format '%B---- %d %F{11}(errors: %e)%f%b'
 # colorfull completions & grouping {{{3
-zstyle ':completion:*:*:*:*:(files|paths|local-directories)' list-colors ${(s.:.)LS_COLORS} # colorfull completions
-zstyle ':completion:*:*:(ls|cd|mv|cp|mp|mount):*:*' list-colors ${(s.:.)LS_COLORS} # colorfull completions
+# evil -> zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS} # colorfull completions
+zstyle ':completion:*:*:*:*:(all-files|files|paths|local-directories)' list-colors ${(s.:.)LS_COLORS} # colorfull completions
+zstyle ':completion:*:*:(ls|cd|mv|cp|mp|rm|mount):*:*' list-colors ${(s.:.)LS_COLORS} # colorfull completions
 zstyle ':completion:*' group-name '' # separate completions into groups
 zstyle ':completion:*' menu select # by default a select-menu for completions
 
@@ -112,6 +113,10 @@ zstyle ':completion:*:*:ssh:*' tag-order hosts # only hosts in the suggestions
 zstyle ':completion:*:*:(ssh|scp):*:hosts' hosts $_cfg_ssh_hosts  # only hosts from ~/.ssh/config
 zstyle ':completion:*:*:scp:*' menu true # rather no menu...
 #zstyle ':completion:*:*:scp:*' group-order files hosts # I like to get hosts before files in scp
+# prevent resugestions {{{3
+zstyle ':completion:*:rm:*' ignore-line yes
+zstyle ':completion:*:scp:*' ignore-line yes
+zstyle ':completion:*:ls:*' ignore-line yes
 # corrections {{{1
 # it's quite inconvenient to use with named-directories
 unsetopt correct_all
@@ -297,12 +302,31 @@ export GREP_OPTIONS='--color=auto'
 export GREP_COLOR='1;32'
 # vi-mode {{{1
 function zle-line-init zle-keymap-select {
-  zle reset-prompt
+    # show nice star digraph when in vi-mode
+    VIMODE_I="${${KEYMAP/vicmd/$fg[yellow]★$reset_color }/(main|viins)/}"
+            zle reset-prompt
 }
-
 zle -N zle-line-init
 zle -N zle-keymap-select
+#function zle-keymap-select {
+#if [ $TERM = "rxvt-256color" ]; then
+        #if [ $KEYMAP = vicmd ]; then
+                #echo -ne "\033]12;Red\007"
+        #else
+                #echo -ne "\033]12;Orange\007"
+        #fi
+#fi
+#}
 
+#zle -N zle-keymap-select
+
+#zle-line-init () {
+        #zle -K viins
+        #if [ $TERM = "rxvt-256color" ]; then
+                #echo -ne "\033]12;Orange\007"
+        #fi
+#}
+#zle -N zle-line-init
 bindkey -v
 bindkey '^[' vi-cmd-mode
 # history {{{1
@@ -370,7 +394,6 @@ chpwd() {
 alias hr=checkout_master_history_branch
 alias hc=create_history_branch
 # keybindings {{{1
-bindkey -e
 bindkey -M viins '^N' down-line-or-history
 bindkey -M viins '^P' up-line-or-history
 bindkey -M viins '^R' history-incremental-search-backward
@@ -429,7 +452,7 @@ local return_code="%(?..%{$fg[red]%}%? ↵%{$reset_color%})"
 
 PROMPT='%{$fg[green]%}%c \
 ${vcs_info_msg_0_}\
-%{$fg[red]%}%(!.#.»)%{$reset_color%} '
+%{$fg[red]%}%(!.#.»)%{$reset_color%} ${VIMODE_I}'
 PROMPT2='%{$fg[red]%}\ %{$reset_color%}'
 RPS1='%{$fg[blue]%}%~%{$reset_color%} ${return_code} '
 # vim: fdm=marker:fdl=0

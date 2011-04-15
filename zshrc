@@ -468,7 +468,7 @@ local return_code="%(?..%{$fg[red]%}%? ↵%{$reset_color%})"
 
 PROMPT='%{$fg[green]%}%c \
 ${vcs_info_msg_0_}\
-${VIMODE_I} %{$fg[red]%}%(!.#.»)%{$reset_color%} '
+${VIMODE_I}%{$fg[red]%}%(!.#.»)%{$reset_color%} '
 PROMPT2='%{$fg[red]%}\ %{$reset_color%}'
 RPS1='%{$fg[blue]%}%~%{$reset_color%} ${return_code} '
 # vim: fdm=marker:fdl=0

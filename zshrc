@@ -113,6 +113,10 @@ zstyle ':completion:*:*:ssh:*' tag-order hosts # only hosts in the suggestions
 zstyle ':completion:*:*:(ssh|scp):*:hosts' hosts $_cfg_ssh_hosts  # only hosts from ~/.ssh/config
 zstyle ':completion:*:*:scp:*' menu true # rather no menu...
 #zstyle ':completion:*:*:scp:*' group-order files hosts # I like to get hosts before files in scp
+# prevent resugestions {{{3
+zstyle ':completion:*:rm:*' ignore-line yes
+zstyle ':completion:*:scp:*' ignore-line yes
+zstyle ':completion:*:ls:*' ignore-line yes
 # corrections {{{1
 # it's quite inconvenient to use with named-directories
 unsetopt correct_all

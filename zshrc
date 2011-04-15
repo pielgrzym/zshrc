@@ -199,15 +199,18 @@ batch_download(){
                         wget --auth-no-challenge --user=$RAPID_USER --password=$RAPID_PASS -i f
                         ;;
                 fileserve)
-                        source $HOME/.fsrv_download
-                        wget --auth-no-challenge --user=$FSRV_USER --password=$FSRV_PASS -i f
+                        if [[ ! -f ~/.fsrv_cookie ]]; then
+                                source $HOME/.fsrv_download
+                                wget --save-cookie="$HOME/.fsrv_cookie" --post-data="loginUserName=$FSRV_USER&loginUserPassword=$FSRV_PASS&autoLogin=1" "http://www.fileserve.com/login.php"
+                        fi
+                        wget --load-cookie="$HOME/.fsrv_cookie" -i f
                         ;;
                 filesonic)
                         if [[ ! -f ~/.fs_cookie ]]; then
                                 source $HOME/.fs_download
-                                wget --save-cookie="~/.fs_cookie" --post-data="returnto=/&email=$FS_USER&password=$FS_PASS&rememberMe=1" http://filesonic.com/premium?login=1
+                                wget --save-cookie="$HOME/.fs_cookie" --post-data="returnto=/&email=$FS_USER&password=$FS_PASS&rememberMe=1" http://www.filesonic.com/user/login
                         fi
-                        wget --load-cookie="~/.fs_cookie" -i f
+                        wget --load-cookie="$HOME/.fs_cookie" -i f
                         ;;
         esac
         rm f

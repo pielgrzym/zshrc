@@ -55,8 +55,8 @@ zstyle -e ':completion:*:approximate:*' max-errors 'reply=( $(( ($#PREFIX + $#SU
 zstyle ':completion:*:corrections' format '%B---- %d %F{11}(errors: %e)%f%b'
 # colorfull completions & grouping {{{3
 # evil -> zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS} # colorfull completions
-zstyle ':completion:*:*:*:*:(files|paths|local-directories)' list-colors ${(s.:.)LS_COLORS} # colorfull completions
-zstyle ':completion:*:*:(ls|cd|mv|cp|mp|mount):*:*' list-colors ${(s.:.)LS_COLORS} # colorfull completions
+zstyle ':completion:*:*:*:*:(all-files|files|paths|local-directories)' list-colors ${(s.:.)LS_COLORS} # colorfull completions
+zstyle ':completion:*:*:(ls|cd|mv|cp|mp|rm|mount):*:*' list-colors ${(s.:.)LS_COLORS} # colorfull completions
 zstyle ':completion:*' group-name '' # separate completions into groups
 zstyle ':completion:*' menu select # by default a select-menu for completions
 

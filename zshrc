@@ -207,11 +207,10 @@ batch_download(){
                         wget --load-cookie="$HOME/.fsrv_cookie" -i f
                         ;;
                 filesonic)
-                        if [[ ! -f ~/.fs_cookie ]]; then
-                                source $HOME/.fs_download
-                                wget --save-cookie="$HOME/.fs_cookie" --post-data="returnto=/&email=$FS_USER&password=$FS_PASS&rememberMe=1" http://www.filesonic.com/user/login
-                        fi
-                        wget --load-cookie="$HOME/.fs_cookie" -i f
+                        source $HOME/.fs_download
+                        wget --save-cookie="fs_cookie" --post-data="returnto=/&email=$FS_USER&password=$FS_PASS&rememberMe=1" http://www.filesonic.com/user/login
+                        wget --load-cookie="fs_cookie" -i f
+                        rm fs_cookie
                         ;;
         esac
         rm f

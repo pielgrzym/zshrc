@@ -56,6 +56,7 @@ zstyle ':completion:*:corrections' format '%B---- %d %F{11}(errors: %e)%f%b'
 # colorfull completions & grouping {{{3
 # evil -> zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS} # colorfull completions
 zstyle ':completion:*:*:*:argument-rest:*' list-colors ${(s.:.)LS_COLORS} # colorfull completions fast
+zstyle ':completion:*:*:*:*:(all-expansions|all-files|files|paths|directories|directory-stack)' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*:*:cd:*:*' list-colors ${(s.:.)LS_COLORS} # cd needs to be nice too
 zstyle ':completion:*' group-name '' # separate completions into groups
 zstyle ':completion:*' menu select # by default a select-menu for completions

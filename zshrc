@@ -98,6 +98,10 @@ zstyle ':completion:*:*:mplayer:*' tag-order files # no urls in completions
 # mplayer show only video files ; if no match then regular files; then dirs
 zstyle ':completion:*:*:mplayer:*' file-patterns '*.(rmvb|mkv|mpg|wmv|mpeg|avi):video' '*:all-files' '*(-/):directories'
 
+# extract (internal unpacking wrapper) {{{3
+zstyle ':completion:*:*:extract:*' menu true
+zstyle ':completion:*:*:extract:*' tag-order files # no urls in completions
+zstyle ':completion:*:*:extract:*' file-patterns '*.(tar.bz2|tar.gz|tar.xz|tar.lzma|bz2|rar|gz|tar|tbz2|tgz|zip|Z|7z):all-files' '*(-/):directories'
 # gvim/vim {{{3
 zstyle ':completion:*:*:(gvim|vim):*:*files' ignored-patterns '*~' '*.pyc' '*.pyo' # ignore backups and pyc/pyo files
 zstyle ':completion:*:*:(gvim|vim):*' file-sort access # sort by last used

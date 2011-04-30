@@ -93,10 +93,10 @@ zstyle ':completion:*:*:cd:*' menu true # same for cd
 zstyle ':completion:*:cd:*' tag-order local-directories directory-stack named-directories path-directories
 
 # mplayer {{{3
-zstyle ':completion:*:*:mplayer:*' menu true # insert autocompletions immediately
-zstyle ':completion:*:*:mplayer:*' tag-order files # no urls in completions
+zstyle ':completion:*:*:(napi|mplayer):*' menu true # insert autocompletions immediately
+zstyle ':completion:*:*:(napi|mplayer):*' tag-order files # no urls in completions
 # mplayer show only video files ; if no match then regular files; then dirs
-zstyle ':completion:*:*:mplayer:*' file-patterns '*.(rmvb|mkv|mpg|wmv|mpeg|avi):video' '*:all-files' '*(-/):directories'
+zstyle ':completion:*:*:(napi|mplayer):*' file-patterns '*.(rmvb|mkv|mpg|wmv|mpeg|avi):video' '*:all-files' '*(-/):directories'
 
 # extract (internal unpacking wrapper) {{{3
 zstyle ':completion:*:*:extract:*' menu true

@@ -215,7 +215,7 @@ batch_download(){
                         source $HOME/.fs_download
                         wget --save-cookie="fs_cookie" --post-data="returnto=/&email=$FS_USER&password=$FS_PASS&rememberMe=1" http://www.filesonic.com/user/login
                         wget --load-cookie="fs_cookie" -i f
-                        rm fs_cookie
+                        rm fs_cookie login
                         ;;
         esac
         rm f

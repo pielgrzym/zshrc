@@ -259,6 +259,7 @@ alias sluch=headphones
 alias glosn=speakers
 alias tcm="truecrypt -t"
 alias tcu="truecrypt -t -d"
+alias serve="python -m SimpleHTTPServer 8000"
 #alias gvim="STTY='intr \^C' gvim" # C-x mapping fucks up gvim
 # git {{{1
 # Aliases

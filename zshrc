@@ -213,8 +213,14 @@ batch_download(){
                         ;;
                 filesonic)
                         source $HOME/.fs_download
-                        wget --save-cookie="fs_cookie" --post-data="returnto=/&email=$FS_USER&password=$FS_PASS&rememberMe=1" http://www.filesonic.com/user/login
+                        wget --save-cookie="fs_cookie" --post-data="returnto=/&email=$FS_USER&password=$FS_PASS&rememberMe=1" http://www.filesonic.pl/user/login
                         wget --load-cookie="fs_cookie" -i f
+                        rm fs_cookie login
+                        ;;
+                wupload)
+                        source $HOME/.wup_download
+                        wget --save-cookie="wup_cookie" --post-data="returnto=/&email=$WUP_USER&password=$WUP_PASS&rememberMe=1" http://www.wupload.com/account/login
+                        wget --load-cookie="wup_cookie" -i f
                         rm fs_cookie login
                         ;;
         esac
@@ -223,6 +229,7 @@ batch_download(){
 alias rsi="batch_download rapidshare"
 alias fsi="batch_download filesonic"
 alias fsrv="batch_download fileserve"
+alias wupl="batch_download fileserve"
 # aliases {{{1
 # just give a filename with those suffixes and zsh will open it with mplayer
 alias -s {mkv,avi,mpg,mpeg,wmv,rmvb}='mplayer' 

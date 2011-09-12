@@ -229,7 +229,7 @@ batch_download(){
 alias rsi="batch_download rapidshare"
 alias fsi="batch_download filesonic"
 alias fsrv="batch_download fileserve"
-alias wupl="batch_download fileserve"
+alias wupl="batch_download wupload"
 # aliases {{{1
 # just give a filename with those suffixes and zsh will open it with mplayer
 alias -s {mkv,avi,mpg,mpeg,wmv,rmvb}='mplayer' 
@@ -265,7 +265,8 @@ alias serve="python -m SimpleHTTPServer 8000"
 # Aliases
 alias g='git'
 alias gst='git status'
-alias gl='git pull'
+alias gl='git log --abbrev-commit --pretty=oneline --stat'
+alias gg='git log --abbrev-commit --pretty=oneline --graph'
 alias gp='git push'
 alias gf='git fetch'
 alias gd='git diff'

@@ -1,0 +1,44 @@
+#!/bin/zsh
+
+WORKDIR=$HOME/work
+
+function startp_session () {
+        cd $1
+        export WORKON_HOME=$HOME/.virtualenvs
+        source /usr/bin/virtualenvwrapper.sh
+        workon $PROJ
+        gvim -S $2 &
+        PIEL_PROJ=$PROJ PIEL_PROJ_DIR=$PROJDIR/git urxvt &
+        PIEL_PROJ=$PROJ PIEL_PROJ_DIR=$PROJDIR/git urxvt
+}
+
+function startp () {
+        cd $1
+        export WORKON_HOME=$HOME/.virtualenvs
+        source /usr/bin/virtualenvwrapper.sh
+        workon $PROJ
+        gvim &
+        PIEL_PROJ=$PROJ PIEL_PROJ_DIR=$PROJDIR/git urxvt &
+        PIEL_PROJ=$PROJ PIEL_PROJ_DIR=$PROJDIR/git urxvt
+}
+
+if [[ -n $1 ]]; then
+        PROJ=$1
+        PROJDIR=$WORKDIR/$PROJ
+else
+        echo "No project given"
+        exit 1
+fi
+
+# if project dir exists and has git subdir
+if [[ -d $PROJDIR && -d $PROJDIR/git ]]; then
+        if [[ -r $PROJDIR/git/Session.vim ]]; then
+                startp_session $PROJDIR/git "Session.vim"
+        elif [[ -r $PROJDIR/git/$PROJ.vim ]]; then
+                start_gvim_session $PROJDIR/git $PROJ.vim
+        else
+                startp $PROJDIR/git
+        fi
+else
+        exit 1
+fi

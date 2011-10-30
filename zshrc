@@ -174,6 +174,17 @@ function extract() {
 term_title() {
 printf \\033]0\;\%s\\007 "$1"
 }
+# irssi runner {{{2
+# I never start irssi in plain term - always in tmux
+# this convenience wrapper connects to tmux session if 
+# availible or creates a new one with irssi :)
+run_or_attach_irssi() {
+        if tmux has-session -tirssi; then
+                tmux at -tirssi
+        else
+                tmux new -sirssi irssi
+        fi
+}
 # headphones/speakers {{{2
 headphones() {
         amixer -c 0 -- sset Front unmute 
@@ -260,6 +271,7 @@ alias glosn=speakers
 alias tcm="truecrypt -t"
 alias tcu="truecrypt -t -d"
 alias serve="python -m SimpleHTTPServer 8000"
+alias irssi=run_or_attach_irssi
 #alias gvim="STTY='intr \^C' gvim" # C-x mapping fucks up gvim
 # git {{{1
 # Aliases
@@ -488,4 +500,11 @@ ${vcs_info_msg_0_}\
 ${VIMODE_I}%{$fg[red]%}%(!.#.»)%{$reset_color%} '
 PROMPT2='%{$fg[red]%}\ %{$reset_color%}'
 RPS1='%{$fg[blue]%}%~%{$reset_color%} ${return_code} '
-# vim: fdm=marker:fdl=0
+# project starter {{{1
+if [[ -n $PIEL_PROJ && -n $PIEL_PROJ_DIR ]]; then
+        cd $PIEL_PROJ_DIR
+        export WORKON_HOME=$HOME/.virtualenvs
+        source /usr/bin/virtualenvwrapper.sh
+        workon $PIEL_PROJ
+fi
+# # vim: fdm=marker:fdl=0

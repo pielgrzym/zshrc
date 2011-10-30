@@ -202,7 +202,7 @@ batch_download(){
         case "$1" in
                 rapidshare)
                         source $HOME/.rs_download
-                        wget --auth-no-challenge --user=$RAPID_USER --password=$RAPID_PASS -i f
+                        wget --auth-no-challenge --user=$RAPID_USER --password="$RAPID_PASS" -i f
                         ;;
                 fileserve)
                         if [[ ! -f ~/.fsrv_cookie ]]; then
@@ -265,8 +265,8 @@ alias serve="python -m SimpleHTTPServer 8000"
 # Aliases
 alias g='git'
 alias gst='git status'
-alias gl='git log --abbrev-commit --pretty=oneline --stat'
-alias gg='git log --abbrev-commit --pretty=oneline --graph'
+alias gl='git log --abbrev-commit --pretty=oneline --stat --decorate'
+alias gg='git log --abbrev-commit --pretty=oneline --graph --decorate'
 alias gp='git push'
 alias gf='git fetch'
 alias gd='git diff'

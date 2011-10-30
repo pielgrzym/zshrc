@@ -185,6 +185,25 @@ run_or_attach_irssi() {
                 tmux new -sirssi irssi
         fi
 }
+# smart sudo {{{2
+# Give us a root shell, or run the command with sudo.
+# Expands command aliases first (cool!)
+
+smart_sudo () {
+    if [[ -n $1 ]]; then
+        #test if the first parameter is a alias
+        if [[ -n $aliases[$1] ]]; then
+            #if so, substitute the real command
+            sudo ${=aliases[$1]} $argv[2,-1]
+        else
+            #else just run sudo as is
+            sudo $argv
+        fi
+    else
+        #if no parameters were given, then assume we want a root shell
+        sudo -s
+    fi
+}
 # headphones/speakers {{{2
 headphones() {
         amixer -c 0 -- sset Front unmute 
@@ -273,6 +292,8 @@ alias tcu="truecrypt -t -d"
 alias serve="python -m SimpleHTTPServer 8000"
 alias irssi=run_or_attach_irssi
 #alias gvim="STTY='intr \^C' gvim" # C-x mapping fucks up gvim
+alias s=smart_sudo
+compdef _sudo smart_sudo
 # git {{{1
 # Aliases
 alias g='git'

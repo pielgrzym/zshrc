@@ -354,10 +354,10 @@ alias d='dirs -v' # show directory stack
 export GREP_OPTIONS='--color=auto'
 export GREP_COLOR='1;32'
 # vi-mode {{{1
-VIMODE_I="☆ "
+VIMODE_I="i"
 function zle-line-init zle-keymap-select {
     # show nice star digraph when in vi-mode
-    VIMODE_I="${${KEYMAP/vicmd/★ }/(main|viins)/☆ }"
+    VIMODE_I="${${KEYMAP/vicmd/n}/(main|viins)/i}"
             zle reset-prompt
 }
 zle -N zle-line-init
@@ -505,22 +505,29 @@ zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b:%r'
 zstyle ':vcs_info:*' enable git svn
 precmd () {
     if [[ -z $(git ls-files --other --exclude-standard 2> /dev/null) ]] {
-            zstyle ':vcs_info:*' formats "%{$reset_color%}::%{$fg[yellow]%} (%b%c%u)%{$reset_color%} "
+            zstyle ':vcs_info:*' formats "%{$fg[green]%} [%{$reset_color%}\
+%{$fg[yellow]%} (%b%c%u)  %{$reset_color%}%{$fg[green]%}]${return_code}"
     } else {
-    zstyle ':vcs_info:*' formats "%{$reset_color%}::%{$fg[yellow]%} (%b%c%u%{$fg[red]%}∪%{$fg[yellow]%})%{$reset_color%} "
+    zstyle ':vcs_info:*' formats "%{$fg[green]%} [%{$reset_color%}\
+%{$fg[yellow]%} %b%c%u%{$fg[red]%}∪%{$fg[yellow]%} %{$reset_color%}%{$fg[green]%}]${return_code}"
     }
  
     vcs_info
 }
  
 #PROMPT='%F{blue}%n@%m %c${vcs_info_msg_0_}%F{blue} %(?/%F{blue}/%F{red})%% %{$reset_color%}'
-local return_code="%(?..%{$fg[red]%}%? ↵%{$reset_color%})"
+#local return_code="%(?..%{$fg[red]%}%? ↵%{$reset_color%})"
 
-PROMPT='%{$fg[green]%}%c \
-${vcs_info_msg_0_}\
-${VIMODE_I}%{$fg[red]%}%(!.#.»)%{$reset_color%} '
-PROMPT2='%{$fg[red]%}\ %{$reset_color%}'
-RPS1='%{$fg[blue]%}%~%{$reset_color%} ${return_code} '
+PROMPT='%{$fg[green]%}┌─[${return_code} %{$fg[blue]%}%~%{$reset_color%}${return_code} \
+%{$fg[green]%}] ${return_code}\
+%{$fg[green]%}[${return_code}${VIMODE_I}\
+%{$fg[green]%}]${return_code}\
+${vcs_info_msg_0_}
+%{$fg[green]%}└─[${return_code}\
+ %n%{$fg[red]%}@%{$fg[green]%}%M\
+ %{$fg[red]%}%(!.#.%%)%{$reset_color%} '
+# PROMPT2='%{$fg[red]%}\ %{$reset_color%}'
+#RPS1='${return_code} '
 # project starter {{{1
 if [[ -n $PIEL_PROJ && -n $PIEL_PROJ_DIR ]]; then
         cd $PIEL_PROJ_DIR

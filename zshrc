@@ -354,14 +354,14 @@ alias d='dirs -v' # show directory stack
 export GREP_OPTIONS='--color=auto'
 export GREP_COLOR='1;32'
 # vi-mode {{{1
-VIMODE_I="i"
-function zle-line-init zle-keymap-select {
-    # show nice star digraph when in vi-mode
-    VIMODE_I="${${KEYMAP/vicmd/n}/(main|viins)/i}"
-            zle reset-prompt
-}
-zle -N zle-line-init
-zle -N zle-keymap-select
+# VIMODE_I="i"
+# function zle-line-init zle-keymap-select {
+#     # show nice star digraph when in vi-mode
+#     VIMODE_I="${${KEYMAP/vicmd/n}/(main|viins)/i}"
+#             zle reset-prompt
+# }
+# zle -N zle-line-init
+# zle -N zle-keymap-select
 #function zle-keymap-select {
 #if [ $TERM = "rxvt-256color" ]; then
         #if [ $KEYMAP = vicmd ]; then
@@ -505,11 +505,9 @@ zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b:%r'
 zstyle ':vcs_info:*' enable git svn
 precmd () {
     if [[ -z $(git ls-files --other --exclude-standard 2> /dev/null) ]] {
-            zstyle ':vcs_info:*' formats "%{$fg[green]%} [%{$reset_color%}\
-%{$fg[yellow]%} (%b%c%u)  %{$reset_color%}%{$fg[green]%}]${return_code}"
+            zstyle ':vcs_info:*' formats "%{$fg[yellow]%} (%b%c%u) %{$reset_color%}"
     } else {
-    zstyle ':vcs_info:*' formats "%{$fg[green]%} [%{$reset_color%}\
-%{$fg[yellow]%} %b%c%u%{$fg[red]%}∪%{$fg[yellow]%} %{$reset_color%}%{$fg[green]%}]${return_code}"
+    zstyle ':vcs_info:*' formats "%{$fg[yellow]%} %b%c%u%{$fg[red]%}∪%{$fg[yellow]%} %{$reset_color%}"
     }
  
     vcs_info
@@ -518,10 +516,8 @@ precmd () {
 #PROMPT='%F{blue}%n@%m %c${vcs_info_msg_0_}%F{blue} %(?/%F{blue}/%F{red})%% %{$reset_color%}'
 #local return_code="%(?..%{$fg[red]%}%? ↵%{$reset_color%})"
 
-PROMPT='%{$fg[green]%}┌─[${return_code} %{$fg[blue]%}%~%{$reset_color%}${return_code} \
-%{$fg[green]%}] ${return_code}\
-%{$fg[green]%}[${return_code}${VIMODE_I}\
-%{$fg[green]%}]${return_code}\
+PROMPT='%{$fg[green]%}┌─[ %{$fg[blue]%}%~%{$reset_color%} \
+%{$fg[green]%}]\
 ${vcs_info_msg_0_}
 %{$fg[green]%}└─[${return_code}\
  %n%{$fg[red]%}@%{$fg[green]%}%M\

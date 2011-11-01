@@ -3,8 +3,8 @@ autoload colors; colors;
 . $HOME/.zsh/nice_colors
 # named-directories {{{1
 # theese are actually aliases for directories:
-# ~ $ cd ~rkl
-# ~/proj/r/git $
+# ~ $ cd ~zsh
+# ~/.zsh $
 function mk_work_named_dirs() {
 for p in `ls $HOME/work`
 do
@@ -271,6 +271,7 @@ alias -s {gif,jpg,jpeg,png}='feh'
 alias history='fc -l 1'
 alias x=extract
 compdef mp=mplayer
+compdef napi=mplayer # ugly, but makes colorfull completions for napi
 alias ls="ls -h --color=tty"
 alias ll='ls -lh --color=tty'
 alias sl="ls -h --color=tty" # often screw this up

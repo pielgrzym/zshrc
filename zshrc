@@ -5,18 +5,18 @@ autoload colors; colors;
 # theese are actually aliases for directories:
 # ~ $ cd ~rkl
 # ~/proj/r/git $
-proj=~/proj
-dn=~/download
-mov=~/mov
-dj=~/proj/django
-scr=~/proj/scrapy
-rukola=~/proj/django/rukola/git
-endywia=~/proj/django/endywia/git
-rkl=~/proj/r/git
-vimrc=~/.vim
-zshrc=~/.zsh
-xmonad=~/.xmonad
-vpn=/etc/openvpn
+function mk_work_named_dirs() {
+for p in `ls $HOME/work`
+do
+        hash -d $p="$HOME/work/$p"
+done
+}
+mk_work_named_dirs
+hash -d dn="$HOME/download"
+hash -d zsh="$HOME/.zsh"
+hash -d xmonad="$HOME/.xmonad"
+hash -d vim="$HOME/.vim"
+hash -d logs="/var/log"
 # completion {{{1
 # options {{{2
 unsetopt menu_complete   # do not autoselect the first completion entry
@@ -513,17 +513,12 @@ precmd () {
     vcs_info
 }
  
-#PROMPT='%F{blue}%n@%m %c${vcs_info_msg_0_}%F{blue} %(?/%F{blue}/%F{red})%% %{$reset_color%}'
-#local return_code="%(?..%{$fg[red]%}%? ↵%{$reset_color%})"
-
 PROMPT='%{$fg[green]%}┌─[ %{$fg[blue]%}%~%{$reset_color%} \
 %{$fg[green]%}]\
 ${vcs_info_msg_0_}
 %{$fg[green]%}└─╼${return_code}\
  %n%{$fg[red]%}@%{$fg[green]%}%M\
  %{$fg[red]%}%(!.#.%%)%{$reset_color%} '
-# PROMPT2='%{$fg[red]%}\ %{$reset_color%}'
-#RPS1='${return_code} '
 # project starter {{{1
 if [[ -n $PIEL_PROJ && -n $PIEL_PROJ_DIR ]]; then
         cd $PIEL_PROJ_DIR

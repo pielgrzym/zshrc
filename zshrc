@@ -275,6 +275,7 @@ compdef napi=mplayer # ugly, but makes colorfull completions for napi
 alias ls="ls -h --color=tty"
 alias ll='ls -lh --color=tty'
 alias sl="ls -h --color=tty" # often screw this up
+alias lt="ls -xCt" # show files in columnt sorted by modification
 alias llp='ls++' # try ls++ - AWESOME: https://github.com/trapd00r/ls--
 alias mp="mplayer"
 alias um="sudo umount"

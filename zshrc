@@ -498,8 +498,8 @@ eval `keychain --eval --nogui -Q -q ~/.ssh/id_dsa`
 setopt prompt_subst # this option is necessary for prompt colors
 autoload -Uz vcs_info
  
-zstyle ':vcs_info:*' stagedstr "%{$fg[green]%}≡%{$reset_color%}%{$fg[yellow]%}"
-zstyle ':vcs_info:*' unstagedstr "%{$fg[red]%}≡%{$reset_color%}%{$fg[yellow]%}"
+zstyle ':vcs_info:*' stagedstr "%{$fg[green]%}∷%{$reset_color%}%{$fg[yellow]%}"
+zstyle ':vcs_info:*' unstagedstr "%{$fg[red]%}∷%{$reset_color%}%{$fg[yellow]%}"
 zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b:%r'
 zstyle ':vcs_info:*' enable git svn
@@ -507,7 +507,7 @@ precmd () {
     if [[ -z $(git ls-files --other --exclude-standard 2> /dev/null) ]] {
             zstyle ':vcs_info:*' formats "%{$fg[yellow]%} (%b%c%u) %{$reset_color%}"
     } else {
-    zstyle ':vcs_info:*' formats "%{$fg[yellow]%} %b%c%u%{$fg[red]%}∪%{$fg[yellow]%} %{$reset_color%}"
+    zstyle ':vcs_info:*' formats "%{$fg[yellow]%} (%b%c%u%%{$fg[red]%}∪%{$fg[yellow]%}) %{$reset_color%}"
     }
  
     vcs_info

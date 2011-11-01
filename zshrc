@@ -519,7 +519,7 @@ precmd () {
 PROMPT='%{$fg[green]%}┌─[ %{$fg[blue]%}%~%{$reset_color%} \
 %{$fg[green]%}]\
 ${vcs_info_msg_0_}
-%{$fg[green]%}└─[${return_code}\
+%{$fg[green]%}└─╼${return_code}\
  %n%{$fg[red]%}@%{$fg[green]%}%M\
  %{$fg[red]%}%(!.#.%%)%{$reset_color%} '
 # PROMPT2='%{$fg[red]%}\ %{$reset_color%}'

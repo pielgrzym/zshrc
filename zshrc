@@ -515,6 +515,7 @@ fi
 # prompt {{{1
 setopt prompt_subst # this option is necessary for prompt colors
 autoload -Uz vcs_info
+autoload -U is-at-least
  
 if [[ $HOST_IS_LOCAL == 1 ]]; then
         MAINCOL="$fg[green]%"
@@ -550,8 +551,10 @@ precmd () {
 
 if [[ `tty` == /dev/tty* ]]; then
         PROMPT_DECOR="["
-else
+elif is-at-least 4.3.6; then
         PROMPT_DECOR="╼"
+else
+        PROMPT_DECOR="("
 fi
 
 # first line of prompt is being printed in line 516 in precmd - this fixes doubling of the first line on window resize

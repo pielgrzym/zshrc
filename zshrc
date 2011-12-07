@@ -525,8 +525,13 @@ precmd () {
     print -rP ' %{$fg[green]%}┌─[ %{$fg[blue]%}%~%{$reset_color%} %{$fg[green]%}] ${vcs_info_msg_0_}'
 }
 
+if [[ `tty` =~ "/dev/tty*" ]]; then
+        PROMPT_DECOR="["
+else
+        PROMPT_DECOR="╼"
+fi
 # first line of prompt is being printed in line 516 in precmd - this fixes doubling of the first line on window resize
-PROMPT=' %{$fg[green]%}└─╼${return_code}\
+PROMPT=' %{$fg[green]%}└─$PROMPT_DECOR${return_code}\
  %n%{$fg[red]%}@%{$fg[green]%}%M\
  %{$fg[red]%}%(!.#.%%)%{$reset_color%} '
 # project starter {{{1

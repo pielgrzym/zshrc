@@ -120,7 +120,8 @@ _cfg_ssh_hosts=(${${${(M)${(f)"$(<$HOME/.ssh/config)"}##Host *}#Host }#\*})
 zstyle ':completion:*:*:ssh:*' menu false # rather no menu...
 zstyle ':completion:*:*:ssh:*' tag-order hosts # only hosts in the suggestions
 zstyle ':completion:*:*:(ssh|scp):*:hosts' hosts $_cfg_ssh_hosts  # only hosts from ~/.ssh/config
-zstyle ':completion:*:*:scp:*' menu true # rather no menu...
+#zstyle ':completion:*:*:(su|sudo):*:users' user ${(k)userdirs}  # all users
+zstyle ':completion:*:*:scp:*' menu true # here is your menu Sir
 #zstyle ':completion:*:*:scp:*' group-order files hosts # I like to get hosts before files in scp
 # prevent resugestions {{{3
 zstyle ':completion:*:rm:*' ignore-line yes
@@ -517,7 +518,7 @@ precmd () {
     zstyle ':vcs_info:*' formats "%{$fg[yellow]%} (%b%c%u%%{$fg[red]%}∪%{$fg[yellow]%}) %{$reset_color%}"
     }
  
-    vcs_info
+    vcs_info 2> /dev/null # yeah, ugly hack to shut up debian/centos that have old zsh withou vcs_info
     # window resize fix
     print -rP ' %{$fg[green]%}┌─[ %{$fg[blue]%}%~%{$reset_color%} %{$fg[green]%}] ${vcs_info_msg_0_}'
 }

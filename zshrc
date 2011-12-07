@@ -230,50 +230,6 @@ speakers() {
         amixer -c 0 -- sset Surround unmute
         amixer -c 0 -- sset PCM 100%
 }
-# wget download prompt {{{2
-
-batch_download(){
-        #if [[ -z "$1" ]] 
-                #echo "WTF? You missed something, dude"
-                #return -1
-        while read URL; do
-                if [[ -n $URL ]]; then
-                        echo "$URL" >> f
-                else
-                        break
-                fi
-        done
-        case "$1" in
-                rapidshare)
-                        source $HOME/.rs_download
-                        wget --auth-no-challenge --user=$RAPID_USER --password="$RAPID_PASS" -i f
-                        ;;
-                fileserve)
-                        if [[ ! -f ~/.fsrv_cookie ]]; then
-                                source $HOME/.fsrv_download
-                                wget --save-cookie="$HOME/.fsrv_cookie" --post-data="loginUserName=$FSRV_USER&loginUserPassword=$FSRV_PASS&autoLogin=1" "http://www.fileserve.com/login.php"
-                        fi
-                        wget --load-cookie="$HOME/.fsrv_cookie" -i f
-                        ;;
-                filesonic)
-                        source $HOME/.fs_download
-                        wget --save-cookie="fs_cookie" --post-data="returnto=/&email=$FS_USER&password=$FS_PASS&rememberMe=1" http://www.filesonic.pl/user/login
-                        wget --load-cookie="fs_cookie" -i f
-                        rm fs_cookie login
-                        ;;
-                wupload)
-                        source $HOME/.wup_download
-                        wget --save-cookie="wup_cookie" --post-data="returnto=/&email=$WUP_USER&password=$WUP_PASS&rememberMe=1" http://www.wupload.com/account/login
-                        wget --load-cookie="wup_cookie" -i f
-                        rm fs_cookie login
-                        ;;
-        esac
-        rm f
-}
-alias rsi="batch_download rapidshare"
-alias fsi="batch_download filesonic"
-alias fsrv="batch_download fileserve"
-alias wupl="batch_download wupload"
 # aliases {{{1
 # just give a filename with those suffixes and zsh will open it with mplayer
 alias -s {mkv,avi,mpg,mpeg,wmv,rmvb}='mplayer' 

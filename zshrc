@@ -537,7 +537,7 @@ precmd () {
     print -rP ' $MAINCOL┌─[ %{$fg[blue]%}%~%{$reset_color%} $MAINCOL] ${vcs_info_msg_0_}'
 }
 
-if [[ `tty` =~ "/dev/tty*" ]]; then
+if [[ `tty` =~ /dev/tty* ]]; then
         PROMPT_DECOR="["
 else
         PROMPT_DECOR="╼"

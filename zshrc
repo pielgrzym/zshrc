@@ -148,6 +148,30 @@ unsetopt correct_all
 #alias ebuild='nocorrect ebuild'
 #alias hpodder='nocorrect hpodder'
 # functions {{{1
+# remote confirm wrapper {{{2
+function rconfirm(){
+        if (( ${+SSH_CONNECTION} ));then
+                local confirm
+                echo " ___ "
+                echo "{o,o}"
+                echo "|)__)"
+                echo "-\"-\"-"
+                echo "O RLY?"
+                read -q confirm
+                if [[ $confirm == "y" || $confirm == "t" ]]; then
+                        "$@"
+                else
+                        echo "\n"
+                        echo " ___ "
+                        echo "{o,o}"
+                        echo "(__(|"
+                        echo "-\"-\"-"
+                        echo "NO WAI!"
+                fi
+        else
+                "$@"
+        fi
+}
 # extract {{{2
 function extract() {
   unset REMOVE_ARCHIVE
@@ -266,6 +290,10 @@ alias irssi=run_or_attach_irssi
 #alias gvim="STTY='intr \^C' gvim" # C-x mapping fucks up gvim
 alias s=smart_sudo
 compdef _sudo smart_sudo
+# always ask for confirmation for these while using ssh:
+alias halt='rconfirm halt'
+alias reboot='rconfirm reboot'
+alias shutdown='rconfirm shutdown'
 # git {{{1
 # Aliases
 alias g='git'

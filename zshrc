@@ -522,6 +522,15 @@ else
         MAINCOL="$fg[cyan]%"
 fi
 
+typeset -A altchar
+set -A altchar ${(s..)terminfo[acsc]}
+PR_SET_CHARSET="%{$terminfo[enacs]%}"
+PR_SHIFT_IN="%{$terminfo[smacs]%}"
+PR_SHIFT_OUT="%{$terminfo[rmacs]%}"
+PR_HBAR=${altchar[q]:--}
+PR_ULCORNER=${altchar[l]:--}
+PR_LLCORNER=${altchar[m]:--}
+
 zstyle ':vcs_info:*' stagedstr "%{$fg[green]%}∷%{$reset_color%}%{$fg[yellow]%}"
 zstyle ':vcs_info:*' unstagedstr "%{$fg[red]%}∷%{$reset_color%}%{$fg[yellow]%}"
 zstyle ':vcs_info:*' check-for-changes true
@@ -536,7 +545,7 @@ precmd () {
  
     vcs_info 2> /dev/null # yeah, ugly hack to shut up debian/centos that have old zsh withou vcs_info
     # window resize fix
-    print -rP ' %{$MAINCOL}┌─[ %{$fg[blue]%}%~%{$reset_color%} %{$MAINCOL}] ${vcs_info_msg_0_}'
+    print -rP ' %{$MAINCOL}$PR_SET_CHARSET$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT( %{$fg[blue]%}%~%{$reset_color%} %{$MAINCOL})${vcs_info_msg_0_}'
 }
 
 if [[ `tty` == /dev/tty* ]]; then
@@ -546,7 +555,7 @@ else
 fi
 
 # first line of prompt is being printed in line 516 in precmd - this fixes doubling of the first line on window resize
-PROMPT=' %{$MAINCOL}└─$PROMPT_DECOR${return_code}\
+PROMPT=' %{$MAINCOL}$PR_SET_CHARSET$PR_SHIFT_IN$PR_LLCORNER$PR_HBAR$PR_SHIFT_OUT$PROMPT_DECOR${return_code}\
  %n%{$fg[red]%}@%{$MAINCOL}%M\
  %{$fg[red]%}%(!.#.%%)%{$reset_color%} '
 # project starter {{{1

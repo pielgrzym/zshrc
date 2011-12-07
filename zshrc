@@ -11,11 +11,15 @@ do
         hash -d $p="$HOME/work/$p"
 done
 }
+
+if [[ -d ~/work ]]; then
 mk_work_named_dirs
 hash -d dn="$HOME/download"
 hash -d zsh="$HOME/.zsh"
 hash -d xmonad="$HOME/.xmonad"
 hash -d vim="$HOME/.vim"
+fi
+
 hash -d logs="/var/log"
 # completion {{{1
 # options {{{2
@@ -149,12 +153,13 @@ function extract() {
       *.tar.gz) tar xvzf $1;;
       *.tar.xz) tar xvJf $1;;
       *.tar.lzma) tar --lzma -xvf $1;;
-      *.bz2) bunzip $1;;
+      *.bz2) bunzip2 $1;;
       *.rar) nice -n 19 ionice -c 3 unrar x $1;;
       *.gz) gunzip $1;;
       *.tar) tar xvf $1;;
       *.tbz2) tar xvjf $1;;
       *.tgz) tar xvzf $1;;
+      *.xz) unxz -d $1;;
       *.zip) unzip $1;;
       *.Z) uncompress $1;;
       *.7z) 7z x $1;;

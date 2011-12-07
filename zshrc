@@ -1,6 +1,6 @@
 # colors {{{1
 autoload colors; colors;
-if [[ hostname == 'abulafia' || hostname == 'black' ]]; then
+if [[ `hostname` == 'abulafia' || `hostname` == 'black' ]]; then
         . $HOME/.zsh/nice_colors
 fi
 # named-directories {{{1

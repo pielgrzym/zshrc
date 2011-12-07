@@ -159,6 +159,7 @@ function rconfirm(){
                 echo "O RLY?"
                 read -q confirm
                 if [[ $confirm == "y" || $confirm == "t" ]]; then
+                        echo "\n"
                         "$@"
                 else
                         echo "\n"
@@ -291,9 +292,9 @@ alias irssi=run_or_attach_irssi
 alias s=smart_sudo
 compdef _sudo smart_sudo
 # always ask for confirmation for these while using ssh:
-alias halt='rconfirm halt'
-alias reboot='rconfirm reboot'
-alias shutdown='rconfirm shutdown'
+alias halt='rconfirm sudo halt'
+alias reboot='rconfirm sudo reboot'
+alias shutdown='rconfirm sudo shutdown'
 # git {{{1
 # Aliases
 alias g='git'

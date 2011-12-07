@@ -1,6 +1,12 @@
 # colors {{{1
 autoload colors; colors;
 if [[ `hostname` == 'abulafia' || `hostname` == 'black' ]]; then
+        HOST_IS_LOCAL=1
+else
+        HOST_IS_LOCAL=0
+fi
+
+if [[ $HOST_IS_LOCAL == 1 ]]; then
         . $HOME/.zsh/nice_colors
 fi
 # named-directories {{{1
@@ -508,6 +514,12 @@ eval `keychain --eval --nogui -Q -q ~/.ssh/id_dsa`
 setopt prompt_subst # this option is necessary for prompt colors
 autoload -Uz vcs_info
  
+if [[ $HOST_IS_LOCAL == 1 ]]; then
+        MAINCOL="%{$fg[green]%}"
+else
+        MAINCOL="%{$fg[cyan]%}"
+fi
+
 zstyle ':vcs_info:*' stagedstr "%{$fg[green]%}∷%{$reset_color%}%{$fg[yellow]%}"
 zstyle ':vcs_info:*' unstagedstr "%{$fg[red]%}∷%{$reset_color%}%{$fg[yellow]%}"
 zstyle ':vcs_info:*' check-for-changes true
@@ -522,7 +534,7 @@ precmd () {
  
     vcs_info 2> /dev/null # yeah, ugly hack to shut up debian/centos that have old zsh withou vcs_info
     # window resize fix
-    print -rP ' %{$fg[green]%}┌─[ %{$fg[blue]%}%~%{$reset_color%} %{$fg[green]%}] ${vcs_info_msg_0_}'
+    print -rP ' $MAINCOL┌─[ %{$fg[blue]%}%~%{$reset_color%} $MAINCOL] ${vcs_info_msg_0_}'
 }
 
 if [[ `tty` =~ "/dev/tty*" ]]; then
@@ -530,9 +542,10 @@ if [[ `tty` =~ "/dev/tty*" ]]; then
 else
         PROMPT_DECOR="╼"
 fi
+
 # first line of prompt is being printed in line 516 in precmd - this fixes doubling of the first line on window resize
-PROMPT=' %{$fg[green]%}└─$PROMPT_DECOR${return_code}\
- %n%{$fg[red]%}@%{$fg[green]%}%M\
+PROMPT=' $MAINCOL└─$PROMPT_DECOR${return_code}\
+ %n%{$fg[red]%}@$MAINCOL%M\
  %{$fg[red]%}%(!.#.%%)%{$reset_color%} '
 # project starter {{{1
 if [[ -n $PIEL_PROJ && -n $PIEL_PROJ_DIR ]]; then

@@ -509,7 +509,9 @@ zle -N insert-sudo insert_sudo
 bindkey "^Xs" insert-sudo
 bindkey '^i' complete-word # this is *VERY* important read below:
 # keychain {{{1
-eval `keychain --eval --nogui -Q -q ~/.ssh/id_dsa`
+if (( ${+commands[keychain]} )); then
+        eval `keychain --eval --nogui -Q -q ~/.ssh/id_dsa`
+fi
 # prompt {{{1
 setopt prompt_subst # this option is necessary for prompt colors
 autoload -Uz vcs_info

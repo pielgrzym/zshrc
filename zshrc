@@ -494,17 +494,22 @@ zle -N insert-sudo insert_sudo
 bindkey "^Xs" insert-sudo
 bindkey '^i' complete-word # this is *VERY* important read below:
 # fast ../.. directory ascension {{{1
-# borrowed from: https://bitbucket.org/radiosilence/env/src/7cd00c47212e/.zshrc#cl-222
+# borrowed from Mikachu (#zsh at freenode): http://mika.l3ib.org/code/dot-zshrc
+# just type '...' to get '../..'
 rationalise-dot() {
-    if [[ $LBUFFER = *.. ]]; then
-        LBUFFER+=/..
-    else
-        LBUFFER+=.
-    fi
+  local MATCH
+  if [[ $LBUFFER =~ '(^|/| |	|'$'\n''|\||;|&)\.\.$' ]]; then
+    LBUFFER+=/
+    zle self-insert
+    zle self-insert
+  else
+    zle self-insert
+  fi
 }
 zle -N rationalise-dot
 bindkey . rationalise-dot
-
+# without this, typing a . aborts incremental history search
+bindkey -M isearch . self-insert
 # keychain {{{1
 if (( ${+commands[keychain]} )); then
         eval `keychain --eval --nogui -Q -q ~/.ssh/id_dsa`

@@ -295,6 +295,8 @@ compdef _sudo smart_sudo
 alias halt='rconfirm sudo halt'
 alias reboot='rconfirm sudo reboot'
 alias shutdown='rconfirm sudo shutdown'
+autoload zcalc
+alias zc=zcalc
 # git {{{1
 # Aliases
 alias g='git'

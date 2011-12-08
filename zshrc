@@ -340,8 +340,6 @@ setopt auto_name_dirs
 setopt auto_pushd # auto push to dir stack
 setopt pushd_ignore_dups # no dups in dir stack
 export DIRSTACKSIZE=100
-# aliases {{{2
-alias ..='cd ..' # not needed with autocd option
 # dir stack traversal:
 alias 1='cd ~1'
 alias 2='cd ~2'

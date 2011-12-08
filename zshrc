@@ -1,5 +1,6 @@
 # colors {{{1
-autoload colors; colors;
+autoload colors
+colors
 if [[ `hostname` == 'abulafia' || `hostname` == 'black' ]]; then
         HOST_IS_LOCAL=1
 else
@@ -509,7 +510,7 @@ rationalise-dot() {
 zle -N rationalise-dot
 bindkey . rationalise-dot
 # without this, typing a . aborts incremental history search
-bindkey -M isearch . self-insert
+[[ -n ${(M)keymaps:#isearch} ]] && bindkey -M isearch . self-insert
 # keychain {{{1
 if (( ${+commands[keychain]} )); then
         eval `keychain --eval --nogui -Q -q ~/.ssh/id_dsa`

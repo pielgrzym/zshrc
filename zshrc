@@ -498,11 +498,14 @@ bindkey '^i' complete-word # this is *VERY* important read below:
 # borrowed from Mikachu (#zsh at freenode): http://mika.l3ib.org/code/dot-zshrc
 # just type '...' to get '../..'
 rationalise-dot() {
-  if [[ $LBUFFER = *.. ]]; then
-    LBUFFER+=/..
-  else
-    LBUFFER+=.
-  fi
+        local MATCH
+        if [[ $LBUFFER == (|*['/ '$'\t\n''|;&']).. ]]; then
+                LBUFFER+=/
+                zle self-insert
+                zle self-insert
+        else
+                zle self-insert
+        fi
 }
 zle -N rationalise-dot
 bindkey . rationalise-dot

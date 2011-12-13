@@ -390,8 +390,8 @@ bindkey -r "^[OA" "^[OB" "^[OC" "^[OD" "^[[A" "^[[B" "^[[C" "^[[D"
 # history {{{1
 # options {{{2
 HISTFILE=$HOME/.zsh_history
-HISTSIZE=10000
-SAVEHIST=10000
+HISTSIZE=5000
+SAVEHIST=5000
 HISTIGNORE="[   ]*:&:bg:fg:clear:hr:hc"
 
 setopt hist_ignore_dups # ignore duplication command history list

@@ -552,7 +552,12 @@ precmd () {
  
     vcs_info 2> /dev/null # yeah, ugly hack to shut up debian/centos that have old zsh withou vcs_info
     # window resize fix
-    print -rP ' %{$MAINCOL}$PR_SET_CHARSET$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT(%{$fg[blue]%}%~%{$reset_color%}%{$MAINCOL})${vcs_info_msg_0_}'
+    if [[ -n $HISTFILE ]]; then
+            HIST_IND=''
+    else
+            HIST_IND=" %{$fg[red]%}[HISTORY_OFF]%($reset_color%) "
+    fi
+            print -rP ' %{$MAINCOL}$PR_SET_CHARSET$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT(%{$fg[blue]%}%~%{$reset_color%}%{$MAINCOL})${vcs_info_msg_0_}$HIST_IND'
 }
 
 if [[ `tty` == /dev/tty* ]]; then

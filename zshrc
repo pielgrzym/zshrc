@@ -300,6 +300,7 @@ autoload zcalc
 alias zc=zcalc
 alias hist_off='HISTFILE='
 alias hist_on='HISTFILE=$HOME/.zsh_history'
+alias svim="vim -n -c 'set nobackup'"
 # git {{{1
 # Aliases
 alias g='git'

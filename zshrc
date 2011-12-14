@@ -298,6 +298,8 @@ alias reboot='rconfirm sudo reboot'
 alias shutdown='rconfirm sudo shutdown'
 autoload zcalc
 alias zc=zcalc
+alias hist_off='HISTFILE='
+alias hist_on='HISTFILE=$HOME/.zsh_history'
 # git {{{1
 # Aliases
 alias g='git'

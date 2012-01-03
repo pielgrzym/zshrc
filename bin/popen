@@ -35,7 +35,7 @@ if [[ -d $PROJDIR && -d $PROJDIR/git ]]; then
         if [[ -r $PROJDIR/git/Session.vim ]]; then
                 startp_session $PROJDIR/git "Session.vim"
         elif [[ -r $PROJDIR/git/$PROJ.vim ]]; then
-                start_gvim_session $PROJDIR/git $PROJ.vim
+                startp_session $PROJDIR/git $PROJ.vim
         else
                 startp $PROJDIR/git
         fi

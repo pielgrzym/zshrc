@@ -305,7 +305,8 @@ alias svim="vim -n -c 'set nobackup'"
 # Aliases
 alias g='git'
 alias gst='git status -sb'
-alias gl='git log --abbrev-commit --pretty=oneline --stat --decorate'
+alias gl='git log --abbrev-commit --pretty=oneline --no-merges --decorate'
+alias gls='git log --abbrev-commit --pretty=oneline --stat --decorate'
 alias gg='git log --abbrev-commit --pretty=oneline --graph --decorate'
 alias gp='git push'
 alias gf='git fetch'

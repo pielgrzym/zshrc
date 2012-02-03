@@ -268,6 +268,7 @@ alias history='fc -l 1'
 alias x=extract
 compdef mp=mplayer
 compdef napi=mplayer # ugly, but makes colorfull completions for napi
+alias l="ls -h -1 --color=tty"
 alias ls="ls -h --color=tty"
 alias ll='ls -lh --color=tty'
 alias sl="ls -h --color=tty" # often screw this up

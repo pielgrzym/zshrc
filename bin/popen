@@ -8,8 +8,8 @@ function startp_session () {
         source /usr/bin/virtualenvwrapper.sh
         workon $PROJ
         gvim -S $2 &
-        PIEL_PROJ=$PROJ PIEL_PROJ_DIR=$PROJDIR/git urxvt &
-        PIEL_PROJ=$PROJ PIEL_PROJ_DIR=$PROJDIR/git urxvt
+        PIEL_PROJ=$PROJ PIEL_PROJ_DIR=$PROJDIR/git urxvtc &
+        PIEL_PROJ=$PROJ PIEL_PROJ_DIR=$PROJDIR/git urxvtc
 }
 
 function startp () {
@@ -18,8 +18,8 @@ function startp () {
         source /usr/bin/virtualenvwrapper.sh
         workon $PROJ
         gvim &
-        PIEL_PROJ=$PROJ PIEL_PROJ_DIR=$PROJDIR/git urxvt &
-        PIEL_PROJ=$PROJ PIEL_PROJ_DIR=$PROJDIR/git urxvt
+        PIEL_PROJ=$PROJ PIEL_PROJ_DIR=$PROJDIR/git urxvtc &
+        PIEL_PROJ=$PROJ PIEL_PROJ_DIR=$PROJDIR/git urxvtc
 }
 
 if [[ -n $1 ]]; then

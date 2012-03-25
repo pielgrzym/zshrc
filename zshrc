@@ -420,6 +420,7 @@ setopt APPEND_HISTORY
 # If I'm done I can simply type 'hr' to use global zsh history. If I have a fresh project
 # I can simply type 'hc' and this will create and checkout new history branch.
 # The checkout and branch terminology is borrowed from git - I use it everyday  :)
+CUSTOM_HISTORY=0
 create_history_branch() {
         if [[ -s .zsh_custom_history && -r .zsh_custom_history && -w .zsh_custom_history ]] 
         then # in case there already is a custom history for current dir
@@ -441,17 +442,20 @@ checkout_history_branch() {
         HISTFILE=$PWD/.zsh_custom_history
         SAVEHIST=10000
         HISTSIZE=10000
+        CUSTOM_HISTORY=$PWD
 }
 
 checkout_master_history_branch() {
         echo "Restoring master history branch"
         fc -P # stash current history and pop global one from stack
+        CUSTOM_HISTORY=0
 }
 
 chpwd() {
         if [[ -s .zsh_custom_history && -r .zsh_custom_history && -w .zsh_custom_history ]] 
         then
                 checkout_history_branch
+        else
         fi
 }
 # branching aliases {{{2
@@ -559,6 +563,11 @@ precmd () {
             HIST_IND=''
     else
             HIST_IND=" %{$fg[red]%}[HISTORY_OFF]%($reset_color%) "
+    fi
+    if [[ $CUSTOM_HISTORY == 0 ]]; then
+            HIST_IND=''
+    else
+            HIST_IND=" %{$fg[red]%}[HISTORY: %{$CUSTOM_HISTORY%}]%($reset_color%) "
     fi
             print -rP ' %{$MAINCOL}$PR_SET_CHARSET$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT(%{$fg[blue]%}%~%{$reset_color%}%{$MAINCOL})${vcs_info_msg_0_}$HIST_IND'
 }

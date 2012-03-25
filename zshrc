@@ -430,8 +430,8 @@ create_history_branch() {
                 fc -p # pop current global history into stack and create new one
                 # below we need to tell zsh where to store the custom history and it's parameters
                 HISTFILE=$PWD/.zsh_custom_history
-                SAVEHIST=10000
-                HISTSIZE=10000
+                SAVEHIST=5000
+                HISTSIZE=5000
         fi
 }
 
@@ -440,8 +440,8 @@ checkout_history_branch() {
         fc -p $PWD/.zsh_custom_history # put global hist on stack and use this one
         # below we need to tell zsh where to store the custom history and it's parameters
         HISTFILE=$PWD/.zsh_custom_history
-        SAVEHIST=10000
-        HISTSIZE=10000
+        SAVEHIST=5000
+        HISTSIZE=5000
         CUSTOM_HISTORY="H: $PWD"
 }
 

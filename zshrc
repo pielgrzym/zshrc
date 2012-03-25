@@ -442,7 +442,7 @@ checkout_history_branch() {
         HISTFILE=$PWD/.zsh_custom_history
         SAVEHIST=10000
         HISTSIZE=10000
-        CUSTOM_HISTORY=$PWD
+        CUSTOM_HISTORY="H: $PWD"
 }
 
 checkout_master_history_branch() {
@@ -567,7 +567,7 @@ precmd () {
     if [[ $CUSTOM_HISTORY == 0 ]]; then
             HIST_IND=''
     else
-            HIST_IND=" %{$fg[red]%}[HISTORY: %{$CUSTOM_HISTORY%}]%($reset_color%) "
+            HIST_IND=" %{$fg[red]%}[%{$CUSTOM_HISTORY%}]%($reset_color%) "
     fi
             print -rP ' %{$MAINCOL}$PR_SET_CHARSET$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT(%{$fg[blue]%}%~%{$reset_color%}%{$MAINCOL})${vcs_info_msg_0_}$HIST_IND'
 }

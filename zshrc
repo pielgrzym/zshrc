@@ -525,7 +525,6 @@ bindkey . rationalise-dot
 if (( ${+commands[keychain]} )); then
         eval `keychain --eval --nogui -Q -q ~/.ssh/id_dsa`
 fi
-
 # vcs_info {{{1
 autoload -Uz vcs_info
 

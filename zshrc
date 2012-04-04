@@ -662,4 +662,8 @@ if [[ -n $PIEL_PROJ && -n $PIEL_PROJ_DIR ]]; then
         source /usr/bin/virtualenvwrapper.sh
         workon $PIEL_PROJ
 fi
+# zsh-history-substring-search {{{1
+source $HOME/.zsh/zsh-history-substring-search/zsh-history-substring-search.zsh
+bindkey '^P' history-substring-search-up
+bindkey '^N' history-substring-search-down
 # # vim: fdm=marker:fdl=0

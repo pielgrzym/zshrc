@@ -602,13 +602,9 @@ precmd () {
     if [[ -z $(git ls-files `git rev-parse --show-toplevel 2> /dev/null` --other --exclude-standard 2> /dev/null) ]] {
             zstyle ':vcs_info:git:prompt:*' formats "(${FMT_PATH}) ${FMT_BRANCH} %m%f"
             zstyle ':vcs_info:git:prompt:*' actionformats "(${FMT_PATH}%f) ${FMT_BRANCH}${FMT_ACTION} %m%f"
-            # zstyle ':vcs_info:*:prompt:*' formats "%{$fg[yellow]%} (%b%c%u) %{$reset_color%}"
-            # UNTRACKED=""
     } else {
             zstyle ':vcs_info:git:prompt:*' formats "(${FMT_PATH}) ${FMT_BRANCH} %F{red}∪%f %m%f"
             zstyle ':vcs_info:git:prompt:*' actionformats "(${FMT_PATH}%f) ${FMT_BRANCH}${FMT_ACTION} %F{red}∪%f %m%f"
-            # zstyle ':vcs_info:*:prompt:*' formats "%{$fg[yellow]%} (%b%c%u%%{$fg[red]%}∪%{$fg[yellow]%}) %{$reset_color%}"
-            # UNTRACKED="%F{red}∪%f"
     }
  
     vcs_info 'prompt' 2> /dev/null # yeah, ugly hack to shut up debian/centos that have old zsh withou vcs_info
@@ -631,7 +627,7 @@ else
 fi
 
 # first line of prompt is being printed in line 516 in precmd - this fixes doubling of the first line on window resize
-PROMPT='%{$MAINCOL}$PR_SET_CHARSET$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT${${vcs_info_msg_0_%%.}/$HOME/~} $UNTRACKED $HIST_IND
+PROMPT='%{$MAINCOL}$PR_SET_CHARSET$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT${${vcs_info_msg_0_%%.}/$HOME/~} $HIST_IND
 %{$MAINCOL}$PR_SET_CHARSET$PR_SHIFT_IN$PR_LLCORNER$PR_HBAR$PR_SHIFT_OUT$PROMPT_DECOR${return_code}\
  %n%F{red}@%{$MAINCOL}%M\
  %F{red}%(!.#.%%)%f '

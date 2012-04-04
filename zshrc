@@ -525,9 +525,62 @@ bindkey . rationalise-dot
 if (( ${+commands[keychain]} )); then
         eval `keychain --eval --nogui -Q -q ~/.ssh/id_dsa`
 fi
+
+# vcs_info {{{1
+autoload -Uz vcs_info
+
+local FMT_BRANCH FMT_ACTION FMT_PATH
+
+# set formats
+# %b - branchname
+# %u - unstagedstr (see below)
+# %c - stangedstr (see below)
+# %a - action (e.g. rebase-i)
+# %R - repository path
+# %S - path in the repository
+FMT_BRANCH="%F{yellow}(%b%u%c)%f" # e.g. master¹²
+FMT_ACTION="%F{cyan}%a%f" # e.g. (rebase-i)
+FMT_PATH="%F{blue}%R/%%F{cyan}%S%F{green}" # e.g. ~/repo/subdir
+
+zstyle ':vcs_info:*' enable git svn darcs bzr hg
+
+# check-for-changes can be really slow.
+# you should disable it, if you work with large repositories
+zstyle ':vcs_info:*:prompt:*' check-for-changes true
+
+# zstyle ':vcs_info:*:prompt:*' unstagedstr '¹' # display ¹ if there are unstaged changes
+# zstyle ':vcs_info:*:prompt:*' stagedstr '²' # display ² if there are staged changes
+zstyle ':vcs_info:*:prompt:*' stagedstr "%F{green}∷%{$reset_color%}"
+zstyle ':vcs_info:*:prompt:*' unstagedstr "%F{red}∷%{$reset_color%}%F{yellow}"
+
+# non-vcs
+zstyle ':vcs_info:*:prompt:*' nvcsformats "(%F{cyan}%3~%f) "
+
+# generic vcs
+zstyle ':vcs_info:*:prompt:*' formats "${FMT_PATH} ${FMT_BRANCH} %s "
+zstyle ':vcs_info:*:prompt:*' actionformats "${FMT_PATH} ${FMT_BRANCH}${FMT_ACTION} %s "
+
+# special hg stuff
+zstyle ':vcs_info:hg:prompt:*' formats "${FMT_PATH} ${FMT_BRANCH} ☿"
+zstyle ':vcs_info:hg:prompt:*' actionformats "${FMT_PATH} ${FMT_BRANCH}${FMT_ACTION} ☿"
+
+# special git stuff
+zstyle ':vcs_info:git:prompt:*' formats "(${FMT_PATH}) ${FMT_BRANCH} %m%f"
+zstyle ':vcs_info:git:prompt:*' actionformats "(${FMT_PATH}%f) ${FMT_BRANCH}${FMT_ACTION} %m%f"
+
+# Show count of stashed changes
+function +vi-git-stash() {
+    local -a stashes
+
+    if [[ -s ${hook_com[base]}/.git/refs/stash ]] ; then
+stashes=$(git stash list 2>/dev/null | wc -l)
+        [[ -n $stashes ]] && hook_com[misc]="%F{243}${stashes} "
+    fi
+}
+
+zstyle ':vcs_info:git*+set-message:*' hooks git-stash
 # prompt {{{1
 setopt prompt_subst # this option is necessary for prompt colors
-autoload -Uz vcs_info
 autoload -U is-at-least
  
 if [[ $HOST_IS_LOCAL == 1 ]]; then
@@ -545,31 +598,28 @@ PR_HBAR=${altchar[q]:--}
 PR_ULCORNER=${altchar[l]:--}
 PR_LLCORNER=${altchar[m]:--}
 
-zstyle ':vcs_info:*' stagedstr "%{$fg[green]%}∷%{$reset_color%}%{$fg[yellow]%}"
-zstyle ':vcs_info:*' unstagedstr "%{$fg[red]%}∷%{$reset_color%}%{$fg[yellow]%}"
-zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b:%r'
-zstyle ':vcs_info:*' enable git svn
 precmd () {
-    if [[ -z $(git ls-files --other --exclude-standard 2> /dev/null) ]] {
-            zstyle ':vcs_info:*' formats "%{$fg[yellow]%} (%b%c%u) %{$reset_color%}"
+    if [[ -z $(git ls-files `git rev-parse --show-toplevel 2> /dev/null` --other --exclude-standard 2> /dev/null) ]] {
+            zstyle ':vcs_info:git:prompt:*' formats "(${FMT_PATH}) ${FMT_BRANCH} %m%f"
+            zstyle ':vcs_info:git:prompt:*' actionformats "(${FMT_PATH}%f) ${FMT_BRANCH}${FMT_ACTION} %m%f"
+            # zstyle ':vcs_info:*:prompt:*' formats "%{$fg[yellow]%} (%b%c%u) %{$reset_color%}"
+            # UNTRACKED=""
     } else {
-    zstyle ':vcs_info:*' formats "%{$fg[yellow]%} (%b%c%u%%{$fg[red]%}∪%{$fg[yellow]%}) %{$reset_color%}"
+            zstyle ':vcs_info:git:prompt:*' formats "(${FMT_PATH}) ${FMT_BRANCH} %F{red}∪%f %m%f"
+            zstyle ':vcs_info:git:prompt:*' actionformats "(${FMT_PATH}%f) ${FMT_BRANCH}${FMT_ACTION} %F{red}∪%f %m%f"
+            # zstyle ':vcs_info:*:prompt:*' formats "%{$fg[yellow]%} (%b%c%u%%{$fg[red]%}∪%{$fg[yellow]%}) %{$reset_color%}"
+            # UNTRACKED="%F{red}∪%f"
     }
  
-    vcs_info 2> /dev/null # yeah, ugly hack to shut up debian/centos that have old zsh withou vcs_info
-    # window resize fix
+    vcs_info 'prompt' 2> /dev/null # yeah, ugly hack to shut up debian/centos that have old zsh withou vcs_info
     if [[ -n $HISTFILE ]]; then
             HIST_IND=''
     else
-            HIST_IND=" %{$fg[red]%}[HISTORY_OFF]%($reset_color%) "
+            HIST_IND=" %F{red}[HISTORY_OFF]%f "
     fi
-    if [[ $CUSTOM_HISTORY == 0 ]]; then
-            HIST_IND=''
-    else
-            HIST_IND=" %{$fg[red]%}[%{$CUSTOM_HISTORY%}]%($reset_color%) "
+    if [[ $CUSTOM_HISTORY != 0 ]]; then
+            HIST_IND=" %{red}[%{$CUSTOM_HISTORY%}]%f "
     fi
-            print -rP ' %{$MAINCOL}$PR_SET_CHARSET$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT(%{$fg[blue]%}%~%{$reset_color%}%{$MAINCOL})${vcs_info_msg_0_}$HIST_IND'
 }
 
 if [[ `tty` == /dev/tty* ]]; then
@@ -581,9 +631,10 @@ else
 fi
 
 # first line of prompt is being printed in line 516 in precmd - this fixes doubling of the first line on window resize
-PROMPT=' %{$MAINCOL}$PR_SET_CHARSET$PR_SHIFT_IN$PR_LLCORNER$PR_HBAR$PR_SHIFT_OUT$PROMPT_DECOR${return_code}\
- %n%{$fg[red]%}@%{$MAINCOL}%M\
- %{$fg[red]%}%(!.#.%%)%{$reset_color%} '
+PROMPT='%{$MAINCOL}$PR_SET_CHARSET$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT${${vcs_info_msg_0_%%.}/$HOME/~} $UNTRACKED $HIST_IND
+%{$MAINCOL}$PR_SET_CHARSET$PR_SHIFT_IN$PR_LLCORNER$PR_HBAR$PR_SHIFT_OUT$PROMPT_DECOR${return_code}\
+ %n%F{red}@%{$MAINCOL}%M\
+ %F{red}%(!.#.%%)%f '
 # project starter {{{1
 if [[ -n $PIEL_PROJ && -n $PIEL_PROJ_DIR ]]; then
         cd $PIEL_PROJ_DIR

@@ -537,7 +537,7 @@ local FMT_BRANCH FMT_ACTION FMT_PATH
 # %a - action (e.g. rebase-i)
 # %R - repository path
 # %S - path in the repository
-FMT_BRANCH="%F{yellow}(%b%u%c)%f" # e.g. master¹²
+FMT_BRANCH="%F{yellow}(%b%u%c%F{yellow})%f"
 FMT_ACTION="%F{cyan}%a%f" # e.g. (rebase-i)
 FMT_PATH="%F{blue}%R/%%F{cyan}%S%F{green}" # e.g. ~/repo/subdir
 
@@ -547,40 +547,66 @@ zstyle ':vcs_info:*' enable git svn darcs bzr hg
 # you should disable it, if you work with large repositories
 zstyle ':vcs_info:*:prompt:*' check-for-changes true
 
-# zstyle ':vcs_info:*:prompt:*' unstagedstr '¹' # display ¹ if there are unstaged changes
-# zstyle ':vcs_info:*:prompt:*' stagedstr '²' # display ² if there are staged changes
-zstyle ':vcs_info:*:prompt:*' stagedstr "%F{green}∷%{$reset_color%}"
-zstyle ':vcs_info:*:prompt:*' unstagedstr "%F{red}∷%{$reset_color%}%F{yellow}"
+zstyle ':vcs_info:*:prompt:*' stagedstr "%F{green}∷%F{yellow}"
+zstyle ':vcs_info:*:prompt:*' unstagedstr "%F{red}∷%F{yellow}"
 
 # non-vcs
 zstyle ':vcs_info:*:prompt:*' nvcsformats "(%F{cyan}%3~%f) "
 
 # generic vcs
-zstyle ':vcs_info:*:prompt:*' formats "${FMT_PATH} ${FMT_BRANCH} %s "
-zstyle ':vcs_info:*:prompt:*' actionformats "${FMT_PATH} ${FMT_BRANCH}${FMT_ACTION} %s "
+zstyle ':vcs_info:*:prompt:*' formats "(${FMT_PATH}) ${FMT_BRANCH} %s "
+zstyle ':vcs_info:*:prompt:*' actionformats "(${FMT_PATH}) ${FMT_BRANCH}${FMT_ACTION} %s "
 
 # special hg stuff
-zstyle ':vcs_info:hg:prompt:*' formats "${FMT_PATH} ${FMT_BRANCH} ☿"
-zstyle ':vcs_info:hg:prompt:*' actionformats "${FMT_PATH} ${FMT_BRANCH}${FMT_ACTION} ☿"
+zstyle ':vcs_info:hg:prompt:*' formats "(${FMT_PATH}) ${FMT_BRANCH} ☿"
+zstyle ':vcs_info:hg:prompt:*' actionformats "(${FMT_PATH}) ${FMT_BRANCH}${FMT_ACTION} ☿"
 
 # special git stuff
 zstyle ':vcs_info:git:prompt:*' formats "(${FMT_PATH}) ${FMT_BRANCH} %m%f"
-zstyle ':vcs_info:git:prompt:*' actionformats "(${FMT_PATH}%f) ${FMT_BRANCH}${FMT_ACTION} %m%f"
+zstyle ':vcs_info:git:prompt:*' actionformats "(${FMT_PATH}) ${FMT_BRANCH}${FMT_ACTION} %m%f"
 
 # Show count of stashed changes
 function +vi-git-stash() {
     local -a stashes
 
     if [[ -s ${hook_com[base]}/.git/refs/stash ]] ; then
-stashes=$(git stash list 2>/dev/null | wc -l)
-        [[ -n $stashes ]] && hook_com[misc]="%F{243}${stashes} "
+            stashes=$(git stash list 2>/dev/null | wc -l)
+            [[ -n $stashes ]] && hook_com[misc]="(Stashes: %F{243}${stashes}) "
     fi
 }
 
-zstyle ':vcs_info:git*+set-message:*' hooks git-stash
++vi-git-untracked(){
+    if [[ $(git rev-parse --is-inside-work-tree 2> /dev/null) == 'true' ]] ; then
+            local git_root
+            git_root=`git rev-parse --show-toplevel 2> /dev/null`
+            if [[ -n $(git ls-files $git_root --other --exclude-standard 2> /dev/null) ]] ; then
+                    hook_com[staged]+='%F{red}∪%f'
+            fi
+    fi
+}
+
+function +vi-git-st() {
+    local ahead behind
+    local -a gitstatus
+
+    # for git prior to 1.7
+    # ahead=$(git rev-list origin/${hook_com[branch]}..HEAD | wc -l)
+    ahead=$(git rev-list ${hook_com[branch]}@{upstream}..HEAD 2>/dev/null | wc -l)
+    (( $ahead )) && gitstatus+=( "[ahead %F{red}${ahead}%f]" )
+
+    # for git prior to 1.7
+    # behind=$(git rev-list HEAD..origin/${hook_com[branch]} | wc -l)
+    behind=$(git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
+    (( $behind )) && gitstatus+=( "[behind %F{red}${behind}%f]" )
+
+    hook_com[misc]+=${(j:/:)gitstatus}
+}
+
+zstyle ':vcs_info:git*+set-message:*' hooks git-untracked git-stash git-st
 # prompt {{{1
 setopt prompt_subst # this option is necessary for prompt colors
 autoload -U is-at-least
+autoload -U add-zsh-hook
  
 if [[ $HOST_IS_LOCAL == 1 ]]; then
         MAINCOL="$fg[green]%"
@@ -597,16 +623,14 @@ PR_HBAR=${altchar[q]:--}
 PR_ULCORNER=${altchar[l]:--}
 PR_LLCORNER=${altchar[m]:--}
 
-precmd () {
-    if [[ -z $(git ls-files `git rev-parse --show-toplevel 2> /dev/null` --other --exclude-standard 2> /dev/null) ]] {
-            zstyle ':vcs_info:git:prompt:*' formats "(${FMT_PATH}) ${FMT_BRANCH} %m%f"
-            zstyle ':vcs_info:git:prompt:*' actionformats "(${FMT_PATH}%f) ${FMT_BRANCH}${FMT_ACTION} %m%f"
-    } else {
-            zstyle ':vcs_info:git:prompt:*' formats "(${FMT_PATH}) ${FMT_BRANCH} %F{red}∪%f %m%f"
-            zstyle ':vcs_info:git:prompt:*' actionformats "(${FMT_PATH}%f) ${FMT_BRANCH}${FMT_ACTION} %F{red}∪%f %m%f"
-    }
- 
+# add info about untracked git files
+vcsinfo_precmd () {
     vcs_info 'prompt' 2> /dev/null # yeah, ugly hack to shut up debian/centos that have old zsh withou vcs_info
+}
+add-zsh-hook precmd vcsinfo_precmd
+
+# add info about HISTFILE used / history off
+history_precmd() {
     if [[ -n $HISTFILE ]]; then
             HIST_IND=''
     else
@@ -616,6 +640,7 @@ precmd () {
             HIST_IND=" %{red}[%{$CUSTOM_HISTORY%}]%f "
     fi
 }
+add-zsh-hook precmd history_precmd
 
 if [[ `tty` == /dev/tty* ]]; then
         PROMPT_DECOR="["

@@ -500,7 +500,7 @@ setopt no_beep
 ## pager
 export PAGER=less
 # complete with sudo {{{1
-insert_sudo () { zle beginning-of-line; zle -U "sudo " }
+insert_sudo () { zle beginning-of-line; zle -U "s " }
 zle -N insert-sudo insert_sudo
 bindkey "^Xs" insert-sudo
 bindkey '^i' complete-word # this is *VERY* important read below:

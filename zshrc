@@ -546,7 +546,7 @@ local FMT_BRANCH FMT_ACTION FMT_PATH
 # %S - path in the repository
 FMT_BRANCH="%F{yellow}(%b%u%c%F{yellow})%f"
 FMT_ACTION="%F{cyan}%a%f" # e.g. (rebase-i)
-FMT_PATH="%F{blue}%R/%%F{cyan}%S%F{green}" # e.g. ~/repo/subdir
+FMT_PATH="%F{blue}%R/%%F{cyan}%S%F{$MAINCOL}" # e.g. ~/repo/subdir
 
 zstyle ':vcs_info:*' enable git svn darcs bzr hg
 

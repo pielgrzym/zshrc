@@ -551,7 +551,7 @@ zstyle ':vcs_info:*:prompt:*' stagedstr "%F{green}∷%F{yellow}"
 zstyle ':vcs_info:*:prompt:*' unstagedstr "%F{red}∷%F{yellow}"
 
 # non-vcs
-zstyle ':vcs_info:*:prompt:*' nvcsformats "(%F{cyan}%3~%f) "
+zstyle ':vcs_info:*:prompt:*' nvcsformats "(%F{cyan}%3~%F{green})%f "
 
 # generic vcs
 zstyle ':vcs_info:*:prompt:*' formats "(${FMT_PATH}) ${FMT_BRANCH} %s "

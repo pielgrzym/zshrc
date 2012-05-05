@@ -528,6 +528,13 @@ fi
 # vcs_info {{{1
 autoload -Uz vcs_info
 
+ 
+if [[ $HOST_IS_LOCAL == 1 ]]; then
+        MAINCOL="$fg[green]%"
+else
+        MAINCOL="$fg[cyan]%"
+fi
+
 local FMT_BRANCH FMT_ACTION FMT_PATH
 
 # set formats
@@ -551,7 +558,7 @@ zstyle ':vcs_info:*:prompt:*' stagedstr "%F{green}∷%F{yellow}"
 zstyle ':vcs_info:*:prompt:*' unstagedstr "%F{red}∷%F{yellow}"
 
 # non-vcs
-zstyle ':vcs_info:*:prompt:*' nvcsformats "(%F{cyan}%3~%F{green})%f "
+zstyle ':vcs_info:*:prompt:*' nvcsformats "(%F{cyan}%3~%F{$MAINCOL})%f "
 
 # generic vcs
 zstyle ':vcs_info:*:prompt:*' formats "(${FMT_PATH}) ${FMT_BRANCH} %s "
@@ -607,12 +614,6 @@ zstyle ':vcs_info:git*+set-message:*' hooks git-untracked git-stash git-st
 setopt prompt_subst # this option is necessary for prompt colors
 autoload -U is-at-least
 autoload -U add-zsh-hook
- 
-if [[ $HOST_IS_LOCAL == 1 ]]; then
-        MAINCOL="$fg[green]%"
-else
-        MAINCOL="$fg[cyan]%"
-fi
 
 typeset -A altchar
 set -A altchar ${(s..)terminfo[acsc]}

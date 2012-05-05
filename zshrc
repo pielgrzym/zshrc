@@ -663,8 +663,9 @@ if [[ -n $PIEL_PROJ && -n $PIEL_PROJ_DIR ]]; then
         workon $PIEL_PROJ
 fi
 # zsh-history-substring-search {{{1
-source $HOME/.zsh/zsh-history-substring-search/zsh-history-substring-search.zsh
-bindkey '^P' history-substring-search-up
-bindkey '^N' history-substring-search-down
-
+if [[ -d $ZDOTDIR/zsh-history-substring-search ]]; then
+        source $ZDOTDIR/zsh-history-substring-search/zsh-history-substring-search.zsh
+        bindkey '^P' history-substring-search-up
+        bindkey '^N' history-substring-search-down
+fi
 # vim: fdm=marker:fdl=0

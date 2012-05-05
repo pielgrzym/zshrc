@@ -546,7 +546,7 @@ local FMT_BRANCH FMT_ACTION FMT_PATH
 # %S - path in the repository
 FMT_BRANCH="%F{yellow}(%b%u%c%F{yellow})%f"
 FMT_ACTION="%F{cyan}%a%f" # e.g. (rebase-i)
-FMT_PATH="%F{blue}%R/%%F{cyan}%S%F{$MAINCOL}" # e.g. ~/repo/subdir
+FMT_PATH="%F{blue}%R/%F{cyan}%S%F{$MAINCOL}" # e.g. ~/repo/subdir
 
 zstyle ':vcs_info:*' enable git svn darcs bzr hg
 
@@ -558,7 +558,7 @@ zstyle ':vcs_info:*:prompt:*' stagedstr "%F{green}∷%F{yellow}"
 zstyle ':vcs_info:*:prompt:*' unstagedstr "%F{red}∷%F{yellow}"
 
 # non-vcs
-zstyle ':vcs_info:*:prompt:*' nvcsformats "(%F{cyan}%3~%F{$MAINCOL})%f "
+zstyle ':vcs_info:*:prompt:*' nvcsformats "(%F{blue}%3~%F{$MAINCOL})%f "
 
 # generic vcs
 zstyle ':vcs_info:*:prompt:*' formats "(${FMT_PATH}) ${FMT_BRANCH} %s "

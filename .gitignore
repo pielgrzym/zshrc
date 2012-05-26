@@ -2,3 +2,4 @@ cache
 !cache/.x
 /.zcompdump
 /.zlogin
+/.zprofile

@@ -8,8 +8,10 @@ do
                 *.less)
                         echo "Yess, compiling less into css."
                         lessc static/less/bootstrap.less static/css/bootstrap.css
+                        lessc static/jah/less/bootstrap.less static/jah/css/bootstrap.css
                         fb=${f%.less}
                         git add static/css/bootstrap.css
+                        git add static/jah/css/bootstrap.css
                         ;;
         esac
 done

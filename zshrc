@@ -499,6 +499,8 @@ setopt no_beep
 #setopt cdablevarS
 ## pager
 export PAGER=less
+# fix ipython pager
+export LESS=-r
 # complete with sudo {{{1
 insert_sudo () { zle beginning-of-line; zle -U "s " }
 zle -N insert-sudo insert_sudo

@@ -661,9 +661,11 @@ PROMPT='%{$MAINCOL}$PR_SET_CHARSET$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT$
 # project starter {{{1
 if [[ -n $PIEL_PROJ && -n $PIEL_PROJ_DIR ]]; then
         cd $PIEL_PROJ_DIR
-        export WORKON_HOME=$HOME/.virtualenvs
-        source /usr/bin/virtualenvwrapper.sh
-        workon $PIEL_PROJ
+        if [[ -d $HOME/.virtualenvs/$PIEL_PROJ ]]; then
+                export WORKON_HOME=$HOME/.virtualenvs
+                source /usr/bin/virtualenvwrapper.sh
+                workon $PIEL_PROJ
+        fi
 fi
 # zsh-history-substring-search {{{1
 if [[ -d $ZDOTDIR/zsh-history-substring-search ]]; then

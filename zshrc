@@ -672,6 +672,8 @@ alias gvs="git pv start"
 alias gvv="git pv show"
 alias gvfn="git pv finish"
 alias gvd="git pv deliver"
+# git-annex {{{1
+export PATH=~/.haskell_bin:$PATH
 # project starter {{{1
 if [[ -n $PIEL_PROJ && -n $PIEL_PROJ_DIR ]]; then
         cd $PIEL_PROJ_DIR

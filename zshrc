@@ -523,6 +523,9 @@ zle -N rationalise-dot
 bindkey . rationalise-dot
 # without this, typing a . aborts incremental history search
 [[ -n ${(M)keymaps:#isearch} ]] && bindkey -M isearch . self-insert
+# gpg pinentry {{{1
+# I HATE YOU pinentry-curses
+export GPG_TTY=$(tty)
 # keychain {{{1
 if (( ${+commands[keychain]} )); then
         eval `keychain --eval --nogui -Q -q ~/.ssh/id_dsa`

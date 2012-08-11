@@ -7,12 +7,11 @@ do
         case ${f} in
                 *.less)
                         echo "Yess, compiling less into css."
-                        lessc static/less/bootstrap.less static/css/bootstrap.css
-                        lessc static/less/style.less static/css/style.css
-                        lessc static/jah/less/bootstrap.less static/jah/css/bootstrap.css
+                        lessc static/furora.less static/css/furora/furora.css
+                        lessc static/jah/jah.less static/jah/css/jah.css
                         fb=${f%.less}
-                        git add static/css/bootstrap.css
-                        git add static/jah/css/bootstrap.css
+                        git add static/css/furora/furora.css
+                        git add static/jah/css/jah.css
                         ;;
         esac
 done

@@ -699,4 +699,14 @@ if [[ -d $ZDOTDIR/zsh-history-substring-search ]]; then
         bindkey '^P' history-substring-search-up
         bindkey '^N' history-substring-search-down
 fi
+# autoenv {{{1
+if [[ -f $ZDOTDIR/autoenv/activate.sh ]]; then
+        source $ZDOTDIR/autoenv/activate.sh
+fi
+# z (the new j, yo!) {{{1
+if [[ -f $ZDOTDIR/z/z.sh ]]; then
+        echo "Activating Z!"
+        . $ZDOTDIR/z/z.sh
+fi
+# modeline {{{1
 # vim: fdm=marker:fdl=0

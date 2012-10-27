@@ -7,3 +7,9 @@
 [submodule "git-hooks"]
 	path = git-hooks
 	url = git@github.com:pielgrzym/git-hooks.git
+[submodule "autoenv"]
+	path = autoenv
+	url = https://github.com/kennethreitz/autoenv.git
+[submodule "z"]
+	path = z
+	url = https://github.com/rupa/z.git

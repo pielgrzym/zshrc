@@ -705,7 +705,6 @@ if [[ -f $ZDOTDIR/autoenv/activate.sh ]]; then
 fi
 # z (the new j, yo!) {{{1
 if [[ -f $ZDOTDIR/z/z.sh ]]; then
-        echo "Activating Z!"
         . $ZDOTDIR/z/z.sh
 fi
 # modeline {{{1

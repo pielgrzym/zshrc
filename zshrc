@@ -699,6 +699,11 @@ if [[ -d $ZDOTDIR/zsh-history-substring-search ]]; then
         bindkey '^P' history-substring-search-up
         bindkey '^N' history-substring-search-down
 fi
+# todotxt {{{1
+export PATH=$ZDOTDIR/todotxt:$PATH
+alias t='noglob todo.sh'
+alias tls='t ls'
+alias ta='t add'
 # autoenv {{{1
 if [[ -f $ZDOTDIR/autoenv/activate.sh ]]; then
         source $ZDOTDIR/autoenv/activate.sh

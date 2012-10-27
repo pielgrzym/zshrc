@@ -484,6 +484,13 @@ prepare_wrapper() {
         source /usr/bin/virtualenvwrapper.sh
 }
 alias vew=prepare_wrapper
+prepare_rvm() {
+        if [[ -x $HOME/.rvm/scripts/rvm ]]; then
+                source $HOME/.rvm/scripts/rvm 
+                export RPROMPT=$( $HOME/.rvm/bin/rvm-prompt )
+        fi
+}
+alias rew=prepare_rvm
 # misc {{{1
 ## smart urls
 autoload -U url-quote-magic

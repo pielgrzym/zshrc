@@ -704,7 +704,9 @@ export PATH=$ZDOTDIR/todotxt:$PATH
 alias t='noglob todo.sh'
 alias tls='t ls'
 alias ta='t add'
+alias tm='t addto maybe.txt'
 alias td='t do'
+alias tp='t p' # t p <num> <prio>
 # autoenv {{{1
 if [[ -f $ZDOTDIR/autoenv/activate.sh ]]; then
         source $ZDOTDIR/autoenv/activate.sh

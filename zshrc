@@ -705,6 +705,7 @@ alias t='noglob todo.sh'
 alias tls='t ls'
 alias ta='t add'
 alias tm='t addto maybe.txt'
+alias tlm='t lf maybe.txt'
 alias td='t do'
 alias tp='t p' # t p <num> <prio>
 # autoenv {{{1

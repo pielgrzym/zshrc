@@ -707,13 +707,14 @@ alias ta='t add'
 alias tm='t addto maybe.txt'
 alias tlm='t lf maybe.txt'
 alias td='t do'
-alias tp='t p' # t p <num> <prio>
+alias tp='t pri' # t p <num> <prio>
 # autoenv {{{1
 if [[ -f $ZDOTDIR/autoenv/activate.sh ]]; then
         source $ZDOTDIR/autoenv/activate.sh
 fi
 # z (the new j, yo!) {{{1
 if [[ -f $ZDOTDIR/z/z.sh ]]; then
+        _Z_CMD='j'
         . $ZDOTDIR/z/z.sh
 fi
 # modeline {{{1

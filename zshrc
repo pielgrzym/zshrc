@@ -701,8 +701,16 @@ if [[ -d $ZDOTDIR/zsh-history-substring-search ]]; then
 fi
 # todotxt {{{1
 export PATH=$ZDOTDIR/todotxt:$PATH
-alias t='noglob todo.sh'
-alias tls='t ls'
+smart_todotxt() {
+        if [[ -n $1 ]]; then
+                noglob todo.sh $argv
+        else
+                noglob todo.sh ls @komp
+        fi
+}
+compdef smart_todotxt=todo.sh
+alias t=smart_todotxt
+alias tl='t ls'
 alias ta='t add'
 alias tm='t addto maybe.txt'
 alias tlm='t lf maybe.txt'

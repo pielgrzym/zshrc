@@ -703,13 +703,13 @@ fi
 export PATH=$ZDOTDIR/todotxt:$PATH
 smart_todotxt() {
         if [[ -n $1 ]]; then
-                noglob todo.sh $argv
+                todo.sh $argv
         else
-                noglob todo.sh ls @komp
+                todo.sh ls @komp
         fi
 }
 compdef smart_todotxt=todo.sh
-alias t=smart_todotxt
+alias t='noglob smart_todotxt'
 alias tl='t ls'
 alias ta='t add'
 alias tm='t addto maybe.txt'

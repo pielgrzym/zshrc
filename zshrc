@@ -699,6 +699,77 @@ if [[ -d $ZDOTDIR/zsh-history-substring-search ]]; then
         bindkey '^P' history-substring-search-up
         bindkey '^N' history-substring-search-down
 fi
+# todotxt date expansion {{{1
+date-expansion() {
+        # a helper for todotxt
+        # if you type #<stuff> and hit space the substitution occurs:
+        # todo.sh add stuff #j => todo.sh add stuff 2012-11-04
+        # #j - tommorow
+        # #t - next week
+        # #23 - 23rd day of current/next month
+        # #23.11 - 23.11 of current/next year
+        # #pn - next monday
+        # #..
+        # #nd - next sunday
+        # if we want not to insert expansion but literal text just press Ctrl-x before hitting space
+        setopt extendedglob
+        local MATCH
+        LBUFFER=${LBUFFER%%(#m)\#[.bcjpwtsrzondt0-9]##}
+        if [[ -n $MATCH ]]; then
+                case "$MATCH" in
+                        \#j)
+                                res=$(date --date="next day" +"%Y-%m-%d")
+                                ;;
+                        \#t)
+                                res=$(date --date="next week" +"%Y-%m-%d")
+                                ;;
+                        \#p[n]#) # either #p or #pn
+                                res=$(date --date="next Monday" +"%Y-%m-%d")
+                                ;;
+                        \#w[t]#) # either #w or #wt
+                                res=$(date --date="next Tuesday" +"%Y-%m-%d")
+                                ;;
+                        \#sr)
+                                res=$(date --date="next Wednesday" +"%Y-%m-%d")
+                                ;;
+                        \#c[zw]#) # either #c #cz or #czw
+                                res=$(date --date="next Thursday" +"%Y-%m-%d")
+                                ;;
+                        \#pt)
+                                res=$(date --date="next Friday" +"%Y-%m-%d")
+                                ;;
+                        \#s[ob]#) # #s #so #sob
+                                res=$(date --date="next Saturday" +"%Y-%m-%d")
+                                ;;
+                        \#n[d]#) # #n #nd
+                                res=$(date --date="next Sunday" +"%Y-%m-%d")
+                                ;;
+                        (#m)\#[0-9]##) # #23, #<digits>
+                                res="$(date +"%Y-%m-")${MATCH##\#}"
+                                ;;
+                        \#[0-9]##\.[0-9]##) # 23.11, #<digits>.<digits>
+                                local month day
+                                day=${MATCH%%.*}
+                                month=${MATCH#*.}
+                                res="$(date +"%Y")-$month-${day##\#}"
+                                ;;
+                        *)
+                                res=" "
+                                ;;
+                esac
+                LBUFFER+=$res
+        fi
+        zle self-insert
+        unsetopt extendedglob
+}
+no-date-expansion() {
+        LBUFFER+=' '
+}
+zle -N date-expansion
+zle -N no-date-expansion
+bindkey " " date-expansion
+bindkey "^x " no-date-expansion
+bindkey -M isearch " " self-insert
 # todotxt {{{1
 export PATH=$ZDOTDIR/todotxt:$PATH
 smart_todotxt() {

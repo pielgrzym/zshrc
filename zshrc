@@ -745,13 +745,27 @@ date-expansion() {
                                 res=$(date --date="next Sunday" +"%Y-%m-%d")
                                 ;;
                         (#m)\#[0-9]##) # #23, #<digits>
-                                res="$(date +"%Y-%m-")${MATCH##\#}"
+                                cur_day=$(date +"%d")
+                                day=${MATCH##\#}
+                                if [[ $day -lt $cur_day ]]; then
+                                        res="$(date --date="next month" +"%Y-%m-")${day}"
+                                else
+                                        res="$(date +"%Y-%m-")${day}"
+                                fi
                                 ;;
                         \#[0-9]##\.[0-9]##) # 23.11, #<digits>.<digits>
                                 local month day
-                                day=${MATCH%%.*}
+                                day=${${MATCH%%.*}##\#}
                                 month=${MATCH#*.}
-                                res="$(date +"%Y")-$month-${day##\#}"
+                                cur_month=$(date +"%m")
+                                cur_day=$(date +"%d")
+                                if [[ "$month" -lt "$cur_month" ]]; then
+                                        res="$(date --date="next year" +"%Y")-$month-$day"
+                                elif [[ "$day" -lt "$cur_day" && "$month" -eq "$cur_month" ]]; then
+                                        res="$(date --date="next year" +"%Y")-$month-$day"
+                                else
+                                        res="$(date +"%Y")-$month-${day##\#}"
+                                fi
                                 ;;
                         *)
                                 res=" "

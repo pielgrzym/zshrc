@@ -669,19 +669,21 @@ PROMPT='%{$MAINCOL}$PR_SET_CHARSET$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT$
  %n%F{red}@%{$MAINCOL}%M\
  %F{red}%(!.#.%%)%f '
 # givotal {{{1
-export PATH=~/work/givotal/git:$PATH
-source ~/work/givotal/git/completion/git-pivotal-completion.zsh
-alias gvf="git pv fetchall"
-alias gvc="git pv current"
-alias gvb="git pv backlog"
-alias gvm="git pv mywork"
-alias gvr="git pv review"
-alias gva="git pv accept"
-alias gvj="git pv reject"
-alias gvs="git pv start"
-alias gvv="git pv show"
-alias gvfn="git pv finish"
-alias gvd="git pv deliver"
+if [[ -d $HOME/work/givotal ]]; then
+        export PATH=~/work/givotal/git:$PATH
+        source ~/work/givotal/git/completion/git-pivotal-completion.zsh
+        alias gvf="git pv fetchall"
+        alias gvc="git pv current"
+        alias gvb="git pv backlog"
+        alias gvm="git pv mywork"
+        alias gvr="git pv review"
+        alias gva="git pv accept"
+        alias gvj="git pv reject"
+        alias gvs="git pv start"
+        alias gvv="git pv show"
+        alias gvfn="git pv finish"
+        alias gvd="git pv deliver"
+fi
 # git-annex {{{1
 export PATH=$HOME/.haskell_bin:$PATH
 # project starter {{{1

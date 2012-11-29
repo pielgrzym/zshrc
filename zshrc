@@ -244,6 +244,14 @@ smart_sudo () {
         sudo -s
     fi
 }
+# ctags for virtuaenv {{{2
+make_ctags(){
+        cur_dir=$(basename $(pwd))
+        if [[ $VIRTUAL_ENV != "" && $cur_dir == "git" ]]; then
+               ctags -R $VIRTUAL_ENV/lib/python?.?
+               ctags -a *
+        fi
+}
 # headphones/speakers {{{2
 headphones() {
         amixer -c 0 -- sset Front unmute 
@@ -302,6 +310,7 @@ alias zc=zcalc
 alias hist_off='HISTFILE='
 alias hist_on='HISTFILE=$HOME/.zsh_history'
 alias svim="vim -n -c 'set nobackup'"
+alias mktags=make_ctags
 # git {{{1
 # Aliases
 alias g='git'

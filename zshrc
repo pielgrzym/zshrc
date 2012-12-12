@@ -551,9 +551,9 @@ autoload -Uz vcs_info
 
  
 if [[ $HOST_IS_LOCAL == 1 ]]; then
-        MAINCOL="$fg[green]%"
+        MAINCOL="%{$fg[green]%}"
 else
-        MAINCOL="$fg[cyan]%"
+        MAINCOL="%{$fg[cyan]%}"
 fi
 
 local FMT_BRANCH FMT_ACTION FMT_PATH
@@ -565,9 +565,9 @@ local FMT_BRANCH FMT_ACTION FMT_PATH
 # %a - action (e.g. rebase-i)
 # %R - repository path
 # %S - path in the repository
-FMT_BRANCH="%F{yellow}(%b%u%c%F{yellow})%f"
-FMT_ACTION="%F{cyan}%a%f" # e.g. (rebase-i)
-FMT_PATH="%F{blue}%R/%F{cyan}%S%F{$MAINCOL}" # e.g. ~/repo/subdir
+FMT_BRANCH="${fg[yellow]}(%b%u%c${fg[yellow]})$reset_color"
+FMT_ACTION="${fg[cyan]}%a$reset_color" # e.g. (rebase-i)
+FMT_PATH="${fg[blue]}%R/${fg[cyan]}%S${MAINCOL}" # e.g. ~/repo/subdir
 
 zstyle ':vcs_info:*' enable git svn darcs bzr hg
 
@@ -575,11 +575,11 @@ zstyle ':vcs_info:*' enable git svn darcs bzr hg
 # you should disable it, if you work with large repositories
 zstyle ':vcs_info:*:prompt:*' check-for-changes true
 
-zstyle ':vcs_info:*:prompt:*' stagedstr "%F{green}∷%F{yellow}"
-zstyle ':vcs_info:*:prompt:*' unstagedstr "%F{red}∷%F{yellow}"
+zstyle ':vcs_info:*:prompt:*' stagedstr "${fg[green]}∷${fg[yellow]}"
+zstyle ':vcs_info:*:prompt:*' unstagedstr "${fg[red]}∷${fg[yellow]}"
 
 # non-vcs
-zstyle ':vcs_info:*:prompt:*' nvcsformats "(%F{blue}%3~%F{$MAINCOL})%f "
+zstyle ':vcs_info:*:prompt:*' nvcsformats "(${fg[blue]}%3~${MAINCOL})$reset_color "
 
 # generic vcs
 zstyle ':vcs_info:*:prompt:*' formats "(${FMT_PATH}) ${FMT_BRANCH} %s "
@@ -654,12 +654,11 @@ add-zsh-hook precmd vcsinfo_precmd
 # add info about HISTFILE used / history off
 history_precmd() {
     if [[ -n $HISTFILE ]]; then
-            HIST_IND=''
+            HIST=""
+    elif [[ $CUSTOM_HISTORY != 0 ]]; then
+            HIST="%{$fg[red]%}[${CUSTOM_HISTORY}]%{$reset_color%} "
     else
-            HIST_IND=" %F{red}[HISTORY_OFF]%f "
-    fi
-    if [[ $CUSTOM_HISTORY != 0 ]]; then
-            HIST_IND=" %{red}[%{$CUSTOM_HISTORY%}]%f "
+            HIST="%{$fg[red]%}[HISTORY_OFF]%{$reset_color%} "
     fi
 }
 add-zsh-hook precmd history_precmd
@@ -672,11 +671,12 @@ else
         PROMPT_DECOR="("
 fi
 
-# first line of prompt is being printed in line 516 in precmd - this fixes doubling of the first line on window resize
-PROMPT='%{$MAINCOL}$PR_SET_CHARSET$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT${${vcs_info_msg_0_%%.}/$HOME/~} $HIST_IND
-%{$MAINCOL}$PR_SET_CHARSET$PR_SHIFT_IN$PR_LLCORNER$PR_HBAR$PR_SHIFT_OUT$PROMPT_DECOR${return_code}\
- %n%F{red}@%{$MAINCOL}%M\
- %F{red}%(!.#.%%)%f '
+TOP_CORNER="$MAINCOL$PR_SET_CHARSET$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT"
+BOTTOM_COR="$MAINCOL$PR_SET_CHARSET$PR_SHIFT_IN$PR_LLCORNER$PR_HBAR$PR_SHIFT_OUT$PROMPT_DECOR"
+
+PROMPT='\
+${TOP_CORNER}${${vcs_info_msg_0_%%.}/$HOME/~} ${HIST}
+${BOTTOM_COR} %n%{$fg[red]%}@%{$MAINCOL%}%M %{$fg[red]%}%(!.#.%%)%{$reset_color%} '
 # givotal {{{1
 if [[ -d $HOME/work/givotal ]]; then
         export PATH=~/work/givotal/git:$PATH
@@ -823,3 +823,5 @@ if [[ -f $ZDOTDIR/z/z.sh ]]; then
 fi
 # modeline {{{1
 # vim: fdm=marker:fdl=0
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting

@@ -675,7 +675,7 @@ TOP_CORNER="$MAINCOL$PR_SET_CHARSET$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT
 BOTTOM_COR="$MAINCOL$PR_SET_CHARSET$PR_SHIFT_IN$PR_LLCORNER$PR_HBAR$PR_SHIFT_OUT$PROMPT_DECOR"
 
 PROMPT='\
-${TOP_CORNER}${${vcs_info_msg_0_%%.}/$HOME/~} ${HIST}
+${TOP_CORNER}${${vcs_info_msg_0_%%.}/$HOME/~}${HIST}
 ${BOTTOM_COR} %n%{$fg[red]%}@%{$MAINCOL%}%M %{$fg[red]%}%(!.#.%%)%{$reset_color%} '
 # givotal {{{1
 if [[ -d $HOME/work/givotal ]]; then

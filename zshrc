@@ -267,7 +267,11 @@ speakers() {
 # setup rvm {{{2
 setup_rvm(){
         export rvm_ignore_gemrc_issues=1
-        [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
+        if [[ -s "/etc/profile.d/rvm.sh" ]]; then
+                . /etc/profile.d/rvm.sh
+        elif [[ -s "$HOME/.rvm/scripts/rvm" ]]; then
+                . "$HOME/.rvm/scripts/rvm"
+        fi
         export RPROMPT="%{$fg[cyan]%}$($HOME/.rvm/bin/rvm-prompt)%{$reset_color%}"
 }
 # aliases {{{1

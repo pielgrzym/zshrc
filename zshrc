@@ -441,17 +441,23 @@ create_history_branch() {
         then # in case there already is a custom history for current dir
                 checkout_history_branch
         else # otherwise let's create a new one!
-                echo "Creating a new custom history branch"
-                fc -p # pop current global history into stack and create new one
-                # below we need to tell zsh where to store the custom history and it's parameters
-                HISTFILE=$PWD/.zsh_custom_history
-                SAVEHIST=5000
-                HISTSIZE=5000
+                echo -n "${fg[blue]}History file '.zsh_custom_history' does not exist. Create a new one?$reset_color"
+                read -q confirm
+                if [[ $confirm == "y" || $confirm == "t" ]]; then
+                        echo ""
+                        echo "${fg[magenta]}Creating a new custom history branch$reset_color"
+                        fc -p # pop current global history into stack and create new one
+                        # below we need to tell zsh where to store the custom history and it's parameters
+                        HISTFILE=$PWD/.zsh_custom_history
+                        SAVEHIST=5000
+                        HISTSIZE=5000
+                        CUSTOM_HISTORY="H: $PWD"
+                fi
         fi
 }
 
 checkout_history_branch() {
-        echo "Restoring custom history branch for current dir"
+        echo "${fg[magenta]}Restoring custom history branch for current dir$reset_color"
         fc -p $PWD/.zsh_custom_history # put global hist on stack and use this one
         # below we need to tell zsh where to store the custom history and it's parameters
         HISTFILE=$PWD/.zsh_custom_history
@@ -461,18 +467,11 @@ checkout_history_branch() {
 }
 
 checkout_master_history_branch() {
-        echo "Restoring master history branch"
+        echo "${fg[magenta]}Restoring master history branch$reset_color"
         fc -P # stash current history and pop global one from stack
         CUSTOM_HISTORY=0
 }
 
-chpwd() {
-        if [[ -s .zsh_custom_history && -r .zsh_custom_history && -w .zsh_custom_history ]] 
-        then
-                checkout_history_branch
-        else
-        fi
-}
 # branching aliases {{{2
 alias hr=checkout_master_history_branch
 alias hc=create_history_branch
@@ -659,10 +658,10 @@ add-zsh-hook precmd vcsinfo_precmd
 
 # add info about HISTFILE used / history off
 history_precmd() {
-    if [[ -n $HISTFILE ]]; then
-            HIST=""
-    elif [[ $CUSTOM_HISTORY != 0 ]]; then
+    if [[ $CUSTOM_HISTORY != 0 ]]; then
             HIST="%{$fg[red]%}[${CUSTOM_HISTORY}]%{$reset_color%} "
+    elif [[ -n $HISTFILE ]]; then
+            HIST=""
     else
             HIST="%{$fg[red]%}[HISTORY_OFF]%{$reset_color%} "
     fi

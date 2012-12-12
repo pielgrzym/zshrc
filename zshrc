@@ -65,7 +65,7 @@ zstyle '*' single-ignored menu
 zstyle ':completion:*' completer _oldlist _expand _complete _correct # with *.avi<tab> expand
 #zstyle ':completion:*' completer _oldlist _complete _correct # without *.avi<tab> expand
 zstyle -e ':completion:*:approximate:*' max-errors 'reply=( $(( ($#PREFIX + $#SUFFIX) / 3 )) )'
-zstyle ':completion:*:corrections' format '%B---- %d %{$fg[red]%}(errors: %e)%f%b'
+zstyle ':completion:*:corrections' format '%B---- %d %{$fg[red]%}(errors: %e)%{$reset_color%}%b'
 # colorfull completions & grouping {{{3
 # evil -> zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS} # colorfull completions
 zstyle ':completion:*:*:*:argument-rest:*' list-colors ${(s.:.)LS_COLORS} # colorfull completions fast
@@ -584,7 +584,7 @@ zstyle ':vcs_info:*:prompt:*' stagedstr "${fg[green]}∷${fg[yellow]}"
 zstyle ':vcs_info:*:prompt:*' unstagedstr "${fg[red]}∷${fg[yellow]}"
 
 # non-vcs
-zstyle ':vcs_info:*:prompt:*' nvcsformats "(${fg[blue]}%3~${MAINCOL})$reset_color "
+zstyle ':vcs_info:*:prompt:*' nvcsformats "(${fg[blue]}%3~${MAINCOL})%{$reset_color%} "
 
 # generic vcs
 zstyle ':vcs_info:*:prompt:*' formats "(${FMT_PATH}) ${FMT_BRANCH} %s "
@@ -595,8 +595,8 @@ zstyle ':vcs_info:hg:prompt:*' formats "(${FMT_PATH}) ${FMT_BRANCH} ☿"
 zstyle ':vcs_info:hg:prompt:*' actionformats "(${FMT_PATH}) ${FMT_BRANCH}${FMT_ACTION} ☿"
 
 # special git stuff
-zstyle ':vcs_info:git:prompt:*' formats "(${FMT_PATH}) ${FMT_BRANCH} %m%f"
-zstyle ':vcs_info:git:prompt:*' actionformats "(${FMT_PATH}) ${FMT_BRANCH}${FMT_ACTION} %m%f"
+zstyle ':vcs_info:git:prompt:*' formats "(${FMT_PATH}) ${FMT_BRANCH} %m%{$reset_color%}"
+zstyle ':vcs_info:git:prompt:*' actionformats "(${FMT_PATH}) ${FMT_BRANCH}${FMT_ACTION} %m%{$reset_color%}"
 
 # Show count of stashed changes
 function +vi-git-stash() {
@@ -613,7 +613,7 @@ function +vi-git-stash() {
             local git_root
             git_root=`git rev-parse --show-toplevel 2> /dev/null`
             if [[ -n $(git ls-files $git_root --other --exclude-standard 2> /dev/null) ]] ; then
-                    hook_com[staged]+='%{$fg[red]%}∪%f'
+                    hook_com[staged]+="%{$fg[red]%}∪%{$reset_color%}"
             fi
     fi
 }

@@ -65,7 +65,7 @@ zstyle '*' single-ignored menu
 zstyle ':completion:*' completer _oldlist _expand _complete _correct # with *.avi<tab> expand
 #zstyle ':completion:*' completer _oldlist _complete _correct # without *.avi<tab> expand
 zstyle -e ':completion:*:approximate:*' max-errors 'reply=( $(( ($#PREFIX + $#SUFFIX) / 3 )) )'
-zstyle ':completion:*:corrections' format '%B---- %d %F{11}(errors: %e)%f%b'
+zstyle ':completion:*:corrections' format '%B---- %d %{$fg[red]%}(errors: %e)%f%b'
 # colorfull completions & grouping {{{3
 # evil -> zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS} # colorfull completions
 zstyle ':completion:*:*:*:argument-rest:*' list-colors ${(s.:.)LS_COLORS} # colorfull completions fast
@@ -599,7 +599,7 @@ function +vi-git-stash() {
 
     if [[ -s ${hook_com[base]}/.git/refs/stash ]] ; then
             stashes=$(git stash list 2>/dev/null | wc -l)
-            [[ -n $stashes ]] && hook_com[misc]="(Stashes: %F{243}${stashes}) "
+            [[ -n $stashes ]] && hook_com[misc]="(Stashes: %{$fg[cyan]%}${stashes}) "
     fi
 }
 
@@ -608,7 +608,7 @@ function +vi-git-stash() {
             local git_root
             git_root=`git rev-parse --show-toplevel 2> /dev/null`
             if [[ -n $(git ls-files $git_root --other --exclude-standard 2> /dev/null) ]] ; then
-                    hook_com[staged]+='%F{red}∪%f'
+                    hook_com[staged]+='%{$fg[red]%}∪%f'
             fi
     fi
 }
@@ -620,12 +620,12 @@ function +vi-git-st() {
     # for git prior to 1.7
     # ahead=$(git rev-list origin/${hook_com[branch]}..HEAD | wc -l)
     ahead=$(git rev-list ${hook_com[branch]}@{upstream}..HEAD 2>/dev/null | wc -l)
-    (( $ahead )) && gitstatus+=( "[ahead %F{red}${ahead}%f]" )
+    (( $ahead )) && gitstatus+=( "[ahead %{$fg[red]%}${ahead}%{$reset_color%}]" )
 
     # for git prior to 1.7
     # behind=$(git rev-list HEAD..origin/${hook_com[branch]} | wc -l)
     behind=$(git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
-    (( $behind )) && gitstatus+=( "[behind %F{red}${behind}%f]" )
+    (( $behind )) && gitstatus+=( "[behind %{$fg[red]%}${behind}%{$reset_color%}]" )
 
     hook_com[misc]+=${(j:/:)gitstatus}
 }

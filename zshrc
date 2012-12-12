@@ -65,7 +65,7 @@ zstyle '*' single-ignored menu
 zstyle ':completion:*' completer _oldlist _expand _complete _correct # with *.avi<tab> expand
 #zstyle ':completion:*' completer _oldlist _complete _correct # without *.avi<tab> expand
 zstyle -e ':completion:*:approximate:*' max-errors 'reply=( $(( ($#PREFIX + $#SUFFIX) / 3 )) )'
-zstyle ':completion:*:corrections' format '%B---- %d %F{11}(errors: %e)%f%b'
+zstyle ':completion:*:corrections' format '%B---- %d ${fg[red]}(errors: %e)$reset_color%b'
 # colorfull completions & grouping {{{3
 # evil -> zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS} # colorfull completions
 zstyle ':completion:*:*:*:argument-rest:*' list-colors ${(s.:.)LS_COLORS} # colorfull completions fast
@@ -542,9 +542,9 @@ autoload -Uz vcs_info
 
  
 if [[ $HOST_IS_LOCAL == 1 ]]; then
-        MAINCOL="$fg[green]%"
+        MAINCOL="${fg[green]}"
 else
-        MAINCOL="$fg[cyan]%"
+        MAINCOL="${fg[cyan]}"
 fi
 
 local FMT_BRANCH FMT_ACTION FMT_PATH
@@ -556,9 +556,9 @@ local FMT_BRANCH FMT_ACTION FMT_PATH
 # %a - action (e.g. rebase-i)
 # %R - repository path
 # %S - path in the repository
-FMT_BRANCH="%F{yellow}(%b%u%c%F{yellow})%f"
-FMT_ACTION="%F{cyan}%a%f" # e.g. (rebase-i)
-FMT_PATH="%F{blue}%R/%F{cyan}%S%F{$MAINCOL}" # e.g. ~/repo/subdir
+FMT_BRANCH="${fg[yellow]}(%b%u%c${fg[yellow]})$reset_color"
+FMT_ACTION="${fg[cyan]}%a$reset_color" # e.g. (rebase-i)
+FMT_PATH="${fg[blue]}%R/${fg[cyan]}%S${MAINCOL}" # e.g. ~/repo/subdir
 
 zstyle ':vcs_info:*' enable git svn darcs bzr hg
 
@@ -566,11 +566,11 @@ zstyle ':vcs_info:*' enable git svn darcs bzr hg
 # you should disable it, if you work with large repositories
 zstyle ':vcs_info:*:prompt:*' check-for-changes true
 
-zstyle ':vcs_info:*:prompt:*' stagedstr "%F{green}∷%F{yellow}"
-zstyle ':vcs_info:*:prompt:*' unstagedstr "%F{red}∷%F{yellow}"
+zstyle ':vcs_info:*:prompt:*' stagedstr "${fg[green]}∷${fg[yellow]}"
+zstyle ':vcs_info:*:prompt:*' unstagedstr "${fg[red]}∷${fg[yellow]}"
 
 # non-vcs
-zstyle ':vcs_info:*:prompt:*' nvcsformats "(%F{blue}%3~%F{$MAINCOL})%f "
+zstyle ':vcs_info:*:prompt:*' nvcsformats "(${fg[blue]}%3~${MAINCOL})$reset_color "
 
 # generic vcs
 zstyle ':vcs_info:*:prompt:*' formats "(${FMT_PATH}) ${FMT_BRANCH} %s "
@@ -590,7 +590,7 @@ function +vi-git-stash() {
 
     if [[ -s ${hook_com[base]}/.git/refs/stash ]] ; then
             stashes=$(git stash list 2>/dev/null | wc -l)
-            [[ -n $stashes ]] && hook_com[misc]="(Stashes: %F{243}${stashes}) "
+            [[ -n $stashes ]] && hook_com[misc]="(Stashes: ${fg[cyan]}${stashes}$reset_color) "
     fi
 }
 
@@ -599,7 +599,7 @@ function +vi-git-stash() {
             local git_root
             git_root=`git rev-parse --show-toplevel 2> /dev/null`
             if [[ -n $(git ls-files $git_root --other --exclude-standard 2> /dev/null) ]] ; then
-                    hook_com[staged]+='%F{red}∪%f'
+                    hook_com[staged]+="${fg[red]}∪$reset_color"
             fi
     fi
 }
@@ -611,12 +611,12 @@ function +vi-git-st() {
     # for git prior to 1.7
     # ahead=$(git rev-list origin/${hook_com[branch]}..HEAD | wc -l)
     ahead=$(git rev-list ${hook_com[branch]}@{upstream}..HEAD 2>/dev/null | wc -l)
-    (( $ahead )) && gitstatus+=( "[ahead %F{red}${ahead}%f]" )
+    (( $ahead )) && gitstatus+=( "[ahead ${fg[red]}${ahead}$reset_color]" )
 
     # for git prior to 1.7
     # behind=$(git rev-list HEAD..origin/${hook_com[branch]} | wc -l)
     behind=$(git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
-    (( $behind )) && gitstatus+=( "[behind %F{red}${behind}%f]" )
+    (( $behind )) && gitstatus+=( "[behind ${fg[red]}${behind}$reset_color]" )
 
     hook_com[misc]+=${(j:/:)gitstatus}
 }
@@ -629,9 +629,9 @@ autoload -U add-zsh-hook
 
 typeset -A altchar
 set -A altchar ${(s..)terminfo[acsc]}
-PR_SET_CHARSET="%{$terminfo[enacs]%}"
-PR_SHIFT_IN="%{$terminfo[smacs]%}"
-PR_SHIFT_OUT="%{$terminfo[rmacs]%}"
+PR_SET_CHARSET="$terminfo[enacs]"
+PR_SHIFT_IN="$terminfo[smacs]"
+PR_SHIFT_OUT="$terminfo[rmacs]"
 PR_HBAR=${altchar[q]:--}
 PR_ULCORNER=${altchar[l]:--}
 PR_LLCORNER=${altchar[m]:--}
@@ -645,12 +645,11 @@ add-zsh-hook precmd vcsinfo_precmd
 # add info about HISTFILE used / history off
 history_precmd() {
     if [[ -n $HISTFILE ]]; then
-            HIST_IND=''
+            HIST=""
+    elif [[ $CUSTOM_HISTORY != 0 ]]; then
+            HIST="${fg[red]}[${CUSTOM_HISTORY}]$reset_color "
     else
-            HIST_IND=" %F{red}[HISTORY_OFF]%f "
-    fi
-    if [[ $CUSTOM_HISTORY != 0 ]]; then
-            HIST_IND=" %{red}[%{$CUSTOM_HISTORY%}]%f "
+            HIST="$fg[red][HISTORY_OFF]$reset_color "
     fi
 }
 add-zsh-hook precmd history_precmd
@@ -663,11 +662,12 @@ else
         PROMPT_DECOR="("
 fi
 
-# first line of prompt is being printed in line 516 in precmd - this fixes doubling of the first line on window resize
-PROMPT='%{$MAINCOL}$PR_SET_CHARSET$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT${${vcs_info_msg_0_%%.}/$HOME/~} $HIST_IND
-%{$MAINCOL}$PR_SET_CHARSET$PR_SHIFT_IN$PR_LLCORNER$PR_HBAR$PR_SHIFT_OUT$PROMPT_DECOR${return_code}\
- %n%F{red}@%{$MAINCOL}%M\
- %F{red}%(!.#.%%)%f '
+TOP_CORNER="${MAINCOL}$PR_SET_CHARSET$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT"
+BOTTOM_COR="${MAINCOL}$PR_SET_CHARSET$PR_SHIFT_IN$PR_LLCORNER$PR_HBAR$PR_SHIFT_OUT$PROMPT_DECOR"
+
+PROMPT='\
+${TOP_CORNER}${${vcs_info_msg_0_%%.}/$HOME/~} ${HIST}
+${BOTTOM_COR} %n${fg[red]}@${MAINCOL}%M ${fg[red]}%(!.#.%%)%f '
 # givotal {{{1
 export PATH=~/work/givotal/git:$PATH
 source ~/work/givotal/git/completion/git-pivotal-completion.zsh
@@ -812,3 +812,5 @@ if [[ -f $ZDOTDIR/z/z.sh ]]; then
 fi
 # modeline {{{1
 # vim: fdm=marker:fdl=0
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting

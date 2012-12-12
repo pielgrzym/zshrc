@@ -267,12 +267,13 @@ speakers() {
 # setup rvm {{{2
 setup_rvm(){
         export rvm_ignore_gemrc_issues=1
-        if [[ -s "/etc/profile.d/rvm.sh" ]]; then
-                . /etc/profile.d/rvm.sh
-        elif [[ -s "$HOME/.rvm/scripts/rvm" ]]; then
+        if [[ -s "$HOME/.rvm/scripts/rvm" ]]; then
                 . "$HOME/.rvm/scripts/rvm"
+                export RPROMPT="%{$fg[cyan]%}$($HOME/.rvm/bin/rvm-prompt)%{$reset_color%}"
+        elif [[ -s "/etc/profile.d/rvm.sh" ]]; then
+                . /etc/profile.d/rvm.sh
+                export RPROMPT="%{$fg[cyan]%}$(/usr/local/rvm/bin/rvm-prompt)%{$reset_color%}"
         fi
-        export RPROMPT="%{$fg[cyan]%}$($HOME/.rvm/bin/rvm-prompt)%{$reset_color%}"
 }
 # aliases {{{1
 # just give a filename with those suffixes and zsh will open it with mplayer

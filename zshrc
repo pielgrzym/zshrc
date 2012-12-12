@@ -264,6 +264,12 @@ speakers() {
         amixer -c 0 -- sset Surround unmute
         amixer -c 0 -- sset PCM 100%
 }
+# setup rvm {{{2
+setup_rvm(){
+        export rvm_ignore_gemrc_issues=1
+        [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
+        export RPROMPT="%{$fg[cyan]%}$($HOME/.rvm/bin/rvm-prompt)%{$reset_color%}"
+}
 # aliases {{{1
 # just give a filename with those suffixes and zsh will open it with mplayer
 alias -s {mkv,avi,mpg,mpeg,wmv,rmvb}='mplayer' 

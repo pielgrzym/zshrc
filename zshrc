@@ -599,7 +599,7 @@ function +vi-git-stash() {
 
     if [[ -s ${hook_com[base]}/.git/refs/stash ]] ; then
             stashes=$(git stash list 2>/dev/null | wc -l)
-            [[ -n $stashes ]] && hook_com[misc]="(Stashes: %{$fg[cyan]%}${stashes}) "
+            [[ -n $stashes ]] && hook_com[misc]="(Stashes: %{$fg[cyan]%}${stashes}%{$reset_color%}) "
     fi
 }
 

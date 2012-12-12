@@ -828,5 +828,3 @@ if [[ -f $ZDOTDIR/z/z.sh ]]; then
 fi
 # modeline {{{1
 # vim: fdm=marker:fdl=0
-
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting

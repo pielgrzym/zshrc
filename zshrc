@@ -675,6 +675,7 @@ add-zsh-hook precmd history_precmd
 
 if [[ `tty` == /dev/tty* ]]; then
         PROMPT_DECOR="["
+        PR_HBAR="" # I have no idea why this glyph displaces cursor when autocomplete is running in tty...
 elif is-at-least 4.3.6; then
         PROMPT_DECOR="╼"
 else
@@ -682,11 +683,11 @@ else
 fi
 
 TOP_CORNER="$MAINCOL$PR_SET_CHARSET$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT"
-BOTTOM_COR="$MAINCOL$PR_SET_CHARSET$PR_SHIFT_IN$PR_LLCORNER$PR_HBAR$PR_SHIFT_OUT$PROMPT_DECOR"
+BOT_CORNER="$MAINCOL$PR_SET_CHARSET$PR_SHIFT_IN$PR_LLCORNER$PR_HBAR$PR_SHIFT_OUT$PROMPT_DECOR"
 
 PROMPT='\
 ${TOP_CORNER}${${vcs_info_msg_0_%%.}/$HOME/~}${HIST}
-${BOTTOM_COR} %n%{$fg[red]%}@%{$MAINCOL%}%M %{$fg[red]%}%(!.#.%%)%{$reset_color%} '
+${BOT_CORNER} %n%{$fg[red]%}@${MAINCOL}%M %{$fg[red]%}%(!.#.%%)%{$reset_color%} '
 # givotal {{{1
 if [[ -d $HOME/work/givotal ]]; then
         export PATH=~/work/givotal/git:$PATH

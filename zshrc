@@ -332,6 +332,7 @@ alias gg='git log --abbrev-commit --pretty=oneline --graph --decorate'
 alias gp='git push'
 alias gf='git fetch'
 alias gd='git diff'
+alias gdi='git diff --word-diff' # show changes in each word in each line
 alias gsh='git stash'
 alias gdc='git diff --cached'
 alias gc='git commit -v'

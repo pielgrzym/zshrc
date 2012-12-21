@@ -813,7 +813,14 @@ smart_todotxt() {
         if [[ -n $1 ]]; then
                 todo.sh $argv
         else
-                todo.sh ls @komp
+                # I set default project name with autoenv .env files like this:
+                # export TODO_PROJ="+someProjName @somecontext"
+                # and I don't have to reapeat it this way
+                if [[ -n $TODO_PROJ ]]; then
+                        todo.sh ls $TODO_PROJ
+                else 
+                        todo.sh ls @komp
+                fi
         fi
 }
 compdef smart_todotxt=todo.sh

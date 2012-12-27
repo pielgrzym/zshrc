@@ -644,7 +644,7 @@ function +vi-git-st() {
 zstyle ':vcs_info:git*+set-message:*' hooks git-untracked git-stash git-st
 # prompt {{{1
 setopt prompt_subst # this option is necessary for prompt colors
-autoload -U is-at-least
+autoload -Uz is-at-least
 autoload -U add-zsh-hook
 
 typeset -A altchar

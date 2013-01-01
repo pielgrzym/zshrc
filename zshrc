@@ -289,11 +289,13 @@ compdef mp=mplayer
 compdef napi=mplayer # ugly, but makes colorfull completions for napi
 alias l="ls -h -1 --color=tty"
 alias ls="ls -h --color=tty"
-alias ll='TERM=rxvt-unicode ls++'
-# alias ll='ls -lh --color=tty'
+if which ls++ >/dev/null 2>&1; then
+        alias ll='TERM=rxvt-unicode ls++'
+else
+        alias ll='ls -lh --color=tty'
+fi
 alias sl="ls" # often screw this up
 alias lt="ls -xCt" # show files in columnt sorted by modification
-alias llp='ls++' # try ls++ - AWESOME: https://github.com/trapd00r/ls--
 alias mp="mplayer"
 alias um="sudo umount"
 alias po="ping onet.pl"

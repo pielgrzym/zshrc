@@ -289,8 +289,9 @@ compdef mp=mplayer
 compdef napi=mplayer # ugly, but makes colorfull completions for napi
 alias l="ls -h -1 --color=tty"
 alias ls="ls -h --color=tty"
-alias ll='ls -lh --color=tty'
-alias sl="ls -h --color=tty" # often screw this up
+alias ll='TERM=rxvt-unicode ls++'
+# alias ll='ls -lh --color=tty'
+alias sl="ls" # often screw this up
 alias lt="ls -xCt" # show files in columnt sorted by modification
 alias llp='ls++' # try ls++ - AWESOME: https://github.com/trapd00r/ls--
 alias mp="mplayer"
@@ -823,6 +824,7 @@ smart_todotxt() {
                 fi
         fi
 }
+
 compdef smart_todotxt=todo.sh
 alias t='noglob smart_todotxt'
 alias tl='t ls'
@@ -831,6 +833,12 @@ alias tm='t addto maybe.txt'
 alias tlm='t lf maybe.txt'
 alias td='t do'
 alias tp='t pri' # t p <num> <prio>
+alias i="t addto inbox.txt"
+alias il="t lf inbox.txt"
+move_from_inbox(){
+        t mv $1 todo.txt inbox.txt 
+}
+alias im=move_from_inbox
 # autoenv {{{1
 if [[ -f $ZDOTDIR/autoenv/activate.sh ]]; then
         source $ZDOTDIR/autoenv/activate.sh

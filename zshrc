@@ -827,6 +827,34 @@ smart_todotxt() {
         fi
 }
 
+watch_todo(){
+        tput smcup
+        while : ; do
+                tput clear
+                echo -n "${bg[cyan]}[[[ TODO: ]]]$reset_color\n"
+                if [[ -n $1 ]]; then
+                        todo.sh "$@"
+                else
+                        todo.sh ls
+                fi
+                trap 'break' 2
+                inotifywait -e close_nowrite -e close_write $HOME/Dropbox/t/todo.txt -qq
+        done
+        tput rmcup
+}
+
+watch_inbox(){
+        tput smcup
+        while : ; do
+                tput clear
+                echo -n "${bg[green]}${fg[black]}[[[ INBOX: ]]]$reset_color\n"
+                todo.sh lf inbox.txt
+                trap 'break' 2
+                inotifywait -e close_nowrite -e close_write $HOME/Dropbox/t/todo.txt -qq
+        done
+        tput rmcup
+}
+
 compdef smart_todotxt=todo.sh
 alias t='noglob smart_todotxt'
 alias tl='t ls'
@@ -837,6 +865,8 @@ alias td='t do'
 alias tp='t pri' # t p <num> <prio>
 alias i="t addto inbox.txt"
 alias il="t lf inbox.txt"
+alias wt=watch_todo
+alias wi=watch_inbox
 move_from_inbox(){
         t mv $1 todo.txt inbox.txt 
 }

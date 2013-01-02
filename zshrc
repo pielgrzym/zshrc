@@ -850,7 +850,7 @@ watch_inbox(){
                 echo -n "${bg[green]}${fg[black]}[[[ INBOX: ]]]$reset_color\n"
                 todo.sh lf inbox.txt
                 trap 'break' 2
-                inotifywait -e close_nowrite -e close_write $HOME/Dropbox/t/todo.txt -qq
+                inotifywait -e close_nowrite -e close_write $HOME/Dropbox/t/inbox.txt -qq
         done
         tput rmcup
 }

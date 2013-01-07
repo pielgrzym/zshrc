@@ -225,6 +225,19 @@ run_or_attach_irssi() {
                 tmux new -sirssi irssi
         fi
 }
+
+# sys session runner {{{2
+run_or_attach_sys(){
+        if tmux has-session -tsys; then
+                tmux at -t sys
+        else
+                tmux new-session -d -ssys -n root 'sudo -s'
+                tmux new-window -tsys:1 -n ranger 'ranger'
+                tmux new-window -tsys:2 -n log 'cd /var/log/; tail -f everything.log | ccze -A' 
+                tmux select-window -tsys:0
+                tmux at -tsys
+        fi
+}
 # smart sudo {{{2
 # Give us a root shell, or run the command with sudo.
 # Expands command aliases first (cool!)

@@ -516,6 +516,7 @@ prepare_rvm() {
 alias rew=prepare_rvm
 # misc {{{1
 ## smart urls
+export EDITOR=vim
 autoload -U url-quote-magic
 zle -N self-insert url-quote-magic
 ## jobs

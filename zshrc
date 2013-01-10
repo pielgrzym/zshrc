@@ -225,6 +225,14 @@ run_or_attach_irssi() {
                 tmux new -sirssi irssi
         fi
 }
+# weechat runner {{{2
+run_or_attach_weechat() {
+        if tmux has-session -twee; then
+                tmux at -twee
+        else
+                tmux new -swee weechat-curses
+        fi
+}
 
 # sys session runner {{{2
 run_or_attach_sys(){
@@ -325,6 +333,7 @@ alias tcm="truecrypt -t"
 alias tcu="truecrypt -t -d"
 alias serve="python2 -m SimpleHTTPServer 8000"
 alias irssi=run_or_attach_irssi
+alias wee=run_or_attach_weechat
 #alias gvim="STTY='intr \^C' gvim" # C-x mapping fucks up gvim
 alias s=smart_sudo
 compdef _sudo smart_sudo

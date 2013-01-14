@@ -619,8 +619,8 @@ zstyle ':vcs_info:*:prompt:*' unstagedstr "${fg[red]}∷${fg[yellow]}"
 zstyle ':vcs_info:*:prompt:*' nvcsformats "「${fg[blue]}%3~${fg[red]}」%{$reset_color%}"
 
 # generic vcs
-zstyle ':vcs_info:*:prompt:*' formats "「${FMT_PATH}」${FMT_BRANCH} %s "
-zstyle ':vcs_info:*:prompt:*' actionformats "「${FMT_PATH}」${FMT_BRANCH}${FMT_ACTION} %s "
+zstyle ':vcs_info:*:prompt:*' formats "「${FMT_PATH}」${FMT_BRANCH} %s"
+zstyle ':vcs_info:*:prompt:*' actionformats "「${FMT_PATH}」${FMT_BRANCH}${FMT_ACTION} %s"
 
 # special hg stuff
 zstyle ':vcs_info:hg:prompt:*' formats "「${FMT_PATH}」${FMT_BRANCH} ☿"
@@ -713,7 +713,7 @@ TOP_CORNER="$MAINCOL$PR_SET_CHARSET$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT
 BOT_CORNER="$MAINCOL$PR_SET_CHARSET$PR_SHIFT_IN$PR_LLCORNER$PR_HBAR$PR_SHIFT_OUT$PROMPT_DECOR"
 
 PROMPT='\
-${MAINCOL}%n%{$fg_bold[green]%}%M%{$fg[red]%} ${${vcs_info_msg_0_%%.}/$HOME/~}${HIST}
+${MAINCOL}%n%{$fg_bold[green]%}%M%{$fg[red]%}${${vcs_info_msg_0_%%.}/$HOME/~}${HIST}
 %{$fg[red]%}%(!.».»)%{$reset_color%} '
 # givotal {{{1
 if [[ -d $HOME/work/givotal ]]; then

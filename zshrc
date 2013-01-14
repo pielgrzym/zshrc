@@ -588,7 +588,7 @@ autoload -Uz vcs_info
 
  
 if [[ $HOST_IS_LOCAL == 1 ]]; then
-        MAINCOL="%{$fg_no_bold[green]%}"
+        MAINCOL="%{$fg[green]%}"
 else
         MAINCOL="%{$fg[cyan]%}"
 fi
@@ -713,7 +713,7 @@ TOP_CORNER="$MAINCOL$PR_SET_CHARSET$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT
 BOT_CORNER="$MAINCOL$PR_SET_CHARSET$PR_SHIFT_IN$PR_LLCORNER$PR_HBAR$PR_SHIFT_OUT$PROMPT_DECOR"
 
 PROMPT='\
-${MAINCOL}%n%{$fg[red]%}@${MAINCOL}%M%{$fg[red]%} ${${vcs_info_msg_0_%%.}/$HOME/~}${HIST}
+${MAINCOL}%n%{$fg_bold[green]%}%M%{$fg[red]%} ${${vcs_info_msg_0_%%.}/$HOME/~}${HIST}
 %{$fg[red]%}%(!.».»)%{$reset_color%} '
 # givotal {{{1
 if [[ -d $HOME/work/givotal ]]; then

@@ -347,6 +347,7 @@ alias hist_off='HISTFILE='
 alias hist_on='HISTFILE=$HOME/.zsh_history'
 alias svim="vim -n -c 'set nobackup'"
 alias mktags=make_ctags
+alias ips="ip addr | grep -v 127.0.0.1 | awk '\$1 ~ /inet/  { print \$7, \$2 }'"
 # git {{{1
 # Aliases
 alias g='git'

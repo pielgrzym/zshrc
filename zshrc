@@ -240,9 +240,11 @@ run_or_attach_sys(){
                 tmux at -t sys
         else
                 tmux new-session -d -ssys -n root 'sudo -s'
-                tmux new-window -tsys:1 -n ranger 'ranger'
-                tmux new-window -tsys:2 -n log 'cd /var/log/; tail -f everything.log | ccze -A' 
+                tmux split-window -h -tsys:0 'cd /var/log/; tail -f everything.log | ccze -A' 
+                tmux new-window -d -tsys:1 -n ranger 'ranger'
+                tmux new-window -d -tsys:2 -n stuff
                 tmux select-window -tsys:0
+                tmux select-pane -L
                 tmux at -tsys
         fi
 }

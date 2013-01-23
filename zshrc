@@ -240,9 +240,11 @@ run_or_attach_sys(){
                 tmux at -t sys
         else
                 tmux new-session -d -ssys -n root 'sudo -s'
-                tmux new-window -tsys:1 -n ranger 'ranger'
-                tmux new-window -tsys:2 -n log 'cd /var/log/; tail -f everything.log | ccze -A' 
+                tmux split-window -h -tsys:0 'cd /var/log/; tail -f everything.log | ccze -A' 
+                tmux new-window -d -tsys:1 -n ranger 'ranger'
+                tmux new-window -d -tsys:2 -n stuff
                 tmux select-window -tsys:0
+                tmux select-pane -L
                 tmux at -tsys
         fi
 }
@@ -347,6 +349,7 @@ alias hist_off='HISTFILE='
 alias hist_on='HISTFILE=$HOME/.zsh_history'
 alias svim="vim -n -c 'set nobackup'"
 alias mktags=make_ctags
+alias ips="ip addr | grep -v 127.0.0.1 | awk '\$1 ~ /inet/  { print \$7, \$2 }'"
 # git {{{1
 # Aliases
 alias g='git'
@@ -602,9 +605,9 @@ local FMT_BRANCH FMT_ACTION FMT_PATH
 # %a - action (e.g. rebase-i)
 # %R - repository path
 # %S - path in the repository
-FMT_BRANCH="${fg[yellow]}(%b%u%c${fg[yellow]})$reset_color"
+FMT_BRANCH="${fg[yellow]}「%b%u%c${fg[yellow]}」$reset_color"
 FMT_ACTION="${fg[cyan]}%a$reset_color" # e.g. (rebase-i)
-FMT_PATH="${fg[blue]}%R/${fg[cyan]}%S${MAINCOL}" # e.g. ~/repo/subdir
+FMT_PATH="${fg[blue]}%R/${fg[cyan]}%S${fg[red]}" # e.g. ~/repo/subdir
 
 zstyle ':vcs_info:*' enable git svn darcs bzr hg
 
@@ -616,19 +619,19 @@ zstyle ':vcs_info:*:prompt:*' stagedstr "${fg[green]}∷${fg[yellow]}"
 zstyle ':vcs_info:*:prompt:*' unstagedstr "${fg[red]}∷${fg[yellow]}"
 
 # non-vcs
-zstyle ':vcs_info:*:prompt:*' nvcsformats "(${fg[blue]}%3~${MAINCOL})%{$reset_color%} "
+zstyle ':vcs_info:*:prompt:*' nvcsformats "「${fg[blue]}%3~${fg[red]}」%{$reset_color%}"
 
 # generic vcs
-zstyle ':vcs_info:*:prompt:*' formats "(${FMT_PATH}) ${FMT_BRANCH} %s "
-zstyle ':vcs_info:*:prompt:*' actionformats "(${FMT_PATH}) ${FMT_BRANCH}${FMT_ACTION} %s "
+zstyle ':vcs_info:*:prompt:*' formats "「${FMT_PATH}」${FMT_BRANCH} %s"
+zstyle ':vcs_info:*:prompt:*' actionformats "「${FMT_PATH}」${FMT_BRANCH}${FMT_ACTION} %s"
 
 # special hg stuff
-zstyle ':vcs_info:hg:prompt:*' formats "(${FMT_PATH}) ${FMT_BRANCH} ☿"
-zstyle ':vcs_info:hg:prompt:*' actionformats "(${FMT_PATH}) ${FMT_BRANCH}${FMT_ACTION} ☿"
+zstyle ':vcs_info:hg:prompt:*' formats "「${FMT_PATH}」${FMT_BRANCH} ☿"
+zstyle ':vcs_info:hg:prompt:*' actionformats "(${FMT_PATH}」${FMT_BRANCH}${FMT_ACTION} ☿"
 
 # special git stuff
-zstyle ':vcs_info:git:prompt:*' formats "(${FMT_PATH}) ${FMT_BRANCH} %m%{$reset_color%}"
-zstyle ':vcs_info:git:prompt:*' actionformats "(${FMT_PATH}) ${FMT_BRANCH}${FMT_ACTION} %m%{$reset_color%}"
+zstyle ':vcs_info:git:prompt:*' formats "「${FMT_PATH}」${FMT_BRANCH} %m%{$reset_color%}"
+zstyle ':vcs_info:git:prompt:*' actionformats "「${FMT_PATH}」${FMT_BRANCH}${FMT_ACTION} %m%{$reset_color%}"
 
 # Show count of stashed changes
 function +vi-git-stash() {
@@ -713,8 +716,8 @@ TOP_CORNER="$MAINCOL$PR_SET_CHARSET$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT
 BOT_CORNER="$MAINCOL$PR_SET_CHARSET$PR_SHIFT_IN$PR_LLCORNER$PR_HBAR$PR_SHIFT_OUT$PROMPT_DECOR"
 
 PROMPT='\
-${TOP_CORNER}${${vcs_info_msg_0_%%.}/$HOME/~}${HIST}
-${BOT_CORNER} %n%{$fg[red]%}@${MAINCOL}%M %{$fg[red]%}%(!.#.%%)%{$reset_color%} '
+${MAINCOL}%n%{$fg_bold[green]%}%M%{$fg[red]%}${${vcs_info_msg_0_%%.}/$HOME/~}${HIST}
+%{$fg[red]%}%(!.».»)%{$reset_color%} '
 # givotal {{{1
 if [[ -d $HOME/work/givotal ]]; then
         export PATH=~/work/givotal/git:$PATH

@@ -310,12 +310,13 @@ alias history='fc -l 1'
 alias x=extract
 compdef mp=mplayer
 compdef napi=mplayer # ugly, but makes colorfull completions for napi
-alias l="ls -h -1 --color=tty"
 alias ls="ls -h --color=tty"
 if which ls++ >/dev/null 2>&1; then
-        alias ll='TERM=rxvt-unicode ls++'
+        alias ll='TERM=rxvt-unicode ls++ --potsf'
+        alias l='TERM=rxvt-unicode ls++'
 else
         alias ll='ls -lh --color=tty'
+        alias l="ls -h -1 --color=tty"
 fi
 alias sl="ls" # often screw this up
 alias lt="ls -xCt" # show files in columnt sorted by modification

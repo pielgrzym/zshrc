@@ -298,6 +298,7 @@ setup_rvm(){
                 export RPROMPT="%{$fg[cyan]%}$(/usr/local/rvm/bin/rvm-prompt)%{$reset_color%}"
         fi
 }
+setup_rvm
 # aliases {{{1
 # just give a filename with those suffixes and zsh will open it with mplayer
 alias -s {mkv,avi,mpg,mpeg,wmv,rmvb}='mplayer' 
@@ -310,20 +311,20 @@ alias history='fc -l 1'
 alias x=extract
 compdef mp=mplayer
 compdef napi=mplayer # ugly, but makes colorfull completions for napi
-alias ls="ls -h --color=tty"
+alias ls="ls -h -G" # --color=tty"
 if which ls++ >/dev/null 2>&1; then
         alias ll='TERM=rxvt-unicode ls++ --potsf'
         alias l='TERM=rxvt-unicode ls++'
 else
-        alias ll='ls -lh --color=tty'
-        alias l="ls -h -1 --color=tty"
+        alias ll='ls -lh -G'
+        alias l="ls -h -1 -G"
 fi
 alias sl="ls" # often screw this up
 alias lt="ls -xCt" # show files in columnt sorted by modification
 alias mp="mplayer"
 alias um="sudo umount"
 alias po="ping onet.pl"
-alias df="df -hT"
+alias df="df -h"
 alias pacman="sudo pacman-color"
 alias tname=term_title
 alias vstart="sudo /etc/rc.d/openvpn start"
@@ -909,3 +910,5 @@ if [[ -f $ZDOTDIR/z/z.sh ]]; then
 fi
 # modeline {{{1
 # vim: fdm=marker:fdl=0
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting

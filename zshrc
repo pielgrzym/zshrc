@@ -356,9 +356,15 @@ alias ips="ip addr | grep -v 127.0.0.1 | awk '\$1 ~ /inet/  { print \$7, \$2 }'"
 # Aliases
 alias g='git'
 alias gst='git status -sb'
-alias gl='git log --abbrev-commit --pretty=oneline --no-merges --decorate'
-alias gls='git log --abbrev-commit --pretty=oneline --stat --decorate'
-alias gg='git log --abbrev-commit --pretty=oneline --graph --decorate'
+GL_HASH="%C(yellow)%h%Creset"
+GL_RELATIVE_TIME="%Cgreen(%ar)%Creset"
+GL_AUTHOR="%C(bold blue)<%an>%Creset"
+GL_REFS="%C(red)%d%Creset"
+GL_SUBJECT="%s"
+GL_FORMAT="$GL_HASH $GL_RELATIVE_TIME $GL_AUTHOR $GL_REFS $GL_SUBJECT"
+alias gl="git log --abbrev-commit --pretty=oneline --no-merges --decorate --pretty='tformat:${GL_FORMAT}'"
+alias gls="git log --abbrev-commit --pretty=oneline --stat --decorate --pretty='tformat:${GL_FORMAT}'"
+alias gg="git log --abbrev-commit --pretty=oneline --graph --decorate --pretty='tformat:${GL_FORMAT}'"
 alias gp='git push'
 alias gf='git fetch'
 alias gd='git diff'
@@ -908,7 +914,7 @@ if [[ -f $ZDOTDIR/z/z.sh ]]; then
         _Z_CMD='j'
         . $ZDOTDIR/z/z.sh
 fi
+# path hacking {{{1
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 # modeline {{{1
 # vim: fdm=marker:fdl=0
-
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting

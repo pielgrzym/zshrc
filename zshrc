@@ -448,7 +448,7 @@ export GREP_COLOR='1;32'
 #zle -N zle-line-init
 bindkey -v
 # removing those causes no delay when going into vimode :)
-bindkey -r "^[OA" "^[OB" "^[OC" "^[OD" "^[[A" "^[[B" "^[[C" "^[[D"
+#bindkey -r "^[OA" "^[OB" "^[OC" "^[OD" "^[[A" "^[[B" "^[[C" "^[[D"
 
 # history {{{1
 # options {{{2

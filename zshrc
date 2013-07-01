@@ -764,8 +764,10 @@ if [[ -d $HOME/work/givotal ]]; then
         alias gvfn="git pv finish"
         alias gvd="git pv deliver"
 fi
-# git-annex {{{1
-export PATH=$HOME/.haskell_bin:$PATH
+# edit-command-line {{{1
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey '\C-x\C-e' edit-command-line
 # project starter {{{1
 if [[ -n $PIEL_PROJ && -n $PIEL_PROJ_DIR ]]; then
         cd $PIEL_PROJ_DIR

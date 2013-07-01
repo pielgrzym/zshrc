@@ -39,7 +39,7 @@ setopt complete_in_word # perform completion from inside the word. Dude.
 setopt always_to_end # everything dies...
 WORDCHARS=''
 # pip plugin 
-fpath=($HOME/.zsh/completions $fpath)
+fpath=($HOME/.zsh/completions/src $fpath)
 autoload -U compinit
 compinit 
 zmodload -i zsh/complist

@@ -292,10 +292,10 @@ setup_rvm(){
         export rvm_ignore_gemrc_issues=1
         if [[ -s "$HOME/.rvm/scripts/rvm" ]]; then
                 . "$HOME/.rvm/scripts/rvm"
-                export RPROMPT="%{$fg[cyan]%}$($HOME/.rvm/bin/rvm-prompt)%{$reset_color%}"
+                # export RPROMPT="%{$fg[cyan]%}$($HOME/.rvm/bin/rvm-prompt)%{$reset_color%}"
         elif [[ -s "/etc/profile.d/rvm.sh" ]]; then
                 . /etc/profile.d/rvm.sh
-                export RPROMPT="%{$fg[cyan]%}$(/usr/local/rvm/bin/rvm-prompt)%{$reset_color%}"
+                # export RPROMPT="%{$fg[cyan]%}$(/usr/local/rvm/bin/rvm-prompt)%{$reset_color%}"
         fi
 }
 setup_rvm
@@ -680,52 +680,159 @@ function +vi-git-st() {
 
 zstyle ':vcs_info:git*+set-message:*' hooks git-untracked git-stash git-st
 # prompt {{{1
+# git {{{2
+function git_prompt_info() {
+  ref=$(command git symbolic-ref HEAD 2> /dev/null) || \
+  ref=$(command git rev-parse --short HEAD 2> /dev/null) || return
+  echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$(parse_git_dirty)$(git_prompt_status)$ZSH_THEME_GIT_PROMPT_SUFFIX"
+}
+
+
+# Checks if working tree is dirty
+parse_git_dirty() {
+  local SUBMODULE_SYNTAX=''
+  local GIT_STATUS=''
+  local CLEAN_MESSAGE='nothing to commit (working directory clean)'
+  if [[ "$(command git config --get oh-my-zsh.hide-status)" != "1" ]]; then
+    if [[ $POST_1_7_2_GIT -gt 0 ]]; then
+          SUBMODULE_SYNTAX="--ignore-submodules=dirty"
+    fi
+    if [[ "$DISABLE_UNTRACKED_FILES_DIRTY" == "true" ]]; then
+        GIT_STATUS=$(command git status -s ${SUBMODULE_SYNTAX} -uno 2> /dev/null | tail -n1)
+    else
+        GIT_STATUS=$(command git status -s ${SUBMODULE_SYNTAX} 2> /dev/null | tail -n1)
+    fi
+    if [[ -n $GIT_STATUS ]]; then
+      echo "$ZSH_THEME_GIT_PROMPT_DIRTY"
+    else
+      echo "$ZSH_THEME_GIT_PROMPT_CLEAN"
+    fi
+  else
+    echo "$ZSH_THEME_GIT_PROMPT_CLEAN"
+  fi
+}
+
+# get the difference between the local and remote branches
+git_remote_status() {
+    remote=${$(command git rev-parse --verify ${hook_com[branch]}@{upstream} --symbolic-full-name 2>/dev/null)/refs\/remotes\/}
+    if [[ -n ${remote} ]] ; then
+        ahead=$(command git rev-list ${hook_com[branch]}@{upstream}..HEAD 2>/dev/null | wc -l)
+        behind=$(command git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
+
+        if [ $ahead -eq 0 ] && [ $behind -gt 0 ]
+        then
+            echo "$ZSH_THEME_GIT_PROMPT_BEHIND_REMOTE"
+        elif [ $ahead -gt 0 ] && [ $behind -eq 0 ]
+        then
+            echo "$ZSH_THEME_GIT_PROMPT_AHEAD_REMOTE"
+        elif [ $ahead -gt 0 ] && [ $behind -gt 0 ]
+        then
+            echo "$ZSH_THEME_GIT_PROMPT_DIVERGED_REMOTE"
+        fi
+    fi
+}
+
+# Checks if there are commits ahead from remote
+function git_prompt_ahead() {
+  if $(echo "$(command git log origin/$(current_branch)..HEAD 2> /dev/null)" | grep '^commit' &> /dev/null); then
+    echo "$ZSH_THEME_GIT_PROMPT_AHEAD"
+  fi
+}
+
+# Formats prompt string for current git commit short SHA
+function git_prompt_short_sha() {
+  SHA=$(command git rev-parse --short HEAD 2> /dev/null) && echo "$ZSH_THEME_GIT_PROMPT_SHA_BEFORE$SHA$ZSH_THEME_GIT_PROMPT_SHA_AFTER"
+}
+
+# Formats prompt string for current git commit long SHA
+function git_prompt_long_sha() {
+  SHA=$(command git rev-parse HEAD 2> /dev/null) && echo "$ZSH_THEME_GIT_PROMPT_SHA_BEFORE$SHA$ZSH_THEME_GIT_PROMPT_SHA_AFTER"
+}
+
+# Get the status of the working tree
+git_prompt_status() {
+  INDEX=$(command git status --porcelain -b 2> /dev/null)
+  STATUS=""
+  if $(echo "$INDEX" | grep -E '^\?\? ' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_UNTRACKED$STATUS"
+  fi
+  if $(echo "$INDEX" | grep '^A  ' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_ADDED$STATUS"
+  elif $(echo "$INDEX" | grep '^M  ' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_ADDED$STATUS"
+  fi
+  if $(echo "$INDEX" | grep '^ M ' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_MODIFIED$STATUS"
+  elif $(echo "$INDEX" | grep '^AM ' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_MODIFIED$STATUS"
+  elif $(echo "$INDEX" | grep '^ T ' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_MODIFIED$STATUS"
+  fi
+  if $(echo "$INDEX" | grep '^R  ' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_RENAMED$STATUS"
+  fi
+  if $(echo "$INDEX" | grep '^ D ' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_DELETED$STATUS"
+  elif $(echo "$INDEX" | grep '^D  ' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_DELETED$STATUS"
+  elif $(echo "$INDEX" | grep '^AD ' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_DELETED$STATUS"
+  fi
+  if $(command git rev-parse --verify refs/stash >/dev/null 2>&1); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_STASHED$STATUS"
+  fi
+  if $(echo "$INDEX" | grep '^UU ' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_UNMERGED$STATUS"
+  fi
+  if $(echo "$INDEX" | grep '^## .*ahead' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_AHEAD$STATUS"
+  fi
+  if $(echo "$INDEX" | grep '^## .*behind' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_BEHIND$STATUS"
+  fi
+  if $(echo "$INDEX" | grep '^## .*diverged' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_DIVERGED$STATUS"
+  fi
+  echo $STATUS
+}
+
+#compare the provided version of git to the version installed and on path
+#prints 1 if input version <= installed version
+#prints -1 otherwise
+function git_compare_version() {
+  local INPUT_GIT_VERSION=$1;
+  local INSTALLED_GIT_VERSION
+  INPUT_GIT_VERSION=(${(s/./)INPUT_GIT_VERSION});
+  INSTALLED_GIT_VERSION=($(command git --version 2>/dev/null));
+  INSTALLED_GIT_VERSION=(${(s/./)INSTALLED_GIT_VERSION[3]});
+
+  for i in {1..3}; do
+    if [[ $INSTALLED_GIT_VERSION[$i] -lt $INPUT_GIT_VERSION[$i] ]]; then
+      echo -1
+      return 0
+    fi
+  done
+  echo 1
+}
+
+#this is unlikely to change so make it all statically assigned
+POST_1_7_2_GIT=$(git_compare_version "1.7.2")
+#clean up the namespace slightly by removing the checker function
+unset -f git_compare_version
+
+# prompt itself {{{2
 setopt prompt_subst # this option is necessary for prompt colors
 autoload -Uz is-at-least
 autoload -U add-zsh-hook
 
-typeset -A altchar
-set -A altchar ${(s..)terminfo[acsc]}
-PR_SET_CHARSET="%{$terminfo[enacs]%}"
-PR_SHIFT_IN="%{$terminfo[smacs]%}"
-PR_SHIFT_OUT="%{$terminfo[rmacs]%}"
-PR_HBAR=${altchar[q]:--}
-PR_ULCORNER=${altchar[l]:--}
-PR_LLCORNER=${altchar[m]:--}
+PROMPT='%{$fg[yellow]%}λ %m %{$fg[green]%}%c %{$fg[yellow]%}» $(git_prompt_info)%{$reset_color%}'
 
-# add info about untracked git files
-vcsinfo_precmd () {
-    vcs_info 'prompt' 2> /dev/null # yeah, ugly hack to shut up debian/centos that have old zsh withou vcs_info
-}
-add-zsh-hook precmd vcsinfo_precmd
-
-# add info about HISTFILE used / history off
-history_precmd() {
-    if [[ $CUSTOM_HISTORY != 0 ]]; then
-            HIST="%{$fg[red]%}[${CUSTOM_HISTORY}]%{$reset_color%} "
-    elif [[ -n $HISTFILE ]]; then
-            HIST=""
-    else
-            HIST="%{$fg[red]%}[HISTORY_OFF]%{$reset_color%} "
-    fi
-}
-add-zsh-hook precmd history_precmd
-
-if [[ `tty` == /dev/tty* ]]; then
-        PROMPT_DECOR="["
-        PR_HBAR="" # I have no idea why this glyph displaces cursor when autocomplete is running in tty...
-elif is-at-least 4.3.6; then
-        PROMPT_DECOR="╼"
-else
-        PROMPT_DECOR="("
-fi
-
-TOP_CORNER="$MAINCOL$PR_SET_CHARSET$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT"
-BOT_CORNER="$MAINCOL$PR_SET_CHARSET$PR_SHIFT_IN$PR_LLCORNER$PR_HBAR$PR_SHIFT_OUT$PROMPT_DECOR"
-
-PROMPT='\
-${MAINCOL}%n%{$fg_bold[green]%}%M%{$fg[red]%}${${vcs_info_msg_0_%%.}/$HOME/~}${HIST}
-%{$fg[red]%}%(!.».»)%{$reset_color%} '
+ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[blue]%}± %{$fg[red]%}"
+ZSH_THEME_GIT_PROMPT_SUFFIX="%{$fg[yellow]%} » %{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[red]%}●%{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_CLEAN=""
+ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg[blue]%}●%{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_ADDED="%{$fg[green]%}●%{$reset_color%}"
 # givotal {{{1
 if [[ -d $HOME/work/givotal ]]; then
         export PATH=~/work/givotal/git:$PATH

@@ -22,12 +22,19 @@ done
 }
 
 if [[ -d ~/work ]]; then
-mk_work_named_dirs
-hash -d dn="$HOME/download"
+        mk_work_named_dirs
+fi
+if [[ -d ~/download ]]; then
+        hash -d dn="$HOME/download"
+fi
+if [[ -d ~/Downloads ]]; then
+        hash -d dn="$HOME/Downloads"
+fi
 hash -d zsh="$HOME/.zsh"
+hash -d dropbox="$HOME/Dropbox"
 hash -d xmonad="$HOME/.xmonad"
 hash -d vim="$HOME/.vim"
-fi
+hash -d v="/Volumes"
 
 hash -d logs="/var/log"
 # completion {{{1

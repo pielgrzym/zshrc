@@ -35,6 +35,7 @@ hash -d dropbox="$HOME/Dropbox"
 hash -d xmonad="$HOME/.xmonad"
 hash -d vim="$HOME/.vim"
 hash -d v="/Volumes"
+hash -d stack="$HOME/workspace/futuresimple"
 
 hash -d logs="/var/log"
 # completion {{{1

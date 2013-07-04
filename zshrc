@@ -10,6 +10,8 @@ fi
 if [[ $HOST_IS_LOCAL == 1 ]]; then
         . $HOME/.zsh/nice_colors
 fi
+# path {{{1
+PATH=$ZDOTDIR/bin:$PATH
 # named-directories {{{1
 # theese are actually aliases for directories:
 # ~ $ cd ~zsh
@@ -744,9 +746,10 @@ POST_1_7_2_GIT=$(git_compare_version "1.7.2")
 unset -f git_compare_version
 
 # battery indicator {{{2
+BATTERY_STATUS=osx_batt.py
 battery_prompt() {
         if [[ "$OSTYPE" == "darwin"* ]]; then
-                echo $($ZDOTDIR/bin/osx_batt.py 2>/dev/null)
+                echo $($BATTERY_STATUS 2>/dev/null)
         fi
 }
 # prompt itself {{{2

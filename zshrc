@@ -743,12 +743,19 @@ POST_1_7_2_GIT=$(git_compare_version "1.7.2")
 #clean up the namespace slightly by removing the checker function
 unset -f git_compare_version
 
+# battery indicator {{{2
+battery_prompt() {
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+                echo $($ZDOTDIR/bin/osx_batt.py 2>/dev/null)
+        fi
+}
 # prompt itself {{{2
 setopt prompt_subst # this option is necessary for prompt colors
 autoload -Uz is-at-least
 autoload -U add-zsh-hook
 
 PROMPT='%{$fg[yellow]%}λ %m %{$fg[green]%}%3c %{$fg[yellow]%}» $(git_prompt_info)%{$reset_color%}'
+RPROMPT="${$(battery_prompt)%}"
 
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[blue]%}± %{$fg[red]%}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$fg[yellow]%} » %{$reset_color%}"

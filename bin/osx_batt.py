@@ -26,10 +26,10 @@ empty = (total_slots - len(filled)) * u'▹'
 out = (filled + empty).encode('utf-8')
 import sys
 
-color_green = '%{$fg[green]%}'
-color_yellow = '%{$fg[yellow]%}'
-color_red = '%{$fg[red]%}'
-color_reset = '%{$reset_color%}'
+color_green = '%F{green}'
+color_yellow = '%F{yellow}'
+color_red = '%F{red}'
+color_reset = '%F{reset}'
 color_out = (
     color_green if len(filled) > 6
     else color_yellow if len(filled) > 4

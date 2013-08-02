@@ -961,6 +961,9 @@ if [[ -f $ZDOTDIR/z/z.sh ]]; then
         . $ZDOTDIR/z/z.sh
 fi
 # teamocil {{{1
+# teamocil path {{{2
+export TEAMOCIL_PATH=$ZDOTDIR/teamocil
+# sysproj function {{{2
 sysproj(){
         name=$1
         proj_path=$2
@@ -974,6 +977,7 @@ sysproj(){
         rbenv shell $(rbenv global); 
         PROJECT=$name PROJECT_ROOT=$proj_path SESSION_FILE=$sfile teamocil tower
 }
+# proj function {{{2
 proj(){
         for name in "$@"; do
                 if [[ $name == "zsh" ]]; then sysproj "zsh" $ZDOTDIR; continue; fi
@@ -991,6 +995,10 @@ proj(){
                 PROJECT=$name PROJECT_ROOT=$proj_path SESSION_FILE=$sfile teamocil tower
         done
 }
-export TEAMOCIL_PATH=$ZDOTDIR/teamocil
+# completions {{{2
+_proj_cpl() {
+        reply=($(cd $HOME/work; print *(/)) "zsh" "vim" "tmux")
+}
+compctl -K _proj_cpl proj
 # modeline {{{1
 # vim: fdm=marker:fdl=0

@@ -376,6 +376,10 @@ GL_FORMAT="$GL_HASH $GL_RELATIVE_TIME $GL_AUTHOR $GL_REFS $GL_SUBJECT"
 alias gl="git log --abbrev-commit --pretty=oneline --no-merges --decorate --pretty='tformat:${GL_FORMAT}'"
 alias gls="git log --abbrev-commit --pretty=oneline --stat --decorate --pretty='tformat:${GL_FORMAT}'"
 alias gg="git log --abbrev-commit --pretty=oneline --graph --decorate --pretty='tformat:${GL_FORMAT}'"
+alias glast="git --no-pager log --abbrev-commit --no-merges --pretty=oneline --stat --decorate --pretty='tformat:${GL_FORMAT}'"
+glastupstream(){
+        glast ..origin/$(current_branch) $*
+}
 alias gp='git push'
 alias gf='git fetch'
 alias gd='git diff'
@@ -389,7 +393,6 @@ alias gb='git branch'
 alias gba='git branch -a'
 alias gcount='git shortlog -sn'
 alias gcp='git cherry-pick'
-alias glg='git log --stat --max-count=5'
 alias gr='git for-each-ref --count=30 --sort=-committerdate refs/remotes/ --format="%(refname:short) (%(authordate))"'
 
 # Git and svn mix
@@ -957,7 +960,37 @@ if [[ -f $ZDOTDIR/z/z.sh ]]; then
         _Z_CMD='j'
         . $ZDOTDIR/z/z.sh
 fi
-# path hacking {{{1
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+# teamocil {{{1
+sysproj(){
+        name=$1
+        proj_path=$2
+        if [[ ! -d $proj_path ]]; then
+                echo "No such project: $name"
+                continue;
+        fi
+        if [[ -f $HOME/.vimsessions/$name ]]; then
+                sfile=$HOME/.vimsessions/$name
+        fi
+        rbenv shell $(rbenv global); 
+        PROJECT=$name PROJECT_ROOT=$proj_path SESSION_FILE=$sfile teamocil tower
+}
+proj(){
+        for name in "$@"; do
+                if [[ $name == "zsh" ]]; then sysproj "zsh" $ZDOTDIR; continue; fi
+                if [[ $name == "vim" ]]; then sysproj "vim" "$HOME/.vim"; continue; fi
+                if [[ $name == "tmux" ]]; then sysproj "tmux" "$HOME/.common"; continue; fi
+                proj_path=$HOME/work/$name/git
+                if [[ ! -d $proj_path ]]; then
+                        echo "No such project: $name"
+                        continue;
+                fi
+                if [[ -f $HOME/.vimsessions/$name ]]; then
+                        sfile=$HOME/.vimsessions/$name
+                fi
+                rbenv shell $(rbenv global); 
+                PROJECT=$name PROJECT_ROOT=$proj_path SESSION_FILE=$sfile teamocil tower
+        done
+}
+export TEAMOCIL_PATH=$ZDOTDIR/teamocil
 # modeline {{{1
 # vim: fdm=marker:fdl=0

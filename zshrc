@@ -961,41 +961,8 @@ if [[ -f $ZDOTDIR/z/z.sh ]]; then
         . $ZDOTDIR/z/z.sh
 fi
 # teamocil {{{1
-# teamocil path {{{2
 export TEAMOCIL_PATH=$ZDOTDIR/teamocil
-# sysproj function {{{2
-sysproj(){
-        name=$1
-        proj_path=$2
-        if [[ ! -d $proj_path ]]; then
-                echo "No such project: $name"
-                continue;
-        fi
-        if [[ -f $HOME/.vimsessions/$name ]]; then
-                sfile=$HOME/.vimsessions/$name
-        fi
-        rbenv shell $(rbenv global); 
-        PROJECT=$name PROJECT_ROOT=$proj_path SESSION_FILE=$sfile teamocil tower
-}
-# proj function {{{2
-proj(){
-        for name in "$@"; do
-                if [[ $name == "zsh" ]]; then sysproj "zsh" $ZDOTDIR; continue; fi
-                if [[ $name == "vim" ]]; then sysproj "vim" "$HOME/.vim"; continue; fi
-                if [[ $name == "tmux" ]]; then sysproj "tmux" "$HOME/.common"; continue; fi
-                proj_path=$HOME/work/$name/git
-                if [[ ! -d $proj_path ]]; then
-                        echo "No such project: $name"
-                        continue;
-                fi
-                if [[ -f $HOME/.vimsessions/$name ]]; then
-                        sfile=$HOME/.vimsessions/$name
-                fi
-                rbenv shell $(rbenv global); 
-                PROJECT=$name PROJECT_ROOT=$proj_path SESSION_FILE=$sfile teamocil tower
-        done
-}
-# completions {{{2
+# completions for proj {{{2
 _proj_cpl() {
         reply=($(cd $HOME/work; print *(/)) "zsh" "vim" "tmux")
 }

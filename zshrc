@@ -296,18 +296,6 @@ speakers() {
         amixer -c 0 -- sset Surround unmute
         amixer -c 0 -- sset PCM 100%
 }
-# setup rvm {{{2
-setup_rvm(){
-        export rvm_ignore_gemrc_issues=1
-        if [[ -s "$HOME/.rvm/scripts/rvm" ]]; then
-                . "$HOME/.rvm/scripts/rvm"
-                # export RPROMPT="%{$fg[cyan]%}$($HOME/.rvm/bin/rvm-prompt)%{$reset_color%}"
-        elif [[ -s "/etc/profile.d/rvm.sh" ]]; then
-                . /etc/profile.d/rvm.sh
-                # export RPROMPT="%{$fg[cyan]%}$(/usr/local/rvm/bin/rvm-prompt)%{$reset_color%}"
-        fi
-}
-setup_rvm
 # aliases {{{1
 # just give a filename with those suffixes and zsh will open it with mplayer
 alias -s {mkv,avi,mpg,mpeg,wmv,rmvb}='mplayer' 
@@ -320,20 +308,20 @@ alias history='fc -l 1'
 alias x=extract
 compdef mp=mplayer
 compdef napi=mplayer # ugly, but makes colorfull completions for napi
-alias ls="ls -h -G" # --color=tty"
+alias ls="ls -h --color=tty"
 if which ls++ >/dev/null 2>&1; then
         alias ll='TERM=rxvt-unicode ls++ --potsf'
         alias l='TERM=rxvt-unicode ls++'
 else
-        alias ll='ls -lh -G'
-        alias l="ls -h -1 -G"
+        alias ll='ls -lh --color=tty'
+        alias l="ls -h -1 --color=tty"
 fi
 alias sl="ls" # often screw this up
 alias lt="ls -xCt" # show files in columnt sorted by modification
 alias mp="mplayer"
 alias um="sudo umount"
 alias po="ping onet.pl"
-alias df="df -h"
+alias df="df -hT"
 alias pacman="sudo pacman-color"
 alias tname=term_title
 alias vstart="sudo /etc/rc.d/openvpn start"
@@ -761,7 +749,7 @@ autoload -Uz is-at-least
 autoload -U add-zsh-hook
 
 PROMPT='%{$fg[yellow]%}λ %m %{$fg[green]%}%3c %{$fg[yellow]%}» $(git_prompt_info)%{$reset_color%}'
-RPROMPT='$(battery_prompt)'
+#RPROMPT='$(battery_prompt)'
 
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[blue]%}± %{$fg[red]%}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$fg[yellow]%} » %{$reset_color%}"

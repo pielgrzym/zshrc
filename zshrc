@@ -10,6 +10,8 @@ fi
 if [[ $HOST_IS_LOCAL == 1 ]]; then
         . $HOME/.zsh/nice_colors
 fi
+# path {{{1
+PATH=$ZDOTDIR/bin:$PATH
 # named-directories {{{1
 # theese are actually aliases for directories:
 # ~ $ cd ~zsh
@@ -22,12 +24,20 @@ done
 }
 
 if [[ -d ~/work ]]; then
-mk_work_named_dirs
-hash -d dn="$HOME/download"
+        mk_work_named_dirs
+fi
+if [[ -d ~/download ]]; then
+        hash -d dn="$HOME/download"
+fi
+if [[ -d ~/Downloads ]]; then
+        hash -d dn="$HOME/Downloads"
+fi
 hash -d zsh="$HOME/.zsh"
+hash -d dropbox="$HOME/Dropbox"
 hash -d xmonad="$HOME/.xmonad"
 hash -d vim="$HOME/.vim"
-fi
+hash -d v="/Volumes"
+hash -d stack="$HOME/workspace/futuresimple"
 
 hash -d logs="/var/log"
 # completion {{{1
@@ -39,7 +49,7 @@ setopt complete_in_word # perform completion from inside the word. Dude.
 setopt always_to_end # everything dies...
 WORDCHARS=''
 # pip plugin 
-fpath=($HOME/.zsh/completions $fpath)
+fpath=($HOME/.zsh/completions/src $fpath)
 autoload -U compinit
 compinit 
 zmodload -i zsh/complist
@@ -291,12 +301,13 @@ setup_rvm(){
         export rvm_ignore_gemrc_issues=1
         if [[ -s "$HOME/.rvm/scripts/rvm" ]]; then
                 . "$HOME/.rvm/scripts/rvm"
-                export RPROMPT="%{$fg[cyan]%}$($HOME/.rvm/bin/rvm-prompt)%{$reset_color%}"
+                # export RPROMPT="%{$fg[cyan]%}$($HOME/.rvm/bin/rvm-prompt)%{$reset_color%}"
         elif [[ -s "/etc/profile.d/rvm.sh" ]]; then
                 . /etc/profile.d/rvm.sh
-                export RPROMPT="%{$fg[cyan]%}$(/usr/local/rvm/bin/rvm-prompt)%{$reset_color%}"
+                # export RPROMPT="%{$fg[cyan]%}$(/usr/local/rvm/bin/rvm-prompt)%{$reset_color%}"
         fi
 }
+setup_rvm
 # aliases {{{1
 # just give a filename with those suffixes and zsh will open it with mplayer
 alias -s {mkv,avi,mpg,mpeg,wmv,rmvb}='mplayer' 
@@ -309,20 +320,20 @@ alias history='fc -l 1'
 alias x=extract
 compdef mp=mplayer
 compdef napi=mplayer # ugly, but makes colorfull completions for napi
-alias ls="ls -h --color=tty"
+alias ls="ls -h -G" # --color=tty"
 if which ls++ >/dev/null 2>&1; then
         alias ll='TERM=rxvt-unicode ls++ --potsf'
         alias l='TERM=rxvt-unicode ls++'
 else
-        alias ll='ls -lh --color=tty'
-        alias l="ls -h -1 --color=tty"
+        alias ll='ls -lh -G'
+        alias l="ls -h -1 -G"
 fi
 alias sl="ls" # often screw this up
 alias lt="ls -xCt" # show files in columnt sorted by modification
 alias mp="mplayer"
 alias um="sudo umount"
 alias po="ping onet.pl"
-alias df="df -hT"
+alias df="df -h"
 alias pacman="sudo pacman-color"
 alias tname=term_title
 alias vstart="sudo /etc/rc.d/openvpn start"
@@ -350,6 +361,7 @@ alias hist_on='HISTFILE=$HOME/.zsh_history'
 alias svim="vim -n -c 'set nobackup'"
 alias mktags=make_ctags
 alias ips="ip addr | grep -v 127.0.0.1 | awk '\$1 ~ /inet/  { print \$7, \$2 }'"
+alias dssh="dropship ssh"
 # git {{{1
 # Aliases
 alias g='git'
@@ -363,6 +375,10 @@ GL_FORMAT="$GL_HASH $GL_RELATIVE_TIME $GL_AUTHOR $GL_REFS $GL_SUBJECT"
 alias gl="git log --abbrev-commit --pretty=oneline --no-merges --decorate --pretty='tformat:${GL_FORMAT}'"
 alias gls="git log --abbrev-commit --pretty=oneline --stat --decorate --pretty='tformat:${GL_FORMAT}'"
 alias gg="git log --abbrev-commit --pretty=oneline --graph --decorate --pretty='tformat:${GL_FORMAT}'"
+alias glast="git --no-pager log --abbrev-commit --no-merges --pretty=oneline --stat --decorate --pretty='tformat:${GL_FORMAT}'"
+glastupstream(){
+        glast ..origin/$(current_branch) $*
+}
 alias gp='git push'
 alias gf='git fetch'
 alias gd='git diff'
@@ -376,7 +392,6 @@ alias gb='git branch'
 alias gba='git branch -a'
 alias gcount='git shortlog -sn'
 alias gcp='git cherry-pick'
-alias glg='git log --stat --max-count=5'
 alias gr='git for-each-ref --count=30 --sort=-committerdate refs/remotes/ --format="%(refname:short) (%(authordate))"'
 
 # Git and svn mix
@@ -446,7 +461,7 @@ export GREP_COLOR='1;32'
 #zle -N zle-line-init
 bindkey -v
 # removing those causes no delay when going into vimode :)
-bindkey -r "^[OA" "^[OB" "^[OC" "^[OD" "^[[A" "^[[B" "^[[C" "^[[D"
+#bindkey -r "^[OA" "^[OB" "^[OC" "^[OD" "^[[A" "^[[B" "^[[C" "^[[D"
 
 # history {{{1
 # options {{{2
@@ -592,138 +607,168 @@ export GPG_TTY=$(tty)
 if (( ${+commands[keychain]} )); then
         eval `keychain --eval --nogui -Q -q ~/.ssh/id_dsa`
 fi
-# vcs_info {{{1
-autoload -Uz vcs_info
-
- 
-if [[ $HOST_IS_LOCAL == 1 ]]; then
-        MAINCOL="%{$fg[green]%}"
-else
-        MAINCOL="%{$fg[cyan]%}"
-fi
-
-local FMT_BRANCH FMT_ACTION FMT_PATH
-
-# set formats
-# %b - branchname
-# %u - unstagedstr (see below)
-# %c - stangedstr (see below)
-# %a - action (e.g. rebase-i)
-# %R - repository path
-# %S - path in the repository
-FMT_BRANCH="${fg[yellow]}「%b%u%c${fg[yellow]}」$reset_color"
-FMT_ACTION="${fg[cyan]}%a$reset_color" # e.g. (rebase-i)
-FMT_PATH="${fg[blue]}%R/${fg[cyan]}%S${fg[red]}" # e.g. ~/repo/subdir
-
-zstyle ':vcs_info:*' enable git svn darcs bzr hg
-
-# check-for-changes can be really slow.
-# you should disable it, if you work with large repositories
-zstyle ':vcs_info:*:prompt:*' check-for-changes true
-
-zstyle ':vcs_info:*:prompt:*' stagedstr "${fg[green]}∷${fg[yellow]}"
-zstyle ':vcs_info:*:prompt:*' unstagedstr "${fg[red]}∷${fg[yellow]}"
-
-# non-vcs
-zstyle ':vcs_info:*:prompt:*' nvcsformats "「${fg[blue]}%3~${fg[red]}」%{$reset_color%}"
-
-# generic vcs
-zstyle ':vcs_info:*:prompt:*' formats "「${FMT_PATH}」${FMT_BRANCH} %s"
-zstyle ':vcs_info:*:prompt:*' actionformats "「${FMT_PATH}」${FMT_BRANCH}${FMT_ACTION} %s"
-
-# special hg stuff
-zstyle ':vcs_info:hg:prompt:*' formats "「${FMT_PATH}」${FMT_BRANCH} ☿"
-zstyle ':vcs_info:hg:prompt:*' actionformats "(${FMT_PATH}」${FMT_BRANCH}${FMT_ACTION} ☿"
-
-# special git stuff
-zstyle ':vcs_info:git:prompt:*' formats "「${FMT_PATH}」${FMT_BRANCH} %m%{$reset_color%}"
-zstyle ':vcs_info:git:prompt:*' actionformats "「${FMT_PATH}」${FMT_BRANCH}${FMT_ACTION} %m%{$reset_color%}"
-
-# Show count of stashed changes
-function +vi-git-stash() {
-    local -a stashes
-
-    if [[ -s ${hook_com[base]}/.git/refs/stash ]] ; then
-            stashes=$(git stash list 2>/dev/null | wc -l)
-            [[ -n $stashes ]] && hook_com[misc]="(Stashes: %{$fg[cyan]%}${stashes}%{$reset_color%}) "
-    fi
-}
-
-+vi-git-untracked(){
-    if [[ $(git rev-parse --is-inside-work-tree 2> /dev/null) == 'true' ]] ; then
-            local git_root
-            git_root=`git rev-parse --show-toplevel 2> /dev/null`
-            if [[ -n $(git ls-files $git_root --other --exclude-standard 2> /dev/null) ]] ; then
-                    hook_com[staged]+="%{$fg[red]%}∪%{$reset_color%}"
-            fi
-    fi
-}
-
-function +vi-git-st() {
-    local ahead behind
-    local -a gitstatus
-
-    # for git prior to 1.7
-    # ahead=$(git rev-list origin/${hook_com[branch]}..HEAD | wc -l)
-    ahead=$(git rev-list ${hook_com[branch]}@{upstream}..HEAD 2>/dev/null | wc -l)
-    (( $ahead )) && gitstatus+=( "[ahead %{$fg[red]%}${ahead}%{$reset_color%}]" )
-
-    # for git prior to 1.7
-    # behind=$(git rev-list HEAD..origin/${hook_com[branch]} | wc -l)
-    behind=$(git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
-    (( $behind )) && gitstatus+=( "[behind %{$fg[red]%}${behind}%{$reset_color%}]" )
-
-    hook_com[misc]+=${(j:/:)gitstatus}
-}
-
-zstyle ':vcs_info:git*+set-message:*' hooks git-untracked git-stash git-st
 # prompt {{{1
-setopt prompt_subst # this option is necessary for prompt colors
+# git {{{2
+function git_prompt_info() {
+  ref=$(command git symbolic-ref HEAD 2> /dev/null) || \
+  ref=$(command git rev-parse --short HEAD 2> /dev/null) || return
+  echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$(parse_git_dirty)$(git_prompt_status)$ZSH_THEME_GIT_PROMPT_SUFFIX"
+}
+
+
+# Checks if working tree is dirty
+parse_git_dirty() {
+  local SUBMODULE_SYNTAX=''
+  local GIT_STATUS=''
+  local CLEAN_MESSAGE='nothing to commit (working directory clean)'
+  if [[ "$(command git config --get oh-my-zsh.hide-status)" != "1" ]]; then
+    if [[ $POST_1_7_2_GIT -gt 0 ]]; then
+          SUBMODULE_SYNTAX="--ignore-submodules=dirty"
+    fi
+    if [[ "$DISABLE_UNTRACKED_FILES_DIRTY" == "true" ]]; then
+        GIT_STATUS=$(command git status -s ${SUBMODULE_SYNTAX} -uno 2> /dev/null | tail -n1)
+    else
+        GIT_STATUS=$(command git status -s ${SUBMODULE_SYNTAX} 2> /dev/null | tail -n1)
+    fi
+    if [[ -n $GIT_STATUS ]]; then
+      echo "$ZSH_THEME_GIT_PROMPT_DIRTY"
+    else
+      echo "$ZSH_THEME_GIT_PROMPT_CLEAN"
+    fi
+  else
+    echo "$ZSH_THEME_GIT_PROMPT_CLEAN"
+  fi
+}
+
+# get the difference between the local and remote branches
+git_remote_status() {
+    remote=${$(command git rev-parse --verify ${hook_com[branch]}@{upstream} --symbolic-full-name 2>/dev/null)/refs\/remotes\/}
+    if [[ -n ${remote} ]] ; then
+        ahead=$(command git rev-list ${hook_com[branch]}@{upstream}..HEAD 2>/dev/null | wc -l)
+        behind=$(command git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
+
+        if [ $ahead -eq 0 ] && [ $behind -gt 0 ]
+        then
+            echo "$ZSH_THEME_GIT_PROMPT_BEHIND_REMOTE"
+        elif [ $ahead -gt 0 ] && [ $behind -eq 0 ]
+        then
+            echo "$ZSH_THEME_GIT_PROMPT_AHEAD_REMOTE"
+        elif [ $ahead -gt 0 ] && [ $behind -gt 0 ]
+        then
+            echo "$ZSH_THEME_GIT_PROMPT_DIVERGED_REMOTE"
+        fi
+    fi
+}
+
+# Checks if there are commits ahead from remote
+function git_prompt_ahead() {
+  if $(echo "$(command git log origin/$(current_branch)..HEAD 2> /dev/null)" | grep '^commit' &> /dev/null); then
+    echo "$ZSH_THEME_GIT_PROMPT_AHEAD"
+  fi
+}
+
+# Formats prompt string for current git commit short SHA
+function git_prompt_short_sha() {
+  SHA=$(command git rev-parse --short HEAD 2> /dev/null) && echo "$ZSH_THEME_GIT_PROMPT_SHA_BEFORE$SHA$ZSH_THEME_GIT_PROMPT_SHA_AFTER"
+}
+
+# Formats prompt string for current git commit long SHA
+function git_prompt_long_sha() {
+  SHA=$(command git rev-parse HEAD 2> /dev/null) && echo "$ZSH_THEME_GIT_PROMPT_SHA_BEFORE$SHA$ZSH_THEME_GIT_PROMPT_SHA_AFTER"
+}
+
+# Get the status of the working tree
+git_prompt_status() {
+  INDEX=$(command git status --porcelain -b 2> /dev/null)
+  STATUS=""
+  if $(echo "$INDEX" | grep -E '^\?\? ' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_UNTRACKED$STATUS"
+  fi
+  if $(echo "$INDEX" | grep '^A  ' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_ADDED$STATUS"
+  elif $(echo "$INDEX" | grep '^M  ' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_ADDED$STATUS"
+  fi
+  if $(echo "$INDEX" | grep '^ M ' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_MODIFIED$STATUS"
+  elif $(echo "$INDEX" | grep '^AM ' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_MODIFIED$STATUS"
+  elif $(echo "$INDEX" | grep '^ T ' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_MODIFIED$STATUS"
+  fi
+  if $(echo "$INDEX" | grep '^R  ' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_RENAMED$STATUS"
+  fi
+  if $(echo "$INDEX" | grep '^ D ' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_DELETED$STATUS"
+  elif $(echo "$INDEX" | grep '^D  ' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_DELETED$STATUS"
+  elif $(echo "$INDEX" | grep '^AD ' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_DELETED$STATUS"
+  fi
+  if $(command git rev-parse --verify refs/stash >/dev/null 2>&1); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_STASHED$STATUS"
+  fi
+  if $(echo "$INDEX" | grep '^UU ' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_UNMERGED$STATUS"
+  fi
+  if $(echo "$INDEX" | grep '^## .*ahead' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_AHEAD$STATUS"
+  fi
+  if $(echo "$INDEX" | grep '^## .*behind' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_BEHIND$STATUS"
+  fi
+  if $(echo "$INDEX" | grep '^## .*diverged' &> /dev/null); then
+    STATUS="$ZSH_THEME_GIT_PROMPT_DIVERGED$STATUS"
+  fi
+  echo $STATUS
+}
+
+#compare the provided version of git to the version installed and on path
+#prints 1 if input version <= installed version
+#prints -1 otherwise
+function git_compare_version() {
+  local INPUT_GIT_VERSION=$1;
+  local INSTALLED_GIT_VERSION
+  INPUT_GIT_VERSION=(${(s/./)INPUT_GIT_VERSION});
+  INSTALLED_GIT_VERSION=($(command git --version 2>/dev/null));
+  INSTALLED_GIT_VERSION=(${(s/./)INSTALLED_GIT_VERSION[3]});
+
+  for i in {1..3}; do
+    if [[ $INSTALLED_GIT_VERSION[$i] -lt $INPUT_GIT_VERSION[$i] ]]; then
+      echo -1
+      return 0
+    fi
+  done
+  echo 1
+}
+
+#this is unlikely to change so make it all statically assigned
+POST_1_7_2_GIT=$(git_compare_version "1.7.2")
+#clean up the namespace slightly by removing the checker function
+unset -f git_compare_version
+
+# battery indicator {{{2
+BATTERY_STATUS=osx_batt.py
+battery_prompt() {
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+                echo $($BATTERY_STATUS 2>/dev/null)
+        fi
+}
+# prompt itself {{{2
+setopt promptsubst # this option is necessary for prompt colors
 autoload -Uz is-at-least
 autoload -U add-zsh-hook
 
-typeset -A altchar
-set -A altchar ${(s..)terminfo[acsc]}
-PR_SET_CHARSET="%{$terminfo[enacs]%}"
-PR_SHIFT_IN="%{$terminfo[smacs]%}"
-PR_SHIFT_OUT="%{$terminfo[rmacs]%}"
-PR_HBAR=${altchar[q]:--}
-PR_ULCORNER=${altchar[l]:--}
-PR_LLCORNER=${altchar[m]:--}
+PROMPT='%{$fg[yellow]%}λ %m %{$fg[green]%}%3c %{$fg[yellow]%}» $(git_prompt_info)%{$reset_color%}'
+RPROMPT='$(battery_prompt)'
 
-# add info about untracked git files
-vcsinfo_precmd () {
-    vcs_info 'prompt' 2> /dev/null # yeah, ugly hack to shut up debian/centos that have old zsh withou vcs_info
-}
-add-zsh-hook precmd vcsinfo_precmd
-
-# add info about HISTFILE used / history off
-history_precmd() {
-    if [[ $CUSTOM_HISTORY != 0 ]]; then
-            HIST="%{$fg[red]%}[${CUSTOM_HISTORY}]%{$reset_color%} "
-    elif [[ -n $HISTFILE ]]; then
-            HIST=""
-    else
-            HIST="%{$fg[red]%}[HISTORY_OFF]%{$reset_color%} "
-    fi
-}
-add-zsh-hook precmd history_precmd
-
-if [[ `tty` == /dev/tty* ]]; then
-        PROMPT_DECOR="["
-        PR_HBAR="" # I have no idea why this glyph displaces cursor when autocomplete is running in tty...
-elif is-at-least 4.3.6; then
-        PROMPT_DECOR="╼"
-else
-        PROMPT_DECOR="("
-fi
-
-TOP_CORNER="$MAINCOL$PR_SET_CHARSET$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT"
-BOT_CORNER="$MAINCOL$PR_SET_CHARSET$PR_SHIFT_IN$PR_LLCORNER$PR_HBAR$PR_SHIFT_OUT$PROMPT_DECOR"
-
-PROMPT='\
-${MAINCOL}%n%{$fg_bold[green]%}%M%{$fg[red]%}${${vcs_info_msg_0_%%.}/$HOME/~}${HIST}
-%{$fg[red]%}%(!.».»)%{$reset_color%} '
+ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[blue]%}± %{$fg[red]%}"
+ZSH_THEME_GIT_PROMPT_SUFFIX="%{$fg[yellow]%} » %{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[red]%}●%{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_CLEAN=""
+ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg[blue]%}●%{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_ADDED="%{$fg[green]%}●%{$reset_color%}"
 # givotal {{{1
 if [[ -d $HOME/work/givotal ]]; then
         export PATH=~/work/givotal/git:$PATH
@@ -740,8 +785,10 @@ if [[ -d $HOME/work/givotal ]]; then
         alias gvfn="git pv finish"
         alias gvd="git pv deliver"
 fi
-# git-annex {{{1
-export PATH=$HOME/.haskell_bin:$PATH
+# edit-command-line {{{1
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey '\C-x\C-e' edit-command-line
 # project starter {{{1
 if [[ -n $PIEL_PROJ && -n $PIEL_PROJ_DIR ]]; then
         cd $PIEL_PROJ_DIR
@@ -912,7 +959,12 @@ if [[ -f $ZDOTDIR/z/z.sh ]]; then
         _Z_CMD='j'
         . $ZDOTDIR/z/z.sh
 fi
-# path hacking {{{1
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+# teamocil {{{1
+export TEAMOCIL_PATH=$ZDOTDIR/teamocil
+# completions for proj {{{2
+_proj_cpl() {
+        reply=($(cd $HOME/work; print *(/)) "zsh" "vim" "tmux")
+}
+compctl -K _proj_cpl proj
 # modeline {{{1
 # vim: fdm=marker:fdl=0

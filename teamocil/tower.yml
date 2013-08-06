@@ -1,0 +1,14 @@
+windows:
+  - name: <%= ENV["PROJECT"] %>
+    clear: true
+    root: <%= ENV["PROJECT_ROOT"] %>
+    # layout:
+    # +------+--+
+    # |      |  |
+    # |      |__|
+    # +______+__+
+    layout: "09b7,204x58,0,0{132x58,0,0,0,71x58,133,0[71x42,133,0,1,71x15,133,43,34]}"
+    panes:
+      - cmd: <%= ENV["SESSION_FILE"] != "" ? "vim -S #{ENV['SESSION_FILE']}" : "vim" %>
+      - cmd: [ 'glast -3', 'gst' ]
+      - cmd: ['gf', 'glastupstream -3']

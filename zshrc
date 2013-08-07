@@ -302,6 +302,7 @@ alias -s {mkv,avi,mpg,mpeg,wmv,rmvb}='mplayer'
 # same goes for images
 alias -s {gif,jpg,jpeg,png}='feh'
 
+alias tmux="TERM=screen-256color-bce tmux"
 #alias ...='cd ../..'
 # Show history
 alias history='fc -l 1'

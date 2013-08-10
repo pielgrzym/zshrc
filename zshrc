@@ -539,7 +539,11 @@ bindkey "^X^A" vi-end-of-line
 # virtualenvwrapper {{{1
 prepare_wrapper() {
         export WORKON_HOME=$HOME/.virtualenvs
-        source /usr/bin/virtualenvwrapper.sh
+        if [[ -f /usr/bin/virtualenvwrapper.sh ]]; then
+                source /usr/bin/virtualenvwrapper.sh
+        else
+                source /etc/bash_completion.d/virtualenvwrapper
+        fi
 }
 alias vew=prepare_wrapper
 prepare_rvm() {

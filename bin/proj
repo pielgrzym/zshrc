@@ -1,4 +1,4 @@
-#!/opt/boxen/homebrew/bin/zsh
+#!/bin/zsh
 eval "$(rbenv init - zsh)"
 
 sysproj(){
@@ -20,7 +20,7 @@ proj(){
                 if [[ $name == "zsh" ]]; then sysproj "zsh" $ZDOTDIR; continue; fi
                 if [[ $name == "vim" ]]; then sysproj "vim" "$HOME/.vim"; continue; fi
                 if [[ $name == "tmux" ]]; then sysproj "tmux" "$HOME/.common"; continue; fi
-                proj_path=$HOME/work/$name/git
+                proj_path=$HOME/${my_project_dir:=work}/$name/git
                 if [[ ! -d $proj_path ]]; then
                         echo "No such project: $name"
                         continue;

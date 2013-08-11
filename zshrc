@@ -956,7 +956,7 @@ fi
 export TEAMOCIL_PATH=$ZDOTDIR/teamocil
 # completions for proj {{{2
 _proj_cpl() {
-        reply=($(cd $HOME/work; print *(/)) "zsh" "vim" "tmux")
+        reply=($(cd $HOME/${my_project_dir:=work}; print *(/)) "zsh" "vim" "tmux")
 }
 compctl -K _proj_cpl proj
 # modeline {{{1

@@ -1,0 +1,14 @@
+#!/bin/zsh
+
+keepass_class="keepassx.Keepassx"
+keepass_window=$(wmctrl -lx | grep $keepass_class | awk '{ print $1 }')
+
+if [[ -z $keepass_window ]]; then
+        keepassx &
+        new_keepass_window=$(wmctrl -lx | grep $keepass_class | awk '{ print $1 }')
+        wmctrl -i -r $new_keepass_window -b add,sticky
+        wmctrl -i -r $new_keepass_window -b add,above
+        wmctrl -i -R $new_keepass_window
+else
+        wmctrl -i -r $keepass_window -b toggle,hidden
+fi

@@ -6,9 +6,17 @@ keepass_window=$(wmctrl -lx | grep $keepass_class | awk '{ print $1 }')
 if [[ -z $keepass_window ]]; then
         keepassx &
         new_keepass_window=$(wmctrl -lx | grep $keepass_class | awk '{ print $1 }')
-        wmctrl -i -r $new_keepass_window -b add,sticky
-        wmctrl -i -r $new_keepass_window -b add,above
+        wmctrl -i -r $new_keepass_window -b add,sticky,above
+        touch /tmp/.keepass_visible
         wmctrl -i -R $new_keepass_window
 else
-        wmctrl -i -r $keepass_window -b toggle,hidden
+        if [[ -f /tmp/.keepass_visible ]]; then
+                #statements
+                wmctrl -i -r $keepass_window -b add,hidden
+                rm /tmp/.keepass_visible
+        else
+                wmctrl -i -r $keepass_window -b remove,hidden
+                wmctrl -i -a $keepass_window
+                touch /tmp/.keepass_visible
+        fi
 fi

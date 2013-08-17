@@ -3,7 +3,7 @@ export MARKPATH=$HOME/.marks
 mark_go() {
         cd -P ${PROJECTS_ROOT:=$HOME/work}/$1/git 2>/dev/null || cd -P $MARKPATH/$1 2>/dev/null || echo "No such mark $1"
 }
-alias g=mark_go
+alias c=mark_go
 
 mark() { 
         mkdir -p $MARKPATH; ln -s $(pwd) $MARKPATH/$1

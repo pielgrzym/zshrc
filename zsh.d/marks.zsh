@@ -22,6 +22,7 @@ marks() {
 alias ms=marks
 
 _mark_go_cpl() {
-        reply=($(cd $MARKPATH; print *(/)) $(cd ${PROJECTS_ROOT:=$HOME/work}; print *(/)) )
+        reply=($MARKPATH/*(@:t))
+        reply+=(${PROJECTS_ROOT:=$HOME/work}/*(/:t))
 }
-compctl -K _proj_cpl mark_go
+compctl -K _mark_go_cpl mark_go

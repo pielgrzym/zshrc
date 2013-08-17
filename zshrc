@@ -960,6 +960,8 @@ if [[ -f $ZDOTDIR/z/z.sh ]]; then
         _Z_CMD='j'
         . $ZDOTDIR/z/z.sh
 fi
+# marks {{{1
+. $ZDOTDIR/zsh.d/marks.zsh
 # teamocil {{{1
 export TEAMOCIL_PATH=$ZDOTDIR/teamocil
 # completions for proj {{{2

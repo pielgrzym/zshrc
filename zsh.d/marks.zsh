@@ -6,7 +6,11 @@ mark_go() {
 alias c=mark_go
 
 mark() { 
-        mkdir -p $MARKPATH; ln -s $(pwd) $MARKPATH/$1
+        if (( $# == 0 )); then
+                marks
+        else
+                mkdir -p $MARKPATH; ln -s $(pwd) $MARKPATH/$1
+        fi
 }
 alias m=mark
 
@@ -22,10 +26,15 @@ marks() {
                 printf "-> %s \t\n" $markpath
         done
 }
-alias ms=marks
 
 _mark_go_cpl() {
         reply=($MARKPATH/*(@:t))
         reply+=(${PROJECTS_ROOT:=$HOME/work}/*(/:t))
 }
+
+_unmark_cpl() {
+        reply=($MARKPATH/*(@:t))
+}
+
 compctl -K _mark_go_cpl mark_go
+compctl -K _unmark_cpl unmark

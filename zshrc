@@ -952,11 +952,14 @@ if [[ -f $ZDOTDIR/z/z.sh ]]; then
         _Z_CMD='j'
         . $ZDOTDIR/z/z.sh
 fi
+# marks {{{1
+. $ZDOTDIR/zsh.d/marks.zsh
 # teamocil {{{1
 export TEAMOCIL_PATH=$ZDOTDIR/teamocil
 # completions for proj {{{2
 _proj_cpl() {
-        reply=($(cd $HOME/${my_project_dir:=work}; print *(/)) "zsh" "vim" "tmux")
+        reply=($HOME/work/*(/:t))
+        reply+=("zsh" "vim" "tmux")
 }
 compctl -K _proj_cpl proj
 # modeline {{{1

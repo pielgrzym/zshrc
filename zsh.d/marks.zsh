@@ -16,7 +16,7 @@ unmark() {
 
 marks() {
         for link in $MARKPATH/*(@); do
-                echo "$fg[cyan] ${link:t} $reset_color -> $fg[blue] $(readlink $link) $reset_color"
+                printf "\t$fg[cyan]${link:t}$reset_color\t -> $fg[blue]$(readlink $link)$reset_color\t\n"
         done
 }
 alias ms=marks

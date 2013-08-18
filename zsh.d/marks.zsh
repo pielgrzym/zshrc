@@ -1,7 +1,7 @@
 export MARKPATH=$HOME/.marks
 
 mark_go() {
-        cd -P ${PROJECTS_ROOT:=$HOME/work}/$1/git 2>/dev/null || cd -P $MARKPATH/$1 2>/dev/null || echo "No such mark $1"
+        cd -P "${PROJECTS_ROOT:=$HOME/work}/$1/git" 2>/dev/null || cd -P "$MARKPATH/$1" 2>/dev/null || echo "No such mark $1"
 }
 alias c=mark_go
 
@@ -9,13 +9,13 @@ mark() {
         if (( $# == 0 )); then
                 marks
         else
-                mkdir -p $MARKPATH; ln -s $(pwd) $MARKPATH/$1
+                mkdir -p $MARKPATH; ln -s "$(pwd)" "$MARKPATH/$1"
         fi
 }
 alias m=mark
 
 unmark() { 
-        rm -i $MARKPATH/$1 
+        rm -i "$MARKPATH/$1" 
 }
 
 marks() {

@@ -10,7 +10,7 @@ alias c=mark_go
 
 echo_markpath() {
         if [[ -h "$MARKPATH/$1" ]]; then
-                printf "$MARKPATH/$1"
+                printf "$(readlink $MARKPATH/$1)"
         elif [[ -d "${PROJECTS_ROOT:=$HOME/work}/$1/git" ]]; then
                 printf "${PROJECTS_ROOT:=$HOME/work}/$1/git"
         else

@@ -6,6 +6,17 @@ export MARKPATH=$HOME/.marks
 mark_go() {
         cd -P "${PROJECTS_ROOT:=$HOME/work}/$1/git" 2>/dev/null || cd -P "$MARKPATH/$1" 2>/dev/null || echo "No such mark $1"
 }
+
+echo_markpath() {
+        if [[ -h "$MARKPATH/$1" ]]; then
+                printf "$MARKPATH/$1"
+        elif [[ -d "${PROJECTS_ROOT:=$HOME/work}/$1/git" ]]; then
+                printf "${PROJECTS_ROOT:=$HOME/work}/$1/git"
+        else
+                printf $1
+        fi
+}
+
 alias c=mark_go
 
 mark() { 
@@ -44,9 +55,8 @@ _unmark_cpl() {
 # becomes:
 # ls /Path/to/my/mark
 _mark_expansion() {
-        setopt extendedglob
         autoload -U modify-current-argument
-        modify-current-argument '$(readlink "$MARKPATH/$ARG")'
+        modify-current-argument '$(echo_markpath $ARG)'
 }
 zle -N _mark_expansion
 bindkey "^g" _mark_expansion

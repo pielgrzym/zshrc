@@ -39,5 +39,17 @@ _unmark_cpl() {
         reply=($MARKPATH/*(@:t))
 }
 
+# use ctrl-g to replace inline mark name with full path:
+# ls mymark<Ctrl-g>
+# becomes:
+# ls /Path/to/my/mark
+_mark_expansion() {
+        setopt extendedglob
+        autoload -U modify-current-argument
+        modify-current-argument '$(readlink "$MARKPATH/$ARG")'
+}
+zle -N _mark_expansion
+bindkey "^g" _mark_expansion
+
 compctl -K _mark_go_cpl mark_go
 compctl -K _unmark_cpl unmark

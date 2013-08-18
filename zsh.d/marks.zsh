@@ -1,3 +1,6 @@
+# marks concept based on post by Jeroen Janssens:
+# http://jeroenjanssens.com/2013/08/16/quickly-navigate-your-filesystem-from-the-command-line.html
+
 export MARKPATH=$HOME/.marks
 
 mark_go() {

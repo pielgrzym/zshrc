@@ -6,6 +6,7 @@ export MARKPATH=$HOME/.marks
 mark_go() {
         cd -P "${PROJECTS_ROOT:=$HOME/work}/$1/git" 2>/dev/null || cd -P "$MARKPATH/$1" 2>/dev/null || echo "No such mark $1"
 }
+alias c=mark_go
 
 echo_markpath() {
         if [[ -h "$MARKPATH/$1" ]]; then
@@ -17,7 +18,6 @@ echo_markpath() {
         fi
 }
 
-alias c=mark_go
 
 mark() { 
         if (( $# == 0 )); then

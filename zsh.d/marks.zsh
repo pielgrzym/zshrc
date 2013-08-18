@@ -8,6 +8,17 @@ mark_go() {
 }
 alias c=mark_go
 
+echo_markpath() {
+        if [[ -h "$MARKPATH/$1" ]]; then
+                printf "$(readlink $MARKPATH/$1)"
+        elif [[ -d "${PROJECTS_ROOT:=$HOME/work}/$1/git" ]]; then
+                printf "${PROJECTS_ROOT:=$HOME/work}/$1/git"
+        else
+                printf $1
+        fi
+}
+
+
 mark() { 
         if (( $# == 0 )); then
                 marks
@@ -38,6 +49,17 @@ _mark_go_cpl() {
 _unmark_cpl() {
         reply=($MARKPATH/*(@:t))
 }
+
+# use ctrl-g to replace inline mark name with full path:
+# ls mymark<Ctrl-g>
+# becomes:
+# ls /Path/to/my/mark
+_mark_expansion() {
+        autoload -U modify-current-argument
+        modify-current-argument '$(echo_markpath $ARG)'
+}
+zle -N _mark_expansion
+bindkey "^g" _mark_expansion
 
 compctl -K _mark_go_cpl mark_go
 compctl -K _unmark_cpl unmark

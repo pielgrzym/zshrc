@@ -598,7 +598,11 @@ bindkey . rationalise-dot
 export GPG_TTY=$(tty)
 # keychain {{{1
 if (( ${+commands[keychain]} )); then
-        eval `keychain --eval --nogui -Q -q ~/.ssh/id_dsa`
+        if [[ -f $HOME/.ssh/id_dsa ]]; then
+                eval `keychain --eval --nogui -Q -q ~/.ssh/id_dsa`
+        elif [[ -f $HOME/.ssh/id_rsa ]]; then
+                eval `keychain --eval --nogui -Q -q ~/.ssh/id_rsa`
+        fi
 fi
 # prompt {{{1
 # git {{{2

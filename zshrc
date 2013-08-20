@@ -130,11 +130,11 @@ zstyle ':completion:*:*:(gvim|vim):*' file-sort access # sort by last used
 
 # hosts, ssh, scp {{{3
 # use /etc/hosts and known_hosts for hostname completion
-[ -r ~/.ssh/known_hosts ] && _ssh_hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[\|]*}%%\ *}%%,*}) || _ssh_hosts=()
+[ -r $HOME/.ssh/known_hosts ] && _ssh_hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[\|]*}%%\ *}%%,*}) || _ssh_hosts=()
 hosts=( "$_ssh_hosts[@]" "$_etc_hosts[@]" `hostname` localhost)
 zstyle ':completion:*:*:*:*:hosts' hosts $hosts
 # above host completion is nice, but for ssh I want only hosts from .ssh/config - doesn't work :(
-_cfg_ssh_hosts=(${${${(M)${(f)"$(<$HOME/.ssh/config)"}##Host *}#Host }#\*})
+[ -r $HOME/.ssh/known_hosts ] && _cfg_ssh_hosts=(${${${(M)${(f)"$(<$HOME/.ssh/config)"}##Host *}#Host }#\*})
 zstyle ':completion:*:*:ssh:*' menu false # rather no menu...
 zstyle ':completion:*:*:ssh:*' tag-order hosts # only hosts in the suggestions
 zstyle ':completion:*:*:(ssh|scp):*:hosts' hosts $_cfg_ssh_hosts  # only hosts from ~/.ssh/config

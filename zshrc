@@ -329,8 +329,10 @@ else
         alias ll='ls -lh -G'
         alias l="ls -h -1 -G"
 fi
+alias lta='tree -L 2'
+alias lt='tree -L 2 -d'
 alias sl="ls" # often screw this up
-alias lt="ls -xCt" # show files in columnt sorted by modification
+#alias lt="ls -xCt" # show files in columnt sorted by modification
 alias mp="mplayer"
 alias um="sudo umount"
 alias po="ping onet.pl"

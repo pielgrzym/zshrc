@@ -6,8 +6,8 @@ colors
 # path {{{1
 PATH=$ZDOTDIR/bin:$PATH
 # zsh.d modules {{{1
-. $ZDOTDIR/zsh.d/aliases.zsh
 . $ZDOTDIR/zsh.d/completions.zsh
+. $ZDOTDIR/zsh.d/aliases.zsh
 . $ZDOTDIR/zsh.d/dirstack.zsh
 . $ZDOTDIR/zsh.d/extract.zsh
 . $ZDOTDIR/zsh.d/fast_updir.zsh

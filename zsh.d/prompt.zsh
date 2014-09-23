@@ -1,5 +1,6 @@
 # prompt based on nicoulai prompt from prezto project:
 # https://github.com/sorin-ionescu/prezto/blob/master/modules/prompt/functions/prompt_nicoulaj_setup
+#
 autoload -Uz promptinit && promptinit
 setopt prompt_subst
 

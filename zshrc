@@ -23,24 +23,7 @@ bindkey -v
 # history {{{1
 . $ZDOTDIR/zsh.d/history.zsh
 . $ZDOTDIR/zsh.d/history_branching.zsh
-# virtualenvwrapper {{{1
-prepare_wrapper() {
-        export WORKON_HOME=$HOME/.virtualenvs
-        if [[ -f /usr/bin/virtualenvwrapper.sh ]]; then
-                source /usr/bin/virtualenvwrapper.sh
-        else
-                source /etc/bash_completion.d/virtualenvwrapper
-        fi
-}
-alias vew=prepare_wrapper
-prepare_rvm() {
-        if [[ -x $HOME/.rvm/scripts/rvm ]]; then
-                source $HOME/.rvm/scripts/rvm 
-                export RPROMPT=$( $HOME/.rvm/bin/rvm-prompt )
-        fi
-}
-alias rew=prepare_rvm
-# misc {{{1
+# misc settings {{{1
 ## smart urls
 export EDITOR=vim
 autoload -U url-quote-magic
@@ -58,57 +41,28 @@ setopt no_beep
 export PAGER=less
 # fix ipython pager
 export LESS=-r
-# complete with sudo {{{1
+# insert sudo widget {{{1
 insert_sudo () { zle beginning-of-line; zle -U "s " }
 zle -N insert-sudo insert_sudo
 bindkey "^Xs" insert-sudo
 bindkey '^i' complete-word # this is *VERY* important read below:
-# fast ../.. directory ascension {{{1
-# borrowed from Mikachu (#zsh at freenode): http://mika.l3ib.org/code/dot-zshrc
-# just type '...' to get '../..'
-rationalise-dot() {
-        local MATCH
-        if [[ $LBUFFER == (|*['/ '$'\t\n''|;&']).. ]]; then
-                LBUFFER+=/
-                zle self-insert
-                zle self-insert
-        else
-                zle self-insert
-        fi
-}
-zle -N rationalise-dot
-bindkey . rationalise-dot
-# without this, typing a . aborts incremental history search
-[[ -n ${(M)keymaps:#isearch} ]] && bindkey -M isearch . self-insert
+# fast directory ascension {{{1
+. $ZDOTDIR/zsh.d/fast_updir.zsh
 # gpg pinentry {{{1
 # I HATE YOU pinentry-curses
-export GPG_TTY=$(tty)
+# export GPG_TTY=$(tty)
 # keychain {{{1
 if (( ${+commands[keychain]} )); then
+    if [[ -d $HOME/.ssh ]]; then
         if [[ -f $HOME/.ssh/id_dsa ]]; then
-                eval `keychain --eval --nogui -Q -q ~/.ssh/id_dsa`
+            eval `keychain --eval --nogui -Q -q ~/.ssh/id_dsa`
         elif [[ -f $HOME/.ssh/id_rsa ]]; then
-                eval `keychain --eval --nogui -Q -q ~/.ssh/id_rsa`
+            eval `keychain --eval --nogui -Q -q ~/.ssh/id_rsa`
         fi
+    fi
 fi
 # prompt {{{1
 . $ZDOTDIR/zsh.d/prompt.zsh
-# givotal {{{1
-if [[ -d $HOME/work/givotal ]]; then
-        export PATH=~/work/givotal/git:$PATH
-        source ~/work/givotal/git/completion/git-pivotal-completion.zsh
-        alias gvf="git pv fetchall"
-        alias gvc="git pv current"
-        alias gvb="git pv backlog"
-        alias gvm="git pv mywork"
-        alias gvr="git pv review"
-        alias gva="git pv accept"
-        alias gvj="git pv reject"
-        alias gvs="git pv start"
-        alias gvv="git pv show"
-        alias gvfn="git pv finish"
-        alias gvd="git pv deliver"
-fi
 # edit-command-line {{{1
 autoload -U edit-command-line
 zle -N edit-command-line

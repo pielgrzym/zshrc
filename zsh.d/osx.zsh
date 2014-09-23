@@ -1,5 +1,4 @@
 zstyle ':completion:*:*:*:*:processes' command "ps -A"
-RPROMPT='$(battery_prompt)'
 if type gls > /dev/null; then # osx gnu coreutils installed
     alias ls='\gls -h --color=auto'
     alias ll='\gls -lh --color=auto'

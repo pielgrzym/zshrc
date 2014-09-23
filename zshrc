@@ -53,28 +53,30 @@ bindkey '^i' complete-word # this is *VERY* important - cant remember why (:
 # export GPG_TTY=$(tty)
 # keychain {{{1
 . $ZDOTDIR/zsh.d/keychain.zsh
+# marks {{{1
+. $ZDOTDIR/zsh.d/marks.zsh
 # prompt {{{1
 . $ZDOTDIR/zsh.d/prompt.zsh
 # edit-command-line {{{1
 autoload -U edit-command-line
 zle -N edit-command-line
 bindkey '\C-x\C-e' edit-command-line
-# zsh-history-substring-search {{{1
-if [[ -d $ZDOTDIR/zsh-history-substring-search ]]; then
-        source $ZDOTDIR/zsh-history-substring-search/zsh-history-substring-search.zsh
+# modules {{{1
+export MYZMODULES=$ZDOTDIR/modules
+# zsh-history-substring-search {{{2
+if [[ -d $MYZMODULES/zsh-history-substring-search ]]; then
+        source $MYZMODULES/zsh-history-substring-search/zsh-history-substring-search.zsh
         bindkey '^P' history-substring-search-up
         bindkey '^N' history-substring-search-down
 fi
-# autoenv {{{1
-if [[ -f $ZDOTDIR/autoenv/activate.sh ]]; then
-        source $ZDOTDIR/autoenv/activate.sh
+# autoenv {{{2
+if [[ -f $MYZMODULES/autoenv/activate.sh ]]; then
+        source $MYZMODULES/autoenv/activate.sh
 fi
-# z (the new j, yo!) {{{1
-if [[ -f $ZDOTDIR/z/z.sh ]]; then
+# z (the new j, yo!) {{{2
+if [[ -f $MYZMODULES/z/z.sh ]]; then
         _Z_CMD='j'
-        . $ZDOTDIR/z/z.sh
+        . $MYZMODULES/z/z.sh 
 fi
-# marks {{{1
-. $ZDOTDIR/zsh.d/marks.zsh
 # modeline {{{1
 # vim: fdm=marker:fdl=0

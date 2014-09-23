@@ -61,8 +61,8 @@ alias gls="git log --abbrev-commit --pretty=oneline --stat --decorate --pretty='
 alias gg="git log --abbrev-commit --pretty=oneline --graph --decorate --pretty='tformat:${GL_FORMAT}'"
 alias glast="git --no-pager log --abbrev-commit --no-merges --pretty=oneline --stat --decorate --pretty='tformat:${GL_FORMAT}'"
 alias glo="git --no-pager log --oneline --decorate --graph --abbrev-commit --date=relative --pretty='tformat:${GL_FORMAT}' -n 10"
-alias gloa="git log --oneline --decorate --graph --abbrev-commit --date=relative --pretty='tformat:${FORMAT}'"
-alias gla="git log --all --oneline --decorate --graph --abbrev-commit --date=relative --pretty='tformat:${FORMAT}'"
+alias gloa="git log --oneline --decorate --graph --abbrev-commit --date=relative --pretty='tformat:${GL_FORMAT}' -n 10"
+alias gla="git log --all --oneline --decorate --graph --abbrev-commit --date=relative --pretty='tformat:${GL_FORMAT}' -n 10"
 glastupstream(){
         glast ..origin/$(current_branch) $*
 }

@@ -1,8 +1,0 @@
-#!/bin/sh
-
-. git-sh-setup  # for die 
-git-diff-index -p -M --cached HEAD -- | grep '^+' |
-grep "console.log" && die You left console.log in js code asshole!
-git-diff-index -p -M --cached HEAD -- settings.py | grep '^+' |
-grep "DEBUG = True" && die Debug enabled in django settings!
-:

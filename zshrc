@@ -1,15 +1,7 @@
 # colors {{{1
 autoload colors
 colors
-if [[ `hostname` == 'abulafia' || `hostname` == 'black' ]]; then
-        HOST_IS_LOCAL=1
-else
-        HOST_IS_LOCAL=0
-fi
-
-if [[ $HOST_IS_LOCAL == 1 ]]; then
-        . $HOME/.zsh/nice_colors
-fi
+. $HOME/.zsh.d/nice_colors.zsh
 # path {{{1
 PATH=$ZDOTDIR/bin:$PATH
 # named-directories {{{1

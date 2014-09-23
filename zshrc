@@ -34,9 +34,6 @@ setopt long_list_jobs
 autoload -U select-word-style
 select-word-style s
 setopt no_beep
-# got to observe if theese actually make any performance difference:
-#setopt multios
-#setopt cdablevarS
 ## pager
 export PAGER=less
 # fix ipython pager

@@ -4,25 +4,22 @@ colors
 . $ZDOTDIR/zsh.d/nice_colors.zsh
 # path {{{1
 PATH=$ZDOTDIR/bin:$PATH
-# completion {{{1
+# various modules {{{1
 . $ZDOTDIR/zsh.d/completions.zsh
-# rly? {{{1
 . $ZDOTDIR/zsh.d/rly.zsh
-# extract {{{1
 . $ZDOTDIR/zsh.d/extract.zsh
-# smart sudo {{{1
 . $ZDOTDIR/zsh.d/smart_sudo.zsh
-# aliases {{{1
 . $ZDOTDIR/zsh.d/aliases.zsh
-# directories {{{1
 . $ZDOTDIR/zsh.d/dirstack.zsh
+. $ZDOTDIR/zsh.d/history.zsh
+. $ZDOTDIR/zsh.d/history_branching.zsh
+. $ZDOTDIR/zsh.d/fast_updir.zsh
+. $ZDOTDIR/zsh.d/keychain.zsh
+. $ZDOTDIR/zsh.d/marks.zsh
 # grep {{{1
 export GREP_OPTIONS='--color=auto'
 export GREP_COLOR='1;32'
 bindkey -v
-# history {{{1
-. $ZDOTDIR/zsh.d/history.zsh
-. $ZDOTDIR/zsh.d/history_branching.zsh
 # misc settings {{{1
 ## smart urls
 export EDITOR=vim
@@ -43,17 +40,9 @@ insert_sudo () { zle beginning-of-line; zle -U "s " }
 zle -N insert-sudo insert_sudo
 bindkey "^Xs" insert-sudo
 bindkey '^i' complete-word # this is *VERY* important - cant remember why (:
-# fast directory ascension {{{1
-. $ZDOTDIR/zsh.d/fast_updir.zsh
 # gpg pinentry {{{1
 # I HATE YOU pinentry-curses
 # export GPG_TTY=$(tty)
-# keychain {{{1
-. $ZDOTDIR/zsh.d/keychain.zsh
-# marks {{{1
-. $ZDOTDIR/zsh.d/marks.zsh
-# prompt {{{1
-. $ZDOTDIR/zsh.d/prompt.zsh
 # edit-command-line {{{1
 autoload -U edit-command-line
 zle -N edit-command-line
@@ -74,6 +63,12 @@ fi
 if [[ -f $MYZMODULES/z/z.sh ]]; then
         _Z_CMD='j'
         . $MYZMODULES/z/z.sh 
+fi
+# prompt {{{1
+. $ZDOTDIR/zsh.d/prompt.zsh
+# osx specifik {{{1
+if [[ "$(uname)" == "Darwin" ]]; then
+. $ZDOTDIR/zsh.d/osx.zsh
 fi
 # modeline {{{1
 # vim: fdm=marker:fdl=0

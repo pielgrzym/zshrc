@@ -317,8 +317,10 @@ else
         alias ll='ls -lh --color=tty'
         alias l="ls -h -1 --color=tty"
 fi
+alias lta='tree -L 2'
+alias lt='tree -L 2 -d'
 alias sl="ls" # often screw this up
-alias lt="ls -xCt" # show files in columnt sorted by modification
+#alias lt="ls -xCt" # show files in columnt sorted by modification
 alias mp="mplayer"
 alias um="sudo umount"
 alias po="ping onet.pl"
@@ -365,6 +367,9 @@ alias gl="git log --abbrev-commit --pretty=oneline --no-merges --decorate --pret
 alias gls="git log --abbrev-commit --pretty=oneline --stat --decorate --pretty='tformat:${GL_FORMAT}'"
 alias gg="git log --abbrev-commit --pretty=oneline --graph --decorate --pretty='tformat:${GL_FORMAT}'"
 alias glast="git --no-pager log --abbrev-commit --no-merges --pretty=oneline --stat --decorate --pretty='tformat:${GL_FORMAT}'"
+alias glo="git --no-pager log --oneline --decorate --graph --abbrev-commit --date=relative --pretty='tformat:${GL_FORMAT}' -n 10"
+alias gloa="git log --oneline --decorate --graph --abbrev-commit --date=relative --pretty='tformat:${FORMAT}'"
+alias gla="git log --all --oneline --decorate --graph --abbrev-commit --date=relative --pretty='tformat:${FORMAT}'"
 glastupstream(){
         glast ..origin/$(current_branch) $*
 }

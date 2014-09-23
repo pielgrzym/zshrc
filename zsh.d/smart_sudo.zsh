@@ -1,6 +1,5 @@
 # Give us a root shell, or run the command with sudo.
 # Expands command aliases first (cool!)
-
 smart_sudo () {
     if [[ -n $1 ]]; then
         #test if the first parameter is a alias
@@ -16,3 +15,5 @@ smart_sudo () {
         sudo -s
     fi
 }
+alias s=smart_sudo
+compdef _sudo smart_sudo

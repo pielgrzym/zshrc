@@ -10,7 +10,6 @@ PATH=$ZDOTDIR/bin:$PATH
 . $ZDOTDIR/zsh.d/rly.zsh
 . $ZDOTDIR/zsh.d/extract.zsh
 . $ZDOTDIR/zsh.d/smart_sudo.zsh
-. $ZDOTDIR/zsh.d/aliases.zsh
 . $ZDOTDIR/zsh.d/dirstack.zsh
 . $ZDOTDIR/zsh.d/history.zsh
 . $ZDOTDIR/zsh.d/history_branching.zsh
@@ -18,6 +17,7 @@ PATH=$ZDOTDIR/bin:$PATH
 . $ZDOTDIR/zsh.d/keychain.zsh
 . $ZDOTDIR/zsh.d/marks.zsh
 . $ZDOTDIR/zsh.d/sudo_widget.zsh
+. $ZDOTDIR/zsh.d/aliases.zsh
 # settings {{{1
 export GREP_OPTIONS='--color=auto'
 export GREP_COLOR='1;32'

@@ -47,6 +47,7 @@ alias rake='noglob rake'
 alias rsync='noglob rsync'
 alias scp='noglob scp'
 alias sftp='noglob sftp'
+alias sftp='noglob nmap'
 # git {{{1
 alias g='git'
 alias gst='git status -sb'

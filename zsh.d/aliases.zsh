@@ -1,6 +1,9 @@
 # global {{{1
 # just give a filename with those suffixes and zsh will open it with mplayer
 alias -s {mkv,avi,mpg,mpeg,wmv,rmvb}='mplayer' 
+if type feh > /dev/null; then
+    alias -s {gif,jpg,jpeg,png}='feh'
+fi
 
 alias tmux="TERM=screen-256color-bce tmux"
 # Show history
@@ -13,25 +16,11 @@ else
 fi
 compdef mp=mplayer
 compdef napi=mplayer # ugly, but makes colorfull completions for napi
-if [[ "$(uname)" == "Linux" ]]; then
-    if type feh > /dev/null; then
-        alias -s {gif,jpg,jpeg,png}='feh'
-    fi
-    alias ls="ls -h --color=tty"
-    alias ll='ls -lh --color=tty'
-    alias l="ls -h -1 --color=tty"
-elif [[ $(uname) == "Darwin" ]]; then
-    # this must be before git 'gls' alias!
-    if type gls > /dev/null; then # osx gnu coreutils installed
-        alias ls='\gls -h --color=auto'
-        alias ll='\gls -lh --color=auto'
-        alias l='\gls -h -1 --color=auto'
-    else # crappy osx ls installed
-        alias ls="ls -h -G"
-        alias ll='ls -lh -G'
-        alias l="ls -h -1 -G"
-    fi
-fi
+# ls
+alias ls="ls -h --color=tty"
+alias ll='ls -lh --color=tty'
+alias l="ls -h -1 --color=tty"
+# tree
 alias lta='tree -L 2'
 alias lt='tree -L 2 -d'
 #alias lt="ls -xCt" # show files in columnt sorted by modification

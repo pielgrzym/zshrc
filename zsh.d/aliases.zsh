@@ -38,6 +38,15 @@ alias hist_off='HISTFILE='
 alias hist_on='HISTFILE=$HOME/.zsh_history'
 alias svim="vim -n -c 'set nobackup'"
 alias dssh="dropship ssh"
+# disable globbing {{{1
+# Disable globbing. stolen from prezto
+alias find='noglob find'
+alias history='noglob history'
+alias locate='noglob locate'
+alias rake='noglob rake'
+alias rsync='noglob rsync'
+alias scp='noglob scp'
+alias sftp='noglob sftp'
 # git {{{1
 alias g='git'
 alias gst='git status -sb'

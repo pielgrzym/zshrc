@@ -76,13 +76,5 @@ if [[ -f $ZDOTDIR/z/z.sh ]]; then
 fi
 # marks {{{1
 . $ZDOTDIR/zsh.d/marks.zsh
-# teamocil {{{1
-export TEAMOCIL_PATH=$ZDOTDIR/teamocil
-# completions for proj {{{2
-_proj_cpl() {
-        reply=($HOME/work/*(/:t))
-        reply+=("zsh" "vim" "tmux")
-}
-compctl -K _proj_cpl proj
 # modeline {{{1
 # vim: fdm=marker:fdl=0

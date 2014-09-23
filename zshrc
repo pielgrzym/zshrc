@@ -6,35 +6,11 @@ colors
 PATH=$ZDOTDIR/bin:$PATH
 # completion {{{1
 . $ZDOTDIR/zsh.d/completions.zsh
-# functions {{{1
-# remote confirm wrapper {{{2
-function rconfirm(){
-        if (( ${+SSH_CONNECTION} ));then
-                local confirm
-                echo " ___ "
-                echo "{o,o}"
-                echo "|)__)"
-                echo "-\"-\"-"
-                echo "O RLY?"
-                read -q confirm
-                if [[ $confirm == "y" || $confirm == "t" ]]; then
-                        echo "\n"
-                        "$@"
-                else
-                        echo "\n"
-                        echo " ___ "
-                        echo "{o,o}"
-                        echo "(__(|"
-                        echo "-\"-\"-"
-                        echo "NO WAI!"
-                fi
-        else
-                "$@"
-        fi
-}
-# extract {{{2
+# rly? {{{1
+. $ZDOTDIR/zsh.d/rly.zsh
+# extract {{{1
 . $ZDOTDIR/zsh.d/extract.zsh
-# smart sudo {{{2
+# smart sudo {{{1
 . $ZDOTDIR/zsh.d/smart_sudo.zsh
 # aliases {{{1
 . $ZDOTDIR/zsh.d/aliases.zsh
@@ -45,89 +21,8 @@ export GREP_OPTIONS='--color=auto'
 export GREP_COLOR='1;32'
 bindkey -v
 # history {{{1
-# options {{{2
-HISTFILE=$HOME/.zsh_history
-HISTSIZE=5000
-SAVEHIST=5000
-HISTIGNORE="[   ]*:&:bg:fg:clear:hr:hc"
-
-setopt hist_ignore_dups # ignore duplication command history list
-unsetopt share_history # by some queer accident it was turned on (horror!)
-
-setopt hist_verify
-#setopt inc_append_history
-setopt extended_history
-setopt hist_expire_dups_first
-setopt hist_find_no_dups
-setopt hist_ignore_space
-
-setopt APPEND_HISTORY
-
-# branching functions {{{2
-# I like to keep a separate shell history for my projects (this makes it easier to
-# reuse some older commands and predict is much more sensible in such scenario).
-# As I would often forget to enable cusom history - I just set up zsh to do this 
-# automatically if it finds a readable-writable-non-zero .zsh_custom_history file in PWD
-# If I'm done I can simply type 'hr' to use global zsh history. If I have a fresh project
-# I can simply type 'hc' and this will create and checkout new history branch.
-# The checkout and branch terminology is borrowed from git - I use it everyday  :)
-CUSTOM_HISTORY=0
-create_history_branch() {
-        if [[ -s .zsh_custom_history && -r .zsh_custom_history && -w .zsh_custom_history ]] 
-        then # in case there already is a custom history for current dir
-                checkout_history_branch
-        else # otherwise let's create a new one!
-                echo -n "${fg[blue]}History file '.zsh_custom_history' does not exist. Create a new one?$reset_color"
-                read -q confirm
-                if [[ $confirm == "y" || $confirm == "t" ]]; then
-                        echo ""
-                        echo "${fg[magenta]}Creating a new custom history branch$reset_color"
-                        fc -p # pop current global history into stack and create new one
-                        # below we need to tell zsh where to store the custom history and it's parameters
-                        HISTFILE=$PWD/.zsh_custom_history
-                        SAVEHIST=5000
-                        HISTSIZE=5000
-                        CUSTOM_HISTORY="H: $PWD"
-                fi
-        fi
-}
-
-checkout_history_branch() {
-        echo "${fg[magenta]}Restoring custom history branch for current dir$reset_color"
-        fc -p $PWD/.zsh_custom_history # put global hist on stack and use this one
-        # below we need to tell zsh where to store the custom history and it's parameters
-        HISTFILE=$PWD/.zsh_custom_history
-        SAVEHIST=5000
-        HISTSIZE=5000
-        CUSTOM_HISTORY="H: $PWD"
-}
-
-checkout_master_history_branch() {
-        echo "${fg[magenta]}Restoring master history branch$reset_color"
-        fc -P # stash current history and pop global one from stack
-        CUSTOM_HISTORY=0
-}
-
-# branching aliases {{{2
-alias hr=checkout_master_history_branch
-alias hc=create_history_branch
-# keybindings {{{1
-bindkey -M viins '^N' down-line-or-history
-bindkey -M viins '^P' up-line-or-history
-bindkey -M viins '^R' history-incremental-search-backward
-bindkey -M viins '^F' history-incremental-search-forward
-
-#stty intr '^x'
-
-bindkey "^Xh" _complete_help
-bindkey "^X?" _complete_debug
-bindkey "^Xx" execute-named-cmd
-## file rename magick
-bindkey "^X^m" copy-prev-shell-word
-bindkey "^Xm" _most_recent_file
-bindkey "^X^X" vi-beginning-of-line
-bindkey "^X^A" vi-end-of-line
-
+. $ZDOTDIR/zsh.d/history.zsh
+. $ZDOTDIR/zsh.d/history_branching.zsh
 # virtualenvwrapper {{{1
 prepare_wrapper() {
         export WORKON_HOME=$HOME/.virtualenvs

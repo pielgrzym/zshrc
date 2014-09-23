@@ -13,6 +13,3 @@
 [submodule "z"]
 	path = z
 	url = https://github.com/rupa/z.git
-[submodule "todotxt"]
-	path = todotxt
-	url = https://github.com/pielgrzym/todo.txt-cli.git

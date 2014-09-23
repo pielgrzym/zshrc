@@ -1,10 +1,11 @@
+# Piel's zshrc v1.0 - refactored
 # colors {{{1
 autoload colors
 colors
 . $ZDOTDIR/zsh.d/nice_colors.zsh
 # path {{{1
 PATH=$ZDOTDIR/bin:$PATH
-# various modules {{{1
+# zsh.d modules {{{1
 . $ZDOTDIR/zsh.d/completions.zsh
 . $ZDOTDIR/zsh.d/rly.zsh
 . $ZDOTDIR/zsh.d/extract.zsh
@@ -16,38 +17,29 @@ PATH=$ZDOTDIR/bin:$PATH
 . $ZDOTDIR/zsh.d/fast_updir.zsh
 . $ZDOTDIR/zsh.d/keychain.zsh
 . $ZDOTDIR/zsh.d/marks.zsh
-# grep {{{1
+. $ZDOTDIR/zsh.d/sudo_widget.zsh
+# settings {{{1
 export GREP_OPTIONS='--color=auto'
 export GREP_COLOR='1;32'
-bindkey -v
-# misc settings {{{1
-## smart urls
-export EDITOR=vim
+bindkey -v # vi style keybindings
+export EDITOR=vim # the only true editor
+setopt long_list_jobs
+autoload -U select-word-style
+select-word-style s # split words by shell arguments instead of spaces
+setopt no_beep # no bling bling
+export PAGER=less
+export LESS=-r # fix ipython pager
+# smart urls {{{2
 autoload -U url-quote-magic
 zle -N self-insert url-quote-magic
-## jobs
-setopt long_list_jobs
-# Make things split words by shell arguments, not spaces
-autoload -U select-word-style
-select-word-style s
-setopt no_beep
-## pager
-export PAGER=less
-# fix ipython pager
-export LESS=-r
-# insert sudo widget {{{1
-insert_sudo () { zle beginning-of-line; zle -U "s " }
-zle -N insert-sudo insert_sudo
-bindkey "^Xs" insert-sudo
-bindkey '^i' complete-word # this is *VERY* important - cant remember why (:
-# gpg pinentry {{{1
+# gpg pinentry {{{2
 # I HATE YOU pinentry-curses
 # export GPG_TTY=$(tty)
-# edit-command-line {{{1
+# edit-command-line ftw {{{2
 autoload -U edit-command-line
 zle -N edit-command-line
 bindkey '\C-x\C-e' edit-command-line
-# modules {{{1
+# modules (git submodules) {{{1
 export MYZMODULES=$ZDOTDIR/modules
 # zsh-history-substring-search {{{2
 if [[ -d $MYZMODULES/zsh-history-substring-search ]]; then
@@ -64,9 +56,9 @@ if [[ -f $MYZMODULES/z/z.sh ]]; then
         _Z_CMD='j'
         . $MYZMODULES/z/z.sh 
 fi
-# prompt {{{1
+# prompt shit {{{1
 . $ZDOTDIR/zsh.d/prompt.zsh
-# osx specifik {{{1
+# osx specific {{{1
 if [[ "$(uname)" == "Darwin" ]]; then
 . $ZDOTDIR/zsh.d/osx.zsh
 fi

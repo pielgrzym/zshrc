@@ -52,15 +52,7 @@ bindkey '^i' complete-word # this is *VERY* important - cant remember why (:
 # I HATE YOU pinentry-curses
 # export GPG_TTY=$(tty)
 # keychain {{{1
-if (( ${+commands[keychain]} )); then
-    if [[ -d $HOME/.ssh ]]; then
-        if [[ -f $HOME/.ssh/id_dsa ]]; then
-            eval `keychain --eval --nogui -Q -q ~/.ssh/id_dsa`
-        elif [[ -f $HOME/.ssh/id_rsa ]]; then
-            eval `keychain --eval --nogui -Q -q ~/.ssh/id_rsa`
-        fi
-    fi
-fi
+. $ZDOTDIR/zsh.d/keychain.zsh
 # prompt {{{1
 . $ZDOTDIR/zsh.d/prompt.zsh
 # edit-command-line {{{1

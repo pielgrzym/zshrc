@@ -1,37 +1,9 @@
 # colors {{{1
 autoload colors
 colors
-. $HOME/.zsh.d/nice_colors.zsh
+. $ZDOTDIR/zsh.d/nice_colors.zsh
 # path {{{1
 PATH=$ZDOTDIR/bin:$PATH
-# named-directories {{{1
-# theese are actually aliases for directories:
-# ~ $ cd ~zsh
-# ~/.zsh $
-function mk_work_named_dirs() {
-for p in `ls $HOME/work`
-do
-        hash -d $p="$HOME/work/$p"
-done
-}
-
-if [[ -d ~/work ]]; then
-        mk_work_named_dirs
-fi
-if [[ -d ~/download ]]; then
-        hash -d dn="$HOME/download"
-fi
-if [[ -d ~/Downloads ]]; then
-        hash -d dn="$HOME/Downloads"
-fi
-hash -d zsh="$HOME/.zsh"
-hash -d dropbox="$HOME/Dropbox"
-hash -d xmonad="$HOME/.xmonad"
-hash -d vim="$HOME/.vim"
-hash -d v="/Volumes"
-hash -d stack="$HOME/workspace/futuresimple"
-
-hash -d logs="/var/log"
 # completion {{{1
 # options {{{2
 unsetopt menu_complete   # do not autoselect the first completion entry

@@ -41,6 +41,14 @@ marks() {
         done
 }
 
+marks_named_dirs() {
+        for link in $MARKPATH/*(@); do
+                local markname="${link:t}"
+                local markpath="$(readlink $link)"
+                hash -d $markname="$markpath"
+        done
+}
+
 _mark_go_cpl() {
         reply=($MARKPATH/*(@:t))
         reply+=(${PROJECTS_ROOT:=$HOME/work}/*(/:t))
@@ -63,3 +71,7 @@ bindkey "^g" _mark_expansion
 
 compctl -K _mark_go_cpl mark_go
 compctl -K _unmark_cpl unmark
+
+if [[ -d $MARKPATH ]]; then
+    marks_named_dirs
+fi
